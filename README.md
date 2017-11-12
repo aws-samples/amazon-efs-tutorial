@@ -1,2 +1,5 @@
-# amazon-efs-tutorial
-This tutorial is designed to help you better understand the performance characteristics of Amazon Elastic File System
+Amazon Efs Tutorial
+
+## License
+
+This library is licensed under the Amazon Software License.
