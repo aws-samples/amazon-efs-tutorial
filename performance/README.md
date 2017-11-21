@@ -282,6 +282,7 @@ nload -u M
 ### Results
 Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, mcp, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
 
+
 | Step | File Transfer Tool | File Count | File Size | Total Size | Threads | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s |
@@ -290,6 +291,7 @@ Not all file transfer utilities are created equal. File systems are distributed 
 | 4.8 | mcp | 5000 | 1 MB | 5 GB | 32 | 87 seconds | 58.9 MB/s |
 | 4.9 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s |
 | 4.10 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 55 seconds | 93 MB/s |
+
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-tools-results.png)
 
