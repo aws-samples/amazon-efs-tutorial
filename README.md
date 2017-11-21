@@ -31,7 +31,8 @@ These three (3) tutorials are designed to help you better understand the perform
 >**Scale-out -** This tutorial is a Cloudformation template that will create an Amazon EC2 spot fleet and download objects in parallel from an Amazon S3 bucket.
 #
 
-### Overview
+### Tutorials
+Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png) link below to go to the tutorial.
 #
 
 | Number | Tutorial | Link |
