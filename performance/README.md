@@ -23,7 +23,7 @@ This tutorial is designed to help you better understand the performance characte
 
 This tutorial is divided into four sections.
 
->**Section 1 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
+**Section 1 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
 **Section 2 -** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
 **Section 3 -** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
 **Section 4 -** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
@@ -35,16 +35,12 @@ The AWS CloudFormation template below will create the compute environment you ne
 ### The Environment
 
 The AWS CloudFormation template will launch three EC2 instances, each in their own Auto Scaling group. Please use the recommended default instance types for each Auto Scaling group. The file system, whose id you entered as a CloudFormation parameter, will be automatically mounted to each EC2 instance. These instances will also have a 20 GB gp2 EBS data volume mounted and 5GB of test data will be generated on that volume. The following open-source applications will also be installed on each instance.
->**nload -** is a console application that monitors network traffic and bandwidth usage in real time
 
+**nload -** is a console application that monitors network traffic and bandwidth usage in real time
 **smallfile -** [https://github.com/bengland2/smallfile](https://github.com/bengland2/smallfile) - used to generate test data; Developer: Ben England
-
 **GNU Parallel -** [https://www.gnu.org/software/parallel/](https://www.gnu.org/software/parallel/) - used to parallelize single-threaded commands; O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47
-
 **Mutil *mcp -*** [https://github.com/pkolano/mutil](https://github.com/pkolano/mutil) - multi-threaded drop-in replacement of cp; Author Paul Kolano (NASA)
-
 **fpart -** [https://github.com/martymac/fpart](https://github.com/martymac/fpart) - sorts file trees and packs them into partitions; Author Ganaël Laplanche
-
 **fpsync -** wraps fpart + rsync together as a multi-threaded transfer utility - included in the tools/ directory of fpart
 
 NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. These software packages are used for demonstration purposes only.  Follow all expressed or implied license agreements associated with these 3rd party software products.
