@@ -25,14 +25,14 @@ This tutorial is a set of AWS Cloudformation templates that will create an Amazo
 
 | Tutorial | Link
 | --- | ---
-| **Create a file system** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-burst-credit-balance-notifications&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit_balance-cloudwatch-alarms.yaml) |
+| **Create a file system** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/create-file-system) |
 
 ### 2. Performance
 This tutorial is a set of scripts that will demonstrate: 1) different instance types provide different levels of network performance when accessing a file system; 2) different I/O sizes (block sizes) and sync() freqencies (the rate data is persisted to disk) effects file system throughput; 3) increasing the number of threads accessing a file system will increase IOPS and throughput.
 
 | Tutorial | Link
 | --- | ---
-| **Performance** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-burst-credit-balance-notifications&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit_balance-cloudwatch-alarms.yaml) |
+| **Performance** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/performance) |
 
 
 ### 3. Scale-out
@@ -40,7 +40,7 @@ This tutorial is a Cloudformation template that will create an Amazon EC2 spot f
 
 | Tutorial | Link
 | --- | ---
-| **Scale-out** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-burst-credit-balance-notifications&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit_balance-cloudwatch-alarms.yaml) |
+| **Scale-out** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/scale-out) |
 
 ---
 
