@@ -32,8 +32,8 @@ These three (3) tutorials are designed to help you better understand the perform
 #
 
 ### Tutorials
-Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png) link below to go to the tutorial.
 #
+Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png) link below to go to the tutorial.
 
 | Number | Tutorial | Link |
 | --- | --- | ---
