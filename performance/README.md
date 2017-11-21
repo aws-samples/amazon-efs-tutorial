@@ -23,17 +23,14 @@ This tutorial is designed to help you better understand the performance characte
 
 This tutorial is divided into four sections.
 
-**Section 1** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
-
-**Section 2** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
-
-**Section 3** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
-
-**Section 4** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
+>**Section 1 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
+**Section 2 -** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
+**Section 3 -** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
+**Section 4 -** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
 ### Prerequisites
 
-The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack.
+The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack. If you don't have a file system, link the link to go to the [***Create a file system***](https://github.com/aws-samples/amazon-efs-tutorial/edit/master/create-a-file-system) tutorial.
 
 ### The Environment
 
