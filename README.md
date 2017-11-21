@@ -32,9 +32,8 @@ These three (3) tutorials are designed to help you better understand the perform
 #
 
 ### Tutorials
-#
 Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png) link below to go to the tutorial.
-
+#
 | Number | Tutorial | Link |
 | --- | --- | ---
 | **1.** | **Create a file system** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-burst-credit-balance-notifications&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit_balance-cloudwatch-alarms.yaml) |
