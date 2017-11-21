@@ -193,7 +193,7 @@ Record run time.
 ### Results
 The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
 | Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | ---
 | 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
 | 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s |
 | 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
@@ -284,7 +284,7 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 
 | Step | File Transfer Tool | File Count | File Size | Total Size | Threads | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | ---
 | 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s |
 | 4.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s |
 | 4.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s |
