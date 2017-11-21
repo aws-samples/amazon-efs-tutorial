@@ -21,11 +21,14 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 This tutorial is designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types have a profound effect on file system performance.
 
-This tutorial is divided into four sections. 
->**Section 1** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system. 
-**Section 2** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
-**Section 3** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
-**Section 4** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
+This tutorial is divided into four sections.
+>**Section 1** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
+
+>**Section 2** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
+
+>**Section 3** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
+
+>**Section 4** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
 ### Prerequisites
 
