@@ -83,10 +83,10 @@ nload -u M
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 
 | Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
-| --- | --- | --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- | --- | --- |
 | 1.2 | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
-| 1.2 | m4.large | 20 GB | 384 seconds ||| 56 MB/s |
-| 1.2 | c4.2xlarge | 20 GB | 143 seconds ||| 150 MB/s |
+| 1.2 | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
+| 1.2 | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s |
 
 ## Section 2
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
@@ -146,6 +146,7 @@ Record run time.
 #
 ### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance appears to have better network performance when initially compared to an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
+
 | Step | EC2 Instance Type | Operation | Data Size | Block Size | Sync | Storage | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2.2 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
