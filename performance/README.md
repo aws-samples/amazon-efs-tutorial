@@ -67,18 +67,18 @@ After launching the AWS CloudFormation Stack above, you should see three Amazon 
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
 
-##### 1.1 SSH into all three Amazon EC2 instances
+### 1.1 SSH into all three Amazon EC2 instances
 
-##### 1.2 Use dd to write 20 GB of data to EFS from each instance
+### 1.2 Use dd to write 20 GB of data to EFS from each instance
 Run this command against all three instances to create a 20 GB file on EFS and monitor network traffic and throughput in real-time
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
 nload -u M
 ```
-##### 1.3 Close all SSH sessions
+### 1.3 Close all SSH sessions
 #
 #
-##### Results
+### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 | Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -89,14 +89,14 @@ All EC2 instance types have different network performance characteristics so eac
  ___
 This section will compare how different I/O sizes (block sizes) and sync frequencies (the rate data is persisted to disk) have a profound impact on performance between EBS and EFS.
 
-##### 2.1 SSH into the c4.2xlarge EC2 instance
-##### 2.2 Write to EBS using 1 MB block size and sync once after each file
+### 2.1 SSH into the c4.2xlarge EC2 instance
+### 2.2 Write to EBS using 1 MB block size and sync once after each file
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
 time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress conv=fsync
 ```
 Record run time.
-##### 2.3 Write to EFS using 1 MB block size and sync once after each file
+### 2.3 Write to EFS using 1 MB block size and sync once after each file
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress conv=fsync
@@ -126,13 +126,13 @@ Run this command against the c4.2xlarge instance and use dd to create a 2 GB fil
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress oflag=sync
 ```
 Record run time.
-##### 2.8 Write to EBS using 16 MB block size and sync after each block
+#### 2.8 Write to EBS using 16 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
 ```
 Record run time.
-##### 2.9 Write to EFS using 16 MB block size and sync after each block
+#### 2.9 Write to EFS using 16 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
@@ -140,7 +140,7 @@ time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=
 Record run time.
 #
 #
-##### Results
+#### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance appears to have better network performance when initially compared to an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 | Step | EC2 Instance Type | Operation | Data Size | Block Size | Sync | Storage | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -156,26 +156,26 @@ All EC2 instance types have different network performance characteristics so eac
  ___
 This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
 
-##### 3.1 SSH into the c4.2xlarge EC2 instance
-##### 3.2 Write to EBS using 4 threads and sync after each block
+#### 3.1 SSH into the c4.2xlarge EC2 instance
+#### 3.2 Write to EBS using 4 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
 ```
 Record run time.
-##### 3.3 Write to EFS using 4 threads and sync after each block
+#### 3.3 Write to EFS using 4 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
 ```
 Record run time.
-##### 3.4 Write to EBS using 16 threads and sync after each block
+#### 3.4 Write to EBS using 16 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
 ```
 Record run time.
-##### 3.5 Write to EFS using 16 threads and sync after each block
+#### 3.5 Write to EFS using 16 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
@@ -183,7 +183,7 @@ time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/
 Record run time.
 #
 #
-##### Results
+#### Results
 The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
 | Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
