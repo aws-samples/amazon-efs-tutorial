@@ -62,7 +62,8 @@ After launching the AWS CloudFormation Stack above, you should see three Amazon 
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-ec2-console-screenshot.png)
 
-## Section 1 - Compare the network performance of different EC2 instance types accessing EFS
+## Section 1
+### Compare the network performance of different EC2 instance types accessing EFS
  ___
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
@@ -80,12 +81,15 @@ nload -u M
 #
 ### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
+
 | Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
-| --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | ---
 | 1.2 | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
 | 1.2 | m4.large | 20 GB | 384 seconds ||| 56 MB/s |
 | 1.2 | c4.2xlarge | 20 GB | 143 seconds ||| 150 MB/s |
-## Section 2 - Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
+
+## Section 2
+### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
  ___
 This section will compare how different I/O sizes (block sizes) and sync frequencies (the rate data is persisted to disk) have a profound impact on performance between EBS and EFS.
 
@@ -102,37 +106,37 @@ Run this command against the c4.2xlarge instance and use dd to create a 2 GB fil
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress conv=fsync
 ```
 Record run time.
-##### 2.4 Write to EBS using 16 MB block size and sync once after each file
+### 2.4 Write to EBS using 16 MB block size and sync once after each file
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
 time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress conv=fsync
 ```
 Record run time.
-##### 2.5 Write to EFS using 16 MB block size and sync once after each file
+### 2.5 Write to EFS using 16 MB block size and sync once after each file
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress conv=fsync
 ```
 Record run time.
-##### 2.6 Write to EBS using 1 MB block size and sync after each block
+### 2.6 Write to EBS using 1 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress oflag=sync
 ```
 Record run time.
-##### 2.7 Write to EFS using 1 MB block size and sync after each block
+### 2.7 Write to EFS using 1 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress oflag=sync
 ```
 Record run time.
-#### 2.8 Write to EBS using 16 MB block size and sync after each block
+### 2.8 Write to EBS using 16 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
 ```
 Record run time.
-#### 2.9 Write to EFS using 16 MB block size and sync after each block
+### 2.9 Write to EFS using 16 MB block size and sync after each block
 Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
@@ -140,10 +144,10 @@ time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=
 Record run time.
 #
 #
-#### Results
+### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance appears to have better network performance when initially compared to an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 | Step | EC2 Instance Type | Operation | Data Size | Block Size | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | ---
 | 2.2 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
 | 2.3 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EFS | 10.7 seconds | 201 MB/s |
 | 2.4 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
@@ -152,30 +156,32 @@ All EC2 instance types have different network performance characteristics so eac
 | 2.7 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EFS | 85.5 seconds | 25 MB/s |
 | 2.8 | c4.2xlarge | Create | 2 GB | 16 MB | After each block | EBS | 16.3 seconds | 132 MB/s |
 | 2.9 | c4.2xlarge | Create | 2 GB| 16 MB | After each block | EFS | 23 seconds | 93 MB/s |
-## Section 3 - Demonstrate how multi-threaded access improves throughput and IOPS
+
+## Section 3
+### Demonstrate how multi-threaded access improves throughput and IOPS
  ___
 This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
 
-#### 3.1 SSH into the c4.2xlarge EC2 instance
-#### 3.2 Write to EBS using 4 threads and sync after each block
+### 3.1 SSH into the c4.2xlarge EC2 instance
+### 3.2 Write to EBS using 4 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
 ```
 Record run time.
-#### 3.3 Write to EFS using 4 threads and sync after each block
+### 3.3 Write to EFS using 4 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
 ```
 Record run time.
-#### 3.4 Write to EBS using 16 threads and sync after each block
+### 3.4 Write to EBS using 16 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
 ```
 Record run time.
-#### 3.5 Write to EFS using 16 threads and sync after each block
+### 3.5 Write to EFS using 16 threads and sync after each block
 Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
 time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
@@ -183,31 +189,33 @@ time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/
 Record run time.
 #
 #
-#### Results
+### Results
 The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
 | Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | ---
 | 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
 | 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s |
 | 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
 | 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s |
-## Section 4 - Compare different file transfer tools
+
+## Section 4
+### Compare different file transfer tools
  ___
 This section will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
-##### 4.1 SSH into the c4.2xlarge EC2 instance
-##### 4.2 Review the data to transfer
+### 4.1 SSH into the c4.2xlarge EC2 instance
+### 4.2 Review the data to transfer
 Run this command against the c4.2xlarge instance to view the total size and count of files to be trasnferred.
 ```sh
 du -csh /ebs/tutorial/data-1m/
 find /ebs/tutorial/data-1m/. -type f | wc -l
 ```
-##### 4.3 Set the $instanceid variable
+### 4.3 Set the $instanceid variable
 Run this command against the c4.2xlarge instance to set the $instanceid variable which will be used in the preceeding steps.
 ```sh
 instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 ```
-##### 4.4 Transfer files from EBS to EFS using ***rsync***
+### 4.4 Transfer files from EBS to EFS using ***rsync***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
 ```sh
 sudo su
@@ -216,7 +224,7 @@ exit
 time rsync -r /ebs/tutorial/data-1m/ /efs/tutorial/rsync/${instanceid} &
 nload -u M
 ```
-##### 4.5 Transfer files from EBS to EFS using ***cp***
+### 4.5 Transfer files from EBS to EFS using ***cp***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp.
 ```sh
 sudo su
@@ -225,12 +233,12 @@ exit
 time cp -r /ebs/tutorial/data-1m/* /efs/tutorial/cp/${instanceid} &
 nload -u M
 ```
-##### 4.6 Set the $threads variable
+### 4.6 Set the $threads variable
 Run this command against the c4.2xlarge instance to set the $threads variable to 4 threads per vcpu. This variable will be used in the subsequent steps.
 ```sh
 threads=$(($(nproc --all) * 4))
 ```
-##### 4.7 Transfer files from EBS to EFS using ***fpsync***
+### 4.7 Transfer files from EBS to EFS using ***fpsync***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpsync.
 ```sh
 sudo su
@@ -239,7 +247,7 @@ exit
 time /usr/local/bin/fpsync -n ${threads} -v /ebs/tutorial/data-1m/ /efs/tutorial/fpsync/${instanceid} &
 nload -u M
 ```
-##### 4.8 Transfer files from EBS to EFS using ***mcp***
+### 4.8 Transfer files from EBS to EFS using ***mcp***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using mcp.
 ```sh
 sudo su
@@ -248,7 +256,7 @@ exit
 time mcp -r --threads=${threads} /ebs/tutorial/data-1m/* /efs/tutorial/mcp/${instanceid} &
 nload -u M
 ```
-##### 4.9 Transfer files from EBS to EFS using ***cp + GNU Parallel***
+### 4.9 Transfer files from EBS to EFS using ***cp + GNU Parallel***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp + GNU Parallel.
 ```sh
 sudo su
@@ -257,7 +265,7 @@ exit
 time find /ebs/tutorial/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /efs/tutorial/parallelcp &
 nload -u M
 ```
-##### 4.10 Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
+### 4.10 Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpart + cpio + GNU Parallel.
 ```sh
 sudo su
@@ -270,11 +278,11 @@ nload -u M
 ```
 #
 #
-##### Results
+### Results
 Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, mcp, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
 
 | Step | File Transfer Tool | File Count | File Size | Total Size | Threads | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | ---
 | 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s |
 | 4.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s |
 | 4.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s |
@@ -284,14 +292,15 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-tools-results.png)
 
-## Section 5 - Cleanup
+## Section 5
+### Cleanup
 Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don't continue to incur additional charges for these resources.
-##### 5.1 Delete all files on the EFS file system created during the tutorial
+### 5.1 Delete all files on the EFS file system created during the tutorial
 Run this command on the c4.2xlarge instance to delete the /efs/tutorial data.
 ```sh
 sudo rm /efs/tutorial/ -r 
 ```
-##### 5.2 Delete the AWS CloudFormation stack you launched during the tutorial
+### 5.2 Delete the AWS CloudFormation stack you launched during the tutorial
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-delete-cf-stack-screenshot.png)
 
 
