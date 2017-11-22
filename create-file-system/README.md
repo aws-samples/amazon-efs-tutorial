@@ -70,14 +70,16 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 
+## Bonus
+
 ### Individual CloudFormation Templates for existing Amazon EFS file systems
 
-> Below are the unnested CloudFormation templates from above that can be run individuall against an existing Amazon EFS file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
+> Below are the unnested CloudFormation templates from above that can be run individually against an existing file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
 
 - adding data to grow a file system
 - creating CloudWatch alarms to monitor burst credit balance and a CloudWatch dashboard with widgets for the burst credit balance alarms, and other important file system metrics, including a custom metric for file system size
 - creating just the CloudWatch alarms to monitor burst credit balance
-- creating just the CloudWatch dasboard with widgets for important file system metrics, including a custom file system size metric
+- creating just the CloudWatch dasboard with widgets for important file system metrics, including a file system size custom  metric
 
 
 ### Add data to grow a file system
@@ -91,7 +93,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-add-data.yml) |
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-add-data.yml) |
 
-### Create an AWS CloudWatch Dashboard with a custom file system size metric and CloudWatch Alarms to monitor Burst Credit Balance
+### Create an AWS CloudWatch Dashboard with a file system size custom metric and CloudWatch Alarms to monitor Burst Credit Balance
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
