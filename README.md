@@ -16,6 +16,11 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ---
 
+##### Table of Contents  
+[Tutorials](#tutorials)  
+
+---
+
 ### Tutorials
 
 These three (3) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
