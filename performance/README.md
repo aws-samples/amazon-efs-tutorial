@@ -80,25 +80,31 @@ After launching the AWS CloudFormation Stack above, you should see three Amazon 
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
 
-### 1.1.  SSH into all three Amazon EC2 instances
+### 1.1.  Add SSH inbound access for your IP address
 
-### 1.2.  Use dd to write 20 GB of data to EFS from each instance
+Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+Select **Security Groups** on the left frame under **NETWORK & SECURITY** and select the default security group of your VPC.
+Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
+
+### 1.2.  SSH into all three Amazon EC2 instances
+
+### 1.3.  Use dd to write 20 GB of data to EFS from each instance
 Run this command against all three instances to create a 20 GB file on EFS and monitor network traffic and throughput in real-time
 ```sh
 time dd if=/dev/zero of=/efs/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
 nload -u M
 ```
-### 1.3.  Close all SSH sessions
+### 1.4.  Close all SSH sessions
 #
 #
 ### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 
 | Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1.2 | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
-| 1.2 | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
-| 1.2 | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s |
+| :--- | :--- | --- | --- | --- | --- | --- |
+| 1.3. | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
+| 1.3. | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
+| 1.3. | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s |
 
 ## Section 2
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
