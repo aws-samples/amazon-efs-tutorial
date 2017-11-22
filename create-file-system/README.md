@@ -115,7 +115,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-burst-credit-balance-alarms.yml) |
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-burst-credit-balance-alarms.yml) |
 
-### Create an AWS CloudWatch Dashboard with a custom file system size metric
+### Create an AWS CloudWatch Dashboard with a file system size custom metric
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
