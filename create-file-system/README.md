@@ -70,6 +70,16 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 
+
+## Next tutorial
+
+### Click on the link below to go to the next Amazon EFS tutorial
+
+| Tutorial | Link
+| --- | ---
+| **Performance** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/performance) |
+
+
 ## Bonus
 
 ### Individual CloudFormation Templates for existing Amazon EFS file systems
