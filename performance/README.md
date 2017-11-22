@@ -82,9 +82,9 @@ This section will demonstrate that not all Amazon EC2 instance types are created
 
 ### 1.1.  Add SSH inbound access for your IP address
 
-Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
-Select **Security Groups** on the left frame under **NETWORK & SECURITY** and select the default security group of your VPC.
-Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
+- Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+- Select **Security Groups** on the left frame under **NETWORK & SECURITY** and select the default security group of your VPC.
+- Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
 
 ### 1.2.  SSH into all three Amazon EC2 instances
 
