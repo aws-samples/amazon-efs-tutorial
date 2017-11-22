@@ -117,9 +117,9 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 **3.3.** Create a Spot Instance Request using the following settings:
 
-**Select request type** section
+- **Select request type** section
 
-**Request type**: **Request**
+- **Request type**: **Request**
 **Target capacity**: Select the size of the fleet (recommend 5)
 **AMI**: Select the latest Amazon Linus AMI (e.g. Amazon Linux AMI 2017.09.0.20170930 x86_64 HVM GP2)
 **Instance type(s)**: **r4.large**
