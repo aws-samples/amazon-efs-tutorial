@@ -36,8 +36,6 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 1: Create an Amazon Virtual Private Cloud (Amazon VPC)
 
-> Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
-
 #### Parameters
 
 - Select three (3) Availability Zones
@@ -47,6 +45,12 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 - Select an existing Amazon EC2 key pair
 
 - Use the default NAT instance size
+
+
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
+
+
+> Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
 
 
 | AWS Region Code | Name | Launch |
