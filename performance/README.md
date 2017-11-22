@@ -112,7 +112,9 @@ All EC2 instance types have different network performance characteristics so eac
 | :--- | :--- | --- | --- | --- | --- | --- |
 | 1.3. | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
 | 1.3. | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
-| 1.3. | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s |
+| 1.3. | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s* |
+
+*150MB/s was achieved with a file system with a permitted throughput greater than 150 MB/s
 
 ## Section 2
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
