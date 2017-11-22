@@ -51,6 +51,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
 
 > Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
+
 - create an Amazon EFS file system with data
 - create AWS CloudWatch alarms to alert when the burst credit balance thresholds are breached
 - create AWS CloudWatch dashboard with metrics and alarms
