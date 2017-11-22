@@ -44,13 +44,13 @@ For more information about this dataset, please refer to http://geospatial.dcgis
 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
-### Tutorial
+## Tutorial
 
-#### Step 1: Create Amazon EC2 Spot Fleet Role
+### Step 1: Create Amazon EC2 Spot Fleet Role
 
 The first step involves creating IAM roles used to run and launch an Amazon EC2 spot fleet.
 
-**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
+   **Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
 
 **Step 2:** Select **Roles** on the left frame and select the **Create Role**
 
