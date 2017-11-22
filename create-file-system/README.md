@@ -49,9 +49,11 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
 
-
+#
+#
 > Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
-
+#
+#
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
