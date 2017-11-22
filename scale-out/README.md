@@ -201,7 +201,7 @@ runcmd:
 # make directories and mount file system
 - mkdir -p /${filesystem}
 - chown ec2-user:ec2-user /${filesystem}
-- echo "${filesystem}.efs.${!region}.amazonaws.com:/ /${filesystem} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" | sudo tee /etc/fstab
+- echo "${filesystem}.efs.${region}.amazonaws.com:/ /${filesystem} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" | sudo tee /etc/fstab
 - mount -a -t nfs4
 - mkdir -p /${filesystem}/lidar/${instanceid}
 
