@@ -43,9 +43,32 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ## Tutorial
 
-### Step 1: Create Amazon EC2 Spot Fleet Role
+### Step 1: Create Amazon Virtual Private Cloud (Amazon VPC)
 
-> This step involves creating an IAM role used to run and launch an Amazon EC2 spot fleet.
+> Click on the link below in the desired AWS region to create the AWS Cloudformation stack which will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resouces created as a part of this tutorial.
+
+| AWS Region Code | Name | Launch |
+| --- | --- | --- 
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+
+
+### Step 2: Create Amazon Virtual Private Cloud (Amazon VPC)
+
+> Click on the link below in the desired AWS region to create the AWS Cloudformation stack which will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resouces created as a part of this tutorial.
+
+| AWS Region Code | Name | Launch |
+| --- | --- | --- 
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
 
 **1.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
 
