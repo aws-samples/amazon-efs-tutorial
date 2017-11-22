@@ -252,13 +252,11 @@ It will take a few minutes for the Amazon EC2 Spot request to be accepted and fu
 
 - Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
 
-- Paste the command below into the **Commands** text box, replacing  ```!!!Add_file_system_id_here!!!``` with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
+- Paste the command below into the **Commands** text box, replacing  ```!!!Add_file_system_id_here!!!``` with the your EFS file system id. (e.g. /tmp/scale-out-tutorial-get-lidar-data.sh fs-123456af)
 
 ```sh
-scale-out-tutorial-get-lidar-data.sh !!!Add_file_system_id_here!!!
+/tmp/scale-out-tutorial-get-lidar-data.sh !!!Add_file_system_id_here!!!
 ```
-
-- Set the **Working Directory** to /tmp
 
 - Select **Run**
 
