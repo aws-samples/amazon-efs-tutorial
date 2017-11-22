@@ -125,7 +125,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 - **Instance type(s)**: **r4.large**
 - **Allocation strategy**: **Lowest price**
 - **Network**: Select the appropriate VPC
-- **Availability Zone**: **No preference (launch in cheapest Availability Zone)**
+- **Availability Zone**: **Select all availability zones**
 - **Maximum price** **Use automated bidding (recommended)**
 
 - Select **Next**
