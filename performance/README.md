@@ -114,7 +114,7 @@ All EC2 instance types have different network performance characteristics so eac
 | 1.3. | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
 | 1.3. | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s* |
 
-*150MB/s was achieved using a file system with a permitted throughput greater than 150 MB/s
+*this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
 ## Section 2
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
@@ -178,13 +178,15 @@ All EC2 instance types have different network performance characteristics so eac
 | Step | EC2 Instance Type | Operation | Data Size | Block Size | Sync | Storage | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2.2 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
-| 2.3 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EFS | 10.7 seconds | 201 MB/s |
+| 2.3 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EFS | 10.7 seconds | 201 MB/s* |
 | 2.4 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
-| 2.5 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EFS | 10.6 seconds | 202 MB/s |
+| 2.5 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EFS | 10.6 seconds | 202 MB/s* |
 | 2.6 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EBS | 17.3 seconds | 124 MB/s |
-| 2.7 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EFS | 85.5 seconds | 25 MB/s |
+| 2.7 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EFS | 85.5 seconds | 25 MB/s* |
 | 2.8 | c4.2xlarge | Create | 2 GB | 16 MB | After each block | EBS | 16.3 seconds | 132 MB/s |
-| 2.9 | c4.2xlarge | Create | 2 GB| 16 MB | After each block | EFS | 23 seconds | 93 MB/s |
+| 2.9 | c4.2xlarge | Create | 2 GB| 16 MB | After each block | EFS | 23 seconds | 93 MB/s* |
+
+*this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
 ## Section 3
 ### Demonstrate how multi-threaded access improves throughput and IOPS
@@ -224,9 +226,11 @@ The distributed data storage design of EFS means that multi-threaded application
 | Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | --- | ---
 | 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
-| 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s |
+| 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s* |
 | 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
-| 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s |
+| 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s* |
+
+*this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
 ## Section 4
 ### Compare different file transfer tools
@@ -314,13 +318,14 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 | Step | File Transfer Tool | File Count | File Size | Total Size | Threads | Duration | Throughput |
 | --- | --- | --- | --- | --- | --- | --- | ---
-| 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s |
-| 4.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s |
-| 4.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s |
-| 4.8 | mcp | 5000 | 1 MB | 5 GB | 32 | 87 seconds | 58.9 MB/s |
-| 4.9 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s |
-| 4.10 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 55 seconds | 93 MB/s |
+| 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s* |
+| 4.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s* |
+| 4.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s* |
+| 4.8 | mcp | 5000 | 1 MB | 5 GB | 32 | 87 seconds | 58.9 MB/s* |
+| 4.9 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s* |
+| 4.10 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 55 seconds | 93 MB/s* |
 
+*this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-tools-results.png)
 
