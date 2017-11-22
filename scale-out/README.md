@@ -138,7 +138,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 - **Monitoring**: **Enable CloudWatch detailed monitoring**
 - **Tenancy**: **Default - run a shared hardware instance**
-- **User data**: **As text** paste the cloud_config snippet below into the text box. IMPORTANT!! There is one placeholder in the script below that needs to be updated with the EFS file system id you want to use. In the **runcmd:** section replace ***Add_file_system_id_here*** with the file system id you want to use. **e.g. - filesystem=fs-123456af**
+- **User data**: **As text** paste the cloud_config snippet below into the text box. IMPORTANT!! There is one placeholder in the script below that needs to be updated with the EFS file system id you want to use. In the **runcmd:** section replace !!!Add_file_system_id_here!!! with the file system id you want to use. **e.g. - filesystem=fs-123456af**
 
 ```sh
 #cloud-config
@@ -193,7 +193,7 @@ runcmd:
 - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 - availabilityzone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
 - region=${availabilityzone:0:-1}
-- filesystem=***Add_file_system_id_here***
+- filesystem=!!!Add_file_system_id_here!!!
 
 # installs
 - yum --enablerepo=epel install nload -y
@@ -252,10 +252,10 @@ It will take a few minutes for the Amazon EC2 Spot request to be accepted and fu
 
 - Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
 
-- Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
+- Paste the command below into the **Commands** text box, replacing  !!!Add_file_system_id_here!!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
 
 ```sh
-scale-out-tutorial-get-lidar-data.sh !!Add_file_system_id_here!!
+scale-out-tutorial-get-lidar-data.sh !!!Add_file_system_id_here!!!
 ```
 
 - Set the **Working Directory** to /tmp
