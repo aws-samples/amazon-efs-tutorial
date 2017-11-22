@@ -17,9 +17,12 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ---
 
 ### Table of Contents  
-[Tutorials](#tutorials)
+[Tutorials](#tutorials) 
+
 [Create a file system](#1-create-a-file-system) 
-[Performance](#2-performance)
+
+[Performance](#2-performance) 
+
 [Scale-out](#3-scale-out) 
 
 ---
