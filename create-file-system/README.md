@@ -30,20 +30,12 @@ If a key pair has not been previously created in your account, please refer to [
 
 Verify that the key pair is created in the same AWS region you will use for the tutorial.
 
-
-### The Environment
-
-This tutorial will create an Amazon Virtual Private Cloud (VPC) and an Amazon Elastic File System (EFS) using AWS Cloudformation templates. The Cloudformation templates that create the EFS file system will also add data and grow the file system.
-
-Each instance will download all S3 objects from the public dataset https://aws.amazon.com/public-datasets/dc-lidar/.
-
-For more information about this dataset, please refer to http://geospatial.dcgis.dc.gov/templates/dcfinder/s2.html?appid=62c9607bcfb349d5988e39390d50e995
-
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
 ## Tutorial
 
-### Step 1: Create Amazon Virtual Private Cloud (Amazon VPC)
+### Step 1:
+### Create Amazon Virtual Private Cloud (Amazon VPC)
 
 > Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resouces created as a part of this tutorial.
 
