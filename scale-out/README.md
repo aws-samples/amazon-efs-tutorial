@@ -48,11 +48,11 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 1: Create Amazon EC2 Spot Fleet Role
 
-The first step involves creating IAM roles used to run and launch an Amazon EC2 spot fleet.
+> The first step involves creating IAM roles used to run and launch an Amazon EC2 spot fleet.
 
-    **1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
+**1.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
 
-**Step 2:** Select **Roles** on the left frame and select the **Create Role**
+**1.2** Select **Roles** on the left frame and select the **Create Role**
 
 **Step 3:** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
 
