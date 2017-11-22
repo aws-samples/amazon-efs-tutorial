@@ -246,19 +246,21 @@ It will take a few minutes for the Amazon EC2 Spot request to be accepted and fu
 
 **4.4.** Select **Run a command**
 
-**4.5.** Select **AWS-RunShellScript** as the **Command document**.
+**4.5.** Create a command using the following settings:
 
-**4.6.** Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
+- Select **AWS-RunShellScript** as the **Command document**.
 
-**4.7.** Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
+- Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
+
+- Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
 
 ```sh
 scale-out-tutorial-get-lidar-data.sh !!Add_file_system_id_here!!
 ```
 
-**4.8.** Set the **Working Directory** to /tmp
+- Set the **Working Directory** to /tmp
 
-**4.9.** Select **Run**
+- Select **Run**
 
 ### Step 5: Monitor the transfer
 
