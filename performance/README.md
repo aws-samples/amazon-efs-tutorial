@@ -86,7 +86,14 @@ This section will demonstrate that not all Amazon EC2 instance types are created
 - Select **Security Groups** on the left frame under **NETWORK & SECURITY** and select the default security group of your VPC.
 - Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
 
-### 1.2.  SSH into all three Amazon EC2 instances
+### 1.2.  SSH into one Amazon EC2 instance
+
+- Start with the t2.micro instance
+- Run the command in 1.3. below and wait for it to complete.
+- What happened after ~15GB was written?
+- Disconnect from that instance and do the same thing for the m4.large instance then the c4.2xlarge instance
+- What's the difference between all three instances?
+- Can you explain the performance results between the t2.micro instance and the m4.large instance?
 
 ### 1.3.  Use dd to write 20 GB of data to EFS from each instance
 Run this command against all three instances to create a 20 GB file on EFS and monitor network traffic and throughput in real-time
@@ -94,6 +101,7 @@ Run this command against all three instances to create a 20 GB file on EFS and m
 time dd if=/dev/zero of=/efs/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
 nload -u M
 ```
+
 ### 1.4.  Close all SSH sessions
 #
 #
