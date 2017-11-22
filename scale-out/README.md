@@ -54,7 +54,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 **1.2.** Select **Roles** on the left frame and select **Create Role**
 
-**1.3.** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
+**1.3.** Select **AWS Service** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
 
 **1.4.** Verify the **AmazonEC2SpotFleetRole** policy is listed and select **Next: Review**.
 
