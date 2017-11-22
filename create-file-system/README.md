@@ -38,6 +38,17 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 > Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
 
+#### Parameters
+
+- Select three (3) Availability Zones
+
+- Use default **Network Configuration** parameters
+
+- Select an existing Amazon EC2 key pair
+
+- Use the default NAT instance size
+
+
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
 | us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-create-vpc.yml) |
