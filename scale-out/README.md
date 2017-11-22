@@ -48,39 +48,39 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 1: Create Amazon EC2 Spot Fleet Role
 
-> The first step involves creating IAM roles used to run and launch an Amazon EC2 spot fleet.
+> This step involves creating an IAM role used to run and launch an Amazon EC2 spot fleet.
 
 **1.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
 
-**1.2** Select **Roles** on the left frame and select the **Create Role**
+**1.2.** Select **Roles** on the left frame and select **Create Role**
 
-**Step 3:** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
+**1.3.** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
 
-**Step 4:** Verify the **AmazonEC2SpotFleetRole** policy is listed and select **Next: Review**.
+**1.4.** Verify the **AmazonEC2SpotFleetRole** policy is listed and select **Next: Review**.
 
-**Step 5:** Give the role a name, like **efs-scale-out-tutorial-ec2-spot-fleet-role** and select **Create Role**.
+**1.5.** Give the role a name, like **efs-scale-out-tutorial-ec2-spot-fleet-role** and select **Create Role**.
 
-#### Step 2: Create Amazon EC2 Role
+### Step 2: Create Amazon EC2 Role
 
-The first step involves creating IAM roles used by the EC2 instances.
+> This step involves creating an IAM role used by the EC2 instances.
 
-**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
+**2.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
 
-**Step 2:** Select **Roles** on the left frame and select the **Create Role**.
+**2.2.** Select **Roles** on the left frame and select the **Create Role**.
 
-**Step 3:** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Role for Simple Systems Manager** as the use case. Select **Next: Permissions**.
+**2.3.** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Role for Simple Systems Manager** as the use case. Select **Next: Permissions**.
 
-**Step 4:** Verify the **AmazonEC2RoleforSSM** policy is listed and select **Next: Review**.
+**2.4.** Verify the **AmazonEC2RoleforSSM** policy is listed and select **Next: Review**.
 
-**Step 5:** Give the role a name, like **efs-scale-out-tutorial-ec2-instance-role** and select **Create Role**.
+**2.5.** Give the role a name, like **efs-scale-out-tutorial-ec2-instance-role** and select **Create Role**.
 
-**Step 6:** Find the role you just created by typing in it's name in the search field **efs-scale-out-tutorial-ec2-instance-role** and click the role's name link.
+**2.6.** Find the role you just created by typing in it's name in the search field **efs-scale-out-tutorial-ec2-instance-role** and click the role's name link.
 
-**Step 7:** Select the **+Add inline policy** link on the bottom right side of the window.
+**2.7.** Select the **+Add inline policy** link on the bottom right side of the window.
 
-**Step 8:** Select **Custom Policy** and **Select**.
+**2.8.** Select **Custom Policy** and **Select**.
 
-**Step 9:** Give the policy a name, like **efs-scale-out-tutorial-ec2-instance-policy** and paste the policy snippet below into the **Policy Document** field.
+**2.9.** Give the policy a name, like **efs-scale-out-tutorial-ec2-instance-policy** and paste the policy snippet below into the **Policy Document** field.
 
 ```sh
 {
@@ -105,15 +105,17 @@ The first step involves creating IAM roles used by the EC2 instances.
     ]
 }
 ```
-**Step 10:** Select **Validate Policy** to make sure the policy is valid. Select **Apply Policy**.
+**2.10.** Select **Validate Policy** to make sure the policy is valid. Select **Apply Policy**.
 
-#### Step 3: Create an Amazon EC2 Spot Request
+### Step 3: Create an Amazon EC2 Spot Request
 
-**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+> This step involves creating an Amazon EC2 Spot request
 
-**Step 2:** Select **Spot Instances** on the left frame under **INSTANCES** and select the **Request Spot Instances**
+**3.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
 
-**Step 3:** Create a Spot Instance Request using the following settings:
+**3.2.** Select **Spot Instances** on the left frame under **INSTANCES** and select the **Request Spot Instances**
+
+**3.3.** Create a Spot Instance Request using the following settings:
 
 **Select request type** section
 
@@ -232,59 +234,61 @@ Select **Launch**
 
 It will take a few minutes for the Amazon EC2 Spot request to be accepted and fulfilled. Before continuing, wait for all EC2 instances requested to show up in the EC2 console with the key:value pair **Name** : **Scale-out Tutorial**.
 
-#### Step 4: Use SSM to remotely start file transfer from Amazon S3 to Amazon EFS
+### Step 4: Use SSM to remotely start file transfer from Amazon S3 to Amazon EFS
 
-**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+> This step involves remotely running a script using SSM to start the transfer from S3 to EFS.
 
-**Step 2:** Select **Managed Instances** on the left frame under **SYSTEMS MANAGER SHARED RESOURCES** and select the **Request Spot Instances**
+**4.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
 
-**Step 3:** Verify all instances in the spot fleet are displayed. Instances should have the key:value pair **Name** : **Scale-out Tutorial**.
+**4.2.** Select **Managed Instances** on the left frame under **SYSTEMS MANAGER SHARED RESOURCES** and select the **Request Spot Instances**
 
-**Step 4:** Select **Run a command**
+**4.3.** Verify all instances in the spot fleet are displayed. Instances should have the key:value pair **Name** : **Scale-out Tutorial**.
 
-**Step 5:** Select **AWS-RunShellScript** as the **Command document**.
+**4.4.** Select **Run a command**
 
-**Step 6:** Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
+**4.5.** Select **AWS-RunShellScript** as the **Command document**.
 
-**Step 7:** Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
+**4.6.** Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
+
+**4.7.** Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
 
 ```sh
 scale-out-tutorial-get-lidar-data.sh !!Add_file_system_id_here!!
 ```
 
-**Step 8:** Set the **Working Directory** to /tmp
+**4.8.** Set the **Working Directory** to /tmp
 
-**Step 9:** Select **Run**
+**4.9.** Select **Run**
 
-#### Step 5: Monitor the transfer
+### Step 5: Monitor the transfer
 
-**Step 1:** Verify the script is executing on each EC2 instance
+**5.1.** Verify the script is executing on each EC2 instance
 Once the script has been successfully executed, the Name tag of each instance will change from **Scale-out Tutorial** to **Scale-out Tutorial  parallel s3 cp (running)**.
 
-**Step 2:** Monitor the total throughput to the EFS file system using CloudWatch
+**5.2.** Monitor the total throughput to the EFS file system using CloudWatch
 Select the CloudWatch dashboard for your EFS file system that was created in the **Create file system** tutorial.
 
-**Step 3:** Monitor for 10 minutes
+**5.3.** Monitor for 10 minutes
 Monitor the CloudWatch metrics for 10 minutes or so, looking at the **Throughput** & **IOPS** widgets. Optionally, you can SSH into one or more of the EC2 instances and monitor the throughput of that instance in realtime by running the script below on the instance.
 
 ```sh
 nload -u M
 ```
 
-#### Step 6: Terminate the EC2 Spot Request
+### Step 6: Terminate the EC2 Spot Request
 
-**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+**6.1.** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
 
-**Step 2:** Select **Spot Requests** on the left frame under **INSTANCES** and select the checkbox next to the request id you just created.
+**6.2.** Select **Spot Requests** on the left frame under **INSTANCES** and select the checkbox next to the request id you just created.
 
-**Step 3:** Select **Actions** then **Cancel Spot request**. Confirm the **Terminate instances** checkbox is checked and select **Confirm**.
+**6.3.** Select **Actions** then **Cancel Spot request**. Confirm the **Terminate instances** checkbox is checked and select **Confirm**.
 
 
 ## Having issues? - Want to save time?
 
 ### Launch the AWS CloudFormation Stack
 
-This AWS CloudFormation stack will automatically create the environment identified in Steps 1 - 3 above. You will still need to complete Steps 4 - 6 to remotely start the transfer, monitor the transfer, and delete the environment.
+This AWS CloudFormation stack will automatically create the environment identified in Steps 1 - 3 above. Steps 4 - 5 are also scripted out below and you can run those in a terminal session to remotely start the transfer of objects from Amazon S3 to Amazon EFS. You will still need to complete Step 6 to delete the environment.
 
 Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
 
