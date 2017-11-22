@@ -23,19 +23,268 @@ This tutorial is designed to help you better understand the distributed data sto
 
 ### Prerequisites
 
-The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack.
+* An AWS account with administrative level access
+* An Amazon EC2 key pair
+* An Amazon VPC
+* An Amazon EFS file system
+
+If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
+
+Verify that the key pair is created in the same AWS region you will use for the tutorial.
+
+If a VPC and EFS file system have not been previously created, please refer to [Create a File System tutorial](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/create-file-system)
 
 ### The Environment
 
-The AWS CloudFormation template will launch an EC2 Spot Fleet. Please use the recommended default instance type. The file system, whose id you entered as a CloudFormation parameter, will be automatically mounted to each EC2 instance. All instances will automatically register with EC2 SSM which will be used to remotely execute a script to download objects from Amazon S3.
+The tutorial steps will launch an EC2 Spot Fleet. Please use the recommended default instance type. All instances will automatically mount the Amazon EFS file system and register with EC2 SSM, which will be used to remotely execute a script to transfer objects from Amazon S3 to Amazon EFS in parallel.
 
 Each instance will download all S3 objects from the public dataset https://aws.amazon.com/public-datasets/dc-lidar/.
 
 For more information about this dataset, please refer to http://geospatial.dcgis.dc.gov/templates/dcfinder/s2.html?appid=62c9607bcfb349d5988e39390d50e995
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of launching this CloudFormation stack and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don’t continue to incur additional compute and storage charges.
+WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
+
+### Tutorial
+
+#### Step 1: Create Amazon EC2 Spot Fleet Role
+
+The first step involves creating IAM roles used to run and launch an Amazon EC2 spot fleet.
+
+**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
+
+**Step 2:** Select **Roles** on the left frame and select the **Create Role**
+
+**Step 3:** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Spot Fleet Role** as the use case. Select **Next: Permissions**.
+
+**Step 4:** Verify the **AmazonEC2SpotFleetRole** policy is listed and select **Next: Review**.
+
+**Step 5:** Give the role a name, like **efs-scale-out-tutorial-ec2-spot-fleet-role** and select **Create Role**.
+
+#### Step 2: Create Amazon EC2 Role
+
+The first step involves creating IAM roles used by the EC2 instances.
+
+**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the IAM service page
+
+**Step 2:** Select **Roles** on the left frame and select the **Create Role**.
+
+**Step 3:** Select **AWS Service.** as the type of trusted entity, **EC2** as the service that will use this role, and **EC2 Role for Simple Systems Manager** as the use case. Select **Next: Permissions**.
+
+**Step 4:** Verify the **AmazonEC2RoleforSSM** policy is listed and select **Next: Review**.
+
+**Step 5:** Give the role a name, like **efs-scale-out-tutorial-ec2-instance-role** and select **Create Role**.
+
+**Step 6:** Find the role you just created by typing in it's name in the search field **efs-scale-out-tutorial-ec2-instance-role** and click the role's name link.
+
+**Step 7:** Select the **+Add inline policy** link on the bottom right side of the window.
+
+**Step 8:** Select **Custom Policy** and **Select**.
+
+**Step 9:** Give the policy a name, like **efs-scale-out-tutorial-ec2-instance-policy** and paste the policy snippet below into the **Policy Document** field.
+
+```sh
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:CreateTags",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeNetworkInterfaceAttribute",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcAttribute",
+                "ec2:DescribeVpcs",
+                "elasticfilesystem:Describe*",
+                "kms:ListAliases"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
+```
+**Step 10:** Select **Validate Policy** to make sure the policy is valid. Select **Apply Policy**.
+
+#### Step 3: Create an Amazon EC2 Spot Request
+
+**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+
+**Step 2:** Select **Spot Instances** on the left frame under **INSTANCES** and select the **Request Spot Instances**
+
+**Step 3:** Create a Spot Instance Request using the following settings:
+
+**Select request type** section
+
+**Request type**: **Request**
+**Target capacity**: Select the size of the fleet (recommend 5)
+**AMI**: Select the latest Amazon Linus AMI (e.g. Amazon Linux AMI 2017.09.0.20170930 x86_64 HVM GP2)
+**Instance type(s)**: **r4.large**
+**Allocation strategy**: **Lowest price**
+**Network**: Select the appropriate VPC
+**Availability Zone**: **No preference (launch in cheapest Availability Zone)**
+**Maximum price** **Use automated bidding (recommended)**
+
+Select **Next**
+
+**Configure storage** section
+
+**Keep all defaults**
+
+**Set instance details** section
+
+**Monitoring**: **Enable CloudWatch detailed monitoring**
+**Tenancy**: **Default - run a shared hardware instance**
+**User data**: **As text** paste the cloud_config snippet below into the text box. IMPORTANT!! There is one placeholder in the script below that needs to be updated with the EFS file system id you want to use. In the **runcmd:** section replace ***Add_file_system_id_here*** with the file system id you want to use. **e.g. - filesystem=fs-123456af**
+
+```sh
+#cloud-config
+repo_update: true
+repo_upgrade: all
+
+packages:
+- parallel
+
+write_files: 
+- content: |
+    #!/bin/bash -xe
+    FILE_SYSTEM_ID=$1
+
+    # get instance-id, availability-zone, and region from intance metadata
+    instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+    availabilityzone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+    region=${availabilityzone:0:-1}
+
+    # wait for file system DNS name to be propagated
+    results=1
+    while [[ $results != 0 ]]; do
+      nslookup $FILE_SYSTEM_ID.efs.$region.amazonaws.com
+      results=$?
+      if [[ results = 1 ]]; then
+        sleep 30
+      fi
+    done
+
+    cd /$FILE_SYSTEM_ID/lidar/${instanceid}
+
+    # create threads variable
+    threads=$(($(nproc --all) * 8))
+
+    aws ec2 create-tags --resources ${instanceid} --tags "Key=Name,Value=Scale-out Tutorial parallel s3 cp (waiting)" --region ${region}
+    
+    # create a list of objecst to get
+    aws s3api list-objects --bucket dc-lidar-2015 --output text --query 'Contents[].{Key:Key}|[?contains(Key, `.las`) == `true`]|[?contains(Key, `.lasx`) == `false`]' | awk '{print "s3://dc-lidar-2015/" $1}' > /tmp/$FILE_SYSTEM_ID-dc-lidar-2015.txt
+
+    aws ec2 create-tags --resources ${instanceid} --tags "Key=Name,Value=Scale-out Tutorial parallel s3 cp (running)" --region ${region}
+
+    # get the s3 objects in parallel
+    sudo cat /tmp/$FILE_SYSTEM_ID-dc-lidar-2015.txt | parallel --will-cite -j ${threads} 'aws s3 cp {} .; grep -o ".\{8\}$"'
+
+    aws ec2 create-tags --resources ${instanceid} --tags "Key=Name,Value=Scale-out Tutorial parallel s3 cp (complete)" --region ${region}
+
+  path: /tmp/scale-out-tutorial-get-lidar-data.sh
+  permissions: 0777
+
+runcmd:
+# set variables
+- instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+- availabilityzone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+- region=${availabilityzone:0:-1}
+- filesystem=***Add_file_system_id_here***
+
+# installs
+- yum --enablerepo=epel install nload -y
+
+# make directories and mount file system
+- mkdir -p /${filesystem}
+- chown ec2-user:ec2-user /${filesystem}
+- echo "${filesystem}.efs.${!region}.amazonaws.com:/ /${filesystem} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" | sudo tee /etc/fstab
+- mount -a -t nfs4
+- mkdir -p /${filesystem}/lidar/${instanceid}
+
+# tag the instance
+- aws ec2 create-tags --resources ${instanceid} --tags "Key=Name,Value=Scale-out Tutorial" --region ${region}
+```
+
+**Instance tags**: Add the following Kay:Value pair
+**Key**: **Name**
+**Value**: **Scale-out Tutorial**
+
+**Set keypair and role** section
+
+**Key pair name**: Select an existing EC2 key pair
+**IAM instance profile**: Select the EC2 instance role you created in **Step 2** above. (e.g. **efs-scale-out-tutorial-ec2-instance-role**)
+
+**Manage firewall rules** section
+
+**Security groups**: Select a security group that has NFS (TCP 2049) inbound access to the file system's mount targets
+
+**auto-assign IPv4 Public IP**: **Use subnet setting (Enable)**
+
+Accept the defaults for the remaining settings on this page.
+
+Select **Review**
+
+Review all the settings.
+
+Select **Launch**
+
+It will take a few minutes for the Amazon EC2 Spot request to be accepted and fulfilled. Before continuing, wait for all EC2 instances requested to show up in the EC2 console with the key:value pair **Name** : **Scale-out Tutorial**.
+
+#### Step 4: Use SSM to remotely start file transfer from Amazon S3 to Amazon EFS
+
+**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+
+**Step 2:** Select **Managed Instances** on the left frame under **SYSTEMS MANAGER SHARED RESOURCES** and select the **Request Spot Instances**
+
+**Step 3:** Verify all instances in the spot fleet are displayed. Instances should have the key:value pair **Name** : **Scale-out Tutorial**.
+
+**Step 4:** Select **Run a command**
+
+**Step 5:** Select **AWS-RunShellScript** as the **Command document**.
+
+**Step 6:** Select **Specifying a Tag** as the **Select Targets by** option and select the key:value pair **Name** : **Scale-out Tutorial**.
+
+**Step 7:** Paste the command below into the **Commands** text box, replacing  !!Add_file_system_id_here!! with the your EFS file system id. (e.g. scale-out-tutorial-get-lidar-data.sh fs-123456af)
+
+```sh
+scale-out-tutorial-get-lidar-data.sh !!Add_file_system_id_here!!
+```
+
+**Step 8:** Set the **Working Directory** to /tmp
+
+**Step 9:** Select **Run**
+
+#### Step 5: Monitor the transfer
+
+**Step 1:** Verify the script is executing on each EC2 instance
+Once the script has been successfully executed, the Name tag of each instance will change from **Scale-out Tutorial** to **Scale-out Tutorial  parallel s3 cp (running)**.
+
+**Step 2:** Monitor the total throughput to the EFS file system using CloudWatch
+Select the CloudWatch dashboard for your EFS file system that was created in the **Create file system** tutorial.
+
+**Step 3:** Monitor for 10 minutes
+Monitor the CloudWatch metrics for 10 minutes or so, looking at the **Throughput** & **IOPS** widgets. Optionally, you can SSH into one or more of the EC2 instances and monitor the throughput of that instance in realtime by running the script below on the instance.
+
+```sh
+nload -u M
+```
+
+#### Step 6: Terminate the EC2 Spot Request
+
+**Step 1:** Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
+
+**Step 2:** Select **Spot Requests** on the left frame under **INSTANCES** and select the checkbox next to the request id you just created.
+
+**Step 3:** Select **Actions** then **Cancel Spot request**. Confirm the **Terminate instances** checkbox is checked and select **Confirm**.
+
+
+## Having issues? - Want to save time?
 
 ### Launch the AWS CloudFormation Stack
+
+This AWS CloudFormation stack will automatically create the environment identified in Steps 1 - 3 above. You will still need to complete Steps 4 - 6 to remotely start the transfer, monitor the transfer, and delete the environment.
 
 Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
 
@@ -59,18 +308,11 @@ aws ssm describe-instance-information --query "InstanceInformationList[*]" --out
 ## Remotely execute script to download objects from S3 to Amazon EFS
 Run this command to remotely execute the scale-out-tutorial-get-lidar-data.sh script which will download all objects from the DC-LiDAR public dataset to the Amazon EFS file system specified in the CloudFormation template parameters.
 ```sh
-sh_command_id=$(aws ssm send-command --targets "Key=tag:Name,Values=Scale-out Tutorial" --document-name "AWS-RunShellScript" --comment "Scale-out Tutorial" --parameters commands=/tmp/scale-out-tutorial-get-lidar-data.sh --output text --query "Command.CommandId")
+aws ssm send-command --targets "Key=tag:Name,Values=Scale-out Tutorial" --document-name "AWS-RunShellScript" --comment "Scale-out Tutorial" --parameters commands=/tmp/scale-out-tutorial-get-lidar-data.sh --output text --query "Command.CommandId"
 ```
 
 ## Verify the script is executing on each EC2 instance
 Once the script has been successfully executed, the Name tag of each instance will change from 'Scale-out Tutorial' to 'Scale-out Tutorial  parallel s3 cp (running)'
-
-## Monitor the total throughput to the EFS file system using CloudWatch
-Select the File System
-Select the TotalIOBytes metric
-Change the Statistic to Sum
-Change the Period to 1 Minute
-To calculate the throughput, take the sum of all bytes within a period (1 minute) and divide it by the number of seconds in that period (e.g. 60 seconds).
 
 ## Delete the CloudFormation stack
 Delete the cloud formation stack to terminate all EC2 instances in the fleet.
