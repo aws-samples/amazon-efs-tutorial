@@ -117,28 +117,28 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 **3.3.** Create a Spot Instance Request using the following settings:
 
-- **Select request type** section
+**Select request type** section
 
 - **Request type**: **Request**
-**Target capacity**: Select the size of the fleet (recommend 5)
-**AMI**: Select the latest Amazon Linus AMI (e.g. Amazon Linux AMI 2017.09.0.20170930 x86_64 HVM GP2)
-**Instance type(s)**: **r4.large**
-**Allocation strategy**: **Lowest price**
-**Network**: Select the appropriate VPC
-**Availability Zone**: **No preference (launch in cheapest Availability Zone)**
-**Maximum price** **Use automated bidding (recommended)**
+- **Target capacity**: Select the size of the fleet (recommend 5)
+- **AMI**: Select the latest Amazon Linus AMI (e.g. Amazon Linux AMI 2017.09.0.20170930 x86_64 HVM GP2)
+- **Instance type(s)**: **r4.large**
+- **Allocation strategy**: **Lowest price**
+- **Network**: Select the appropriate VPC
+- **Availability Zone**: **No preference (launch in cheapest Availability Zone)**
+- **Maximum price** **Use automated bidding (recommended)**
 
-Select **Next**
+- Select **Next**
 
 **Configure storage** section
 
-**Keep all defaults**
+- **Keep all defaults**
 
-**Set instance details** section
+- **Set instance details** section
 
-**Monitoring**: **Enable CloudWatch detailed monitoring**
-**Tenancy**: **Default - run a shared hardware instance**
-**User data**: **As text** paste the cloud_config snippet below into the text box. IMPORTANT!! There is one placeholder in the script below that needs to be updated with the EFS file system id you want to use. In the **runcmd:** section replace ***Add_file_system_id_here*** with the file system id you want to use. **e.g. - filesystem=fs-123456af**
+- **Monitoring**: **Enable CloudWatch detailed monitoring**
+- **Tenancy**: **Default - run a shared hardware instance**
+- **User data**: **As text** paste the cloud_config snippet below into the text box. IMPORTANT!! There is one placeholder in the script below that needs to be updated with the EFS file system id you want to use. In the **runcmd:** section replace ***Add_file_system_id_here*** with the file system id you want to use. **e.g. - filesystem=fs-123456af**
 
 ```sh
 #cloud-config
@@ -209,28 +209,28 @@ runcmd:
 - aws ec2 create-tags --resources ${instanceid} --tags "Key=Name,Value=Scale-out Tutorial" --region ${region}
 ```
 
-**Instance tags**: Add the following Kay:Value pair
-**Key**: **Name**
-**Value**: **Scale-out Tutorial**
+- **Instance tags**: Add the following Kay:Value pair
+- **Key**: **Name**
+- **Value**: **Scale-out Tutorial**
 
 **Set keypair and role** section
 
-**Key pair name**: Select an existing EC2 key pair
-**IAM instance profile**: Select the EC2 instance role you created in **Step 2** above. (e.g. **efs-scale-out-tutorial-ec2-instance-role**)
+- **Key pair name**: Select an existing EC2 key pair
+- **IAM instance profile**: Select the EC2 instance role you created in **Step 2** above. (e.g. **efs-scale-out-tutorial-ec2-instance-role**)
 
 **Manage firewall rules** section
 
-**Security groups**: Select a security group that has NFS (TCP 2049) inbound access to the file system's mount targets
+- **Security groups**: Select a security group that has NFS (TCP 2049) inbound access to the file system's mount targets
 
-**auto-assign IPv4 Public IP**: **Use subnet setting (Enable)**
+- **auto-assign IPv4 Public IP**: **Use subnet setting (Enable)**
 
-Accept the defaults for the remaining settings on this page.
+- Accept the defaults for the remaining settings on this page.
 
-Select **Review**
+- Select **Review**
 
-Review all the settings.
+- Review all the settings.
 
-Select **Launch**
+- Select **Launch**
 
 It will take a few minutes for the Amazon EC2 Spot request to be accepted and fulfilled. Before continuing, wait for all EC2 instances requested to show up in the EC2 console with the key:value pair **Name** : **Scale-out Tutorial**.
 
