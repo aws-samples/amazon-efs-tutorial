@@ -34,10 +34,9 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ## Tutorial
 
-### Step 1:
-### Create Amazon Virtual Private Cloud (Amazon VPC)
+### Step 1: Create an Amazon Virtual Private Cloud (Amazon VPC)
 
-> Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resouces created as a part of this tutorial.
+> Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
@@ -51,7 +50,14 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
 
-> Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will: 1) create a file system with data; 2) create AWS CloudWatch alarms to alert when burst credit balance thresholds are breached; 3) create CloudWatch dashboard with metrics and alarms. This file system will be used in the **Performance** and **Scale-out** tutorials.
+> Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
+- create an Amazon EFS file system with data
+- create AWS CloudWatch alarms to alert when the burst credit balance thresholds are breached
+- create AWS CloudWatch dashboard with metrics and alarms
+
+This file system will be used in the **Performance** and **Scale-out** tutorials.
+
+Accept all parameter defaults.
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
