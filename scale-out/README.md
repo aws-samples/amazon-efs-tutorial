@@ -290,7 +290,7 @@ nload -u M
 
 ### Launch the AWS CloudFormation Stack
 
-This AWS CloudFormation stack will automatically create the environment identified in Steps 1 - 3 above. Steps 4 - 5 are also scripted out below and you can run those in a terminal session to remotely start the transfer of objects from Amazon S3 to Amazon EFS. You will still need to complete Step 6 to delete the environment.
+This AWS CloudFormation stack will automatically create the environment created in Steps 1 - 3 above. Steps 4 - 5 are also scripted out below and you can run those in a terminal session. You will still need to complete Step 6 to delete the environment when you're finished with the tutorial.
 
 Click the  ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/deploy_to_aws_20171004_v2.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
 
