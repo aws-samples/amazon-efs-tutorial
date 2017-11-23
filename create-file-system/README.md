@@ -65,19 +65,24 @@ Click on the ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east
 ---
 
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
-
 #### Parameters
+
 - Use default parameters
+
+---
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
-#
-> Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
+
+---
+
+Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
 - create an Amazon EFS file system with data
 - create AWS CloudWatch alarms to alert when the burst credit balance thresholds are breached
 - create AWS CloudWatch dashboard with metrics and alarms
 This file system will be used in the **Performance** and **Scale-out** tutorials.
 
+
 | AWS Region Code | Name | Launch |
-| --- | --- | --- 
+| :--- | :--- | :--- 
 | us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 | us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 | us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
@@ -85,21 +90,20 @@ This file system will be used in the **Performance** and **Scale-out** tutorials
 | eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-file-system-master.yml) |
 
+---
 
 ## Next tutorial
-
 ### Click on the link below to go to the next Amazon EFS tutorial
 
 | Tutorial | Link
 | --- | ---
 | **Performance** | [![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-tutorial-button-20171120.png)](https://github.com/aws-samples/amazon-efs-tutorial/tree/master/performance) |
 
-
+---
 ## Bonus
-
 ### Individual CloudFormation Templates for existing Amazon EFS file systems
 
-> Below are the unnested CloudFormation templates from above that can be run individually against an existing file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
+Below are the unnested CloudFormation templates from above that can be run individually against an existing file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
 
 - adding data to grow a file system
 - creating CloudWatch alarms to monitor burst credit balance and a CloudWatch dashboard with widgets for the burst credit balance alarms, and other important file system metrics, including a custom metric for file system size
