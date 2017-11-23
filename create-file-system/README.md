@@ -34,6 +34,8 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ## Tutorial
 
+---
+
 ### Step 1: Create an Amazon Virtual Private Cloud (Amazon VPC)
 
 #### Parameters
@@ -50,9 +52,9 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
 
 #
-#
+
 > Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
-#
+
 #
 
 | AWS Region Code | Name | Launch |
@@ -65,17 +67,19 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/deploy_to_aws_20171004_v2.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/amazon-elastic-file-system/tutorial/create-file-system/efs-create-vpc.yml) |
 
 
+---
+
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
 
+#### Parameters
+- Use default parameters
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
+#
 > Click on the link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
-
 - create an Amazon EFS file system with data
 - create AWS CloudWatch alarms to alert when the burst credit balance thresholds are breached
 - create AWS CloudWatch dashboard with metrics and alarms
-
 This file system will be used in the **Performance** and **Scale-out** tutorials.
-
-Accept all parameter defaults.
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
