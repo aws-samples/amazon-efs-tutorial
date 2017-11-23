@@ -67,10 +67,20 @@ Click on the ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
 #### Parameters
 
-- Use default parameters
+- Add **100** GiB of data
+
+- Select an existing key pair
+
+- Select the default security group of the VPC created in **Step 1** above
+
+- Select three (3) Availability Zones of the VPC created in **Step 1** above
+
+- Add an email address to the **SNS Email Address** field that will receive AWS CloudWatch alarm notifications
+
+- Accept all other parameter defaults
 
 ---
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-file-system.png)
 
 ---
 
@@ -106,7 +116,7 @@ This file system will be used in the **Performance** and **Scale-out** tutorials
 Below are the unnested CloudFormation templates from above that can be run individually against an existing file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
 
 - adding data to grow a file system
-- creating CloudWatch alarms to monitor burst credit balance and a CloudWatch dashboard with widgets for the burst credit balance alarms, and other important file system metrics, including a custom metric for file system size
+- creating CloudWatch alarms to monitor burst credit balance and a CloudWatch dashboard with widgets for the burst credit balance alarms, and other important file system metrics, including a custom metric for file system size (this has the next two tools combined into one)
 - creating just the CloudWatch alarms to monitor burst credit balance
 - creating just the CloudWatch dasboard with widgets for important file system metrics, including a file system size custom  metric
 
