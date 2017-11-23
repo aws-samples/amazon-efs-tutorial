@@ -33,13 +33,7 @@ Verify that the key pair is created in the same AWS region you will use for the 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
 ## Tutorial
-
-
-
 ### Step 1: Create an Amazon Virtual Private Cloud (Amazon VPC)
-
-
-
 #### Parameters
 
 - Select three (3) Availability Zones
@@ -50,9 +44,9 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 - Use the default NAT instance size
 
-#
+---
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc-2.png)
-#
+---
    Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial.
 
 #
