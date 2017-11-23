@@ -132,12 +132,14 @@ The email address entered as an input parameter will automatically be subscribed
 
 Verify all four CloudWatch alarms have been created. See the **AWS Resources** section below for the alarm names.
 
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-alarms.png)
+
 ### Step 5: Verify the EC2 instances terminate after a few minutes
 
 Two instances are launched from separate Auto Scaling groups.
 
 - The EC2 instance will automatically terminate once the script runs that calcualtes the burst credit balance thresholds.
-- The EC2 instance will automatically terminate once the script runs that add data to grow the file system.
+- The EC2 instance will automatically terminate once the script runs that adds data to grow the file system.
 
 
 ### AWS Resources
