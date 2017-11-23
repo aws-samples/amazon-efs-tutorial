@@ -38,7 +38,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 - Select three (3) Availability Zones
 
-- Use default **Network Configuration** parameters
+- Use default Network Configuration parameters
 
 - Select an existing Amazon EC2 key pair
 
@@ -67,15 +67,15 @@ Click on the ![cloudformation-launch-stack](https://s3.amazonaws.com/aws-us-east
 ### Step 2: Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
 #### Parameters
 
-- Add **100** GiB of data
+- Add 100 GiB of data
 
 - Select an existing key pair
 
-- Select the default security group of the VPC created in **Step 1** above
+- Select the default security group of the VPC created in Step 1 above
 
-- Select three (3) Availability Zones of the VPC created in **Step 1** above
+- Select three (3) Availability Zones of the VPC created in Step 1 above
 
-- Add an email address to the **SNS Email Address** field that will receive AWS CloudWatch alarm notifications
+- Add an email address to the SNS Email Address field that will receive AWS CloudWatch alarm notifications
 
 - Accept all other parameter defaults
 
