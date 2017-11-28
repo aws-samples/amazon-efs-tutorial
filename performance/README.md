@@ -352,7 +352,7 @@ The distributed data storage design of Amazon EFS enables high levels of availab
 
 | Tutorial | Link
 | --- | ---
-| **Scale-out** | [![](/images/efs_tutorial.png)](/tutorial/scale-out) |
+| **Scale-out** | [![](/images/efs_tutorial.png)](/scale-out) |
 
 ---
 
