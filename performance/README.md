@@ -36,7 +36,7 @@ This tutorial is divided into four sections.
 
 ### Prerequisites
 
-The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack. If you don't already have a file system you can use for this tutorial, click the link to go to the [***Create a file system***](/tutorial/create-file-system) tutorial.
+The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack. If you don't already have a file system you can use for this tutorial, click the link to go to the [***Create a file system***](/create-file-system) tutorial.
 
 ### The Environment
 
