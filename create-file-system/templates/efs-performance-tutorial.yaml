@@ -1,0 +1,935 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Amazon EFS performance tutorial - Creates multiple Auto Scaling groups & mounts an existing EFS file system
+
+Metadata:
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File System Parameters
+      Parameters:
+        - ElasticFileSystem
+    - Label:
+        default: EC2 Parameters
+      Parameters:
+        - KeyName
+        - SecurityGroup
+        - InstanceType0
+        - InstanceType1
+        - InstanceType2
+        - NumberOfSubnets
+        - Subnet
+    ParameterLabels:
+      ElasticFileSystem:
+        default: Amazon EFS File System
+      InstanceType0:
+        default: Instance Type 0
+      InstanceType1:
+        default: Instance Type 1
+      InstanceType2:
+        default: Instance Type 2
+      KeyName:
+        default: Existing Key Pair
+      NumberOfSubnets:
+        default: Number of subnets
+      SecurityGroup:
+        default: Security Group
+      Subnet:
+        default: Subnets
+
+Parameters:
+
+  ElasticFileSystem:
+    AllowedPattern: ^(fs-)([a-z0-9]{8})$
+    Description: The Amazon EFS file system id.
+    Type: String
+  KeyName:
+    AllowedPattern: ^([a-zA-Z0-9 @.`~!#$%^&*()_+,\\-])*$
+    ConstraintDescription: Must be letters (upper or lower), numbers, and special characters.
+    Description: Name of an EC2 KeyPair. Your EC2 instances will launch with this KeyPair.
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType0:
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.16xlarge
+      - i3.large
+      - i3.xlarge
+      - i3.2xlarge
+      - i3.4xlarge
+      - i3.8xlarge
+      - i3.16xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - p2.xlarge
+      - p2.8xlarage
+      - p2.16xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - g3.16xlarge
+      - f1.2xlarge
+      - f1.16xlarge
+      - x1.16xlarge
+      - x1.32xlarge
+    ConstraintDescription: Must be a valid Amazon EC2 instance type.
+    Default: t2.micro
+    Description: The Amazon EC2 instance type for Auto Scaling group 0.
+    Type: String
+  InstanceType1:
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.16xlarge
+      - i3.large
+      - i3.xlarge
+      - i3.2xlarge
+      - i3.4xlarge
+      - i3.8xlarge
+      - i3.16xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - p2.xlarge
+      - p2.8xlarage
+      - p2.16xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - g3.16xlarge
+      - f1.2xlarge
+      - f1.16xlarge
+      - x1.16xlarge
+      - x1.32xlarge
+    ConstraintDescription: Must be a valid Amazon EC2 instance type.
+    Default: m4.large
+    Description: The Amazon EC2 instance type for Auto Scaling group 1.
+    Type: String
+  InstanceType2:
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.16xlarge
+      - i3.large
+      - i3.xlarge
+      - i3.2xlarge
+      - i3.4xlarge
+      - i3.8xlarge
+      - i3.16xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - p2.xlarge
+      - p2.8xlarage
+      - p2.16xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - g3.16xlarge
+      - f1.2xlarge
+      - f1.16xlarge
+      - x1.16xlarge
+      - x1.32xlarge
+    ConstraintDescription: Must be a valid Amazon EC2 instance type.
+    Default: c4.2xlarge
+    Description: The Amazon EC2 instance type for Auto Scaling group 2.
+    Type: String
+  NumberOfSubnets:
+    AllowedValues:
+    - 3
+    Default: 3
+    Description: Number of subnets. This must match your selections in the list of Subnets below.
+    Type: String 
+  SecurityGroup:
+    Description: Select the EC2 security group that allows SSH access to the instance and NFS access to the EFS file system.
+    Type: AWS::EC2::SecurityGroup::Id
+  Subnet:
+    Description: Select existing public subnets.
+    Type: List<AWS::EC2::Subnet::Id>
+
+Conditions:
+
+  MoreThan3AZ:
+    !Or [
+      !Equals [ !Ref 'AWS::Region', us-east-1 ],
+      !Equals [ !Ref 'AWS::Region', us-east-1 ]
+    ]
+  MoreThan2AZ:
+    !Or [
+      !Equals [ !Ref 'AWS::Region', us-east-2 ],
+      !Equals [ !Ref 'AWS::Region', us-west-2 ],
+      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
+      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
+      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
+      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
+    ]
+
+Mappings:
+
+  RegionMap:
+    ap-northeast-1:
+      AMI: ami-3bd3c45c
+    ap-northeast-2:
+      AMI: ami-e21cc38c
+    ap-south-1:
+      AMI: ami-47205e28
+    ap-southeast-1:
+      AMI: ami-77af2014
+    ap-southeast-2:
+      AMI: ami-10918173
+    ca-central-1:
+      AMI: ami-a7aa15c3
+    eu-central-1:
+      AMI: ami-82be18ed
+    eu-west-1:
+      AMI: ami-d7b9a2b1
+    eu-west-2:
+      AMI: ami-ed100689
+    sa-east-1:
+      AMI: ami-87dab1eb
+    us-east-1:
+      AMI: ami-a4c7edb2
+    us-east-2:
+      AMI: ami-8a7859ef
+    us-west-1:
+      AMI: ami-327f5352
+    us-west-2:
+      AMI: ami-6df1e514
+
+Resources:
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: efs-performance-tutorial
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+              - ec2:CreateTags
+              - ec2:DescribeAvailabilityZones
+              - ec2:DescribeNetworkInterfaceAttribute
+              - ec2:DescribeNetworkInterfaces
+              - ec2:DescribeSecurityGroups
+              - ec2:DescribeSubnets
+              - ec2:DescribeVpcAttribute
+              - ec2:DescribeVpcs
+              - elasticfilesystem:Describe*
+              - kms:ListAliases
+            Resource: '*'
+  AutoScalingGroup0:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Cooldown: 60
+      HealthCheckGracePeriod: 120
+      HealthCheckType: EC2
+      LaunchConfigurationName: !Ref LaunchConfiguration0
+      MaxSize: 1
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value: 'EFS Performance Tutorial - Launching...'
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+    CreationPolicy:
+      ResourceSignal:
+        Count: 0
+        Timeout: PT5M
+  LaunchConfiguration0:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          install_all_utilities:
+            - tools-install
+            - smallfile-install
+            - parallel-install
+            - fpart-install
+            - automake-1.14-install
+            - mcp-install
+        tools-install:
+          commands:
+            misctools-install:
+              command: yum --enablerepo=epel install nload sysstat ioping -y
+              ignoreErrors: false             
+            devtools-install:
+              command: yum groupinstall "Development Tools" -y
+        smallfile-install:
+          files:              
+            /tmp/smallfile-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/bengland2/smallfile.git
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            smallfile-install:
+              command: su -l ec2-user /tmp/smallfile-install.sh
+              ignoreErrors: false 
+        parallel-install:
+          files:              
+            /tmp/parallel-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            parallel-install:
+              command: /tmp/parallel-install.sh
+              ignoreErrors: false
+        fpart-install:
+          files:              
+            /tmp/fpart-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/martymac/fpart.git
+                  cd /home/ec2-user/fpart
+                  autoreconf -i
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            fpart-install:
+              command: su -l ec2-user /tmp/fpart-install.sh
+              ignoreErrors: false 
+        automake-1.14-install:
+          files:              
+            /tmp/automake-1.14-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user
+                  wget http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
+                  tar xvzf automake-1.14.tar.gz
+                  cd /home/ec2-user/automake-1.14
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            automake-remove:
+              command: yum remove automake -y
+              ignoreErrors: false 
+            automake-1.14-install:
+              command: su -l ec2-user /tmp/automake-1.14-install.sh
+              ignoreErrors: false
+        mcp-install:
+          files:              
+            /tmp/mcp-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/pkolano/mutil.git
+                  wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.22.tar.xz
+                  tar xvf coreutils-8.22.tar.xz
+                  cd /home/ec2-user/coreutils-8.22
+                  patch -p1 < /home/ec2-user/mutil/patch/coreutils-8.22.patch
+                  ./configure
+                  make
+                  sudo cp src/cp /usr/local/bin/mcp
+                  sudo cp src/md5sum /usr/local/bin/msum
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            mcp-install:
+              command: su -l ec2-user /tmp/mcp-install.sh
+              ignoreErrors: false
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/xvdf
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 20
+            VolumeType: gp2
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
+      InstanceMonitoring: true
+      InstanceType: !Ref InstanceType0
+      KeyName: !Ref KeyName
+      SecurityGroups:
+      - !Ref SecurityGroup
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - git
+            - gcc
+
+            runcmd:
+            - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+            - efs_directory=/efs
+            - mkdir -p $efs_directory
+            - chown ec2-user:ec2-user $efs_directory
+            - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+            - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/dd/$instanceid         
+            - mkdir -p $efs_directory/tutorial/cp/$instanceid
+            - mkdir -p $efs_directory/tutorial/rsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/mcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/fpsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcpio/$instanceid
+            - chown ec2-user:ec2-user $efs_directory/tutorial/ -R
+            
+            - ebs_directory=/ebs
+            - mkdir $ebs_directory
+            - mkfs -t ext4 /dev/xvdf
+            - mount /dev/xvdf $ebs_directory
+            - mkdir -p $ebs_directory/tutorial/dd/$instanceid
+            - mkdir -p $ebs_directory/tutorial/smallfile
+            - mkdir -p $ebs_directory/tutorial/data-1m
+            - chown ec2-user:ec2-user $ebs_directory/tutorial/ -R
+
+            - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
+
+            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
+            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
+            - rm $ebs_directory/tutorial/smallfile/ -r
+
+            - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
+
+  AutoScalingGroup1:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Cooldown: 60
+      HealthCheckGracePeriod: 120
+      HealthCheckType: EC2
+      LaunchConfigurationName: !Ref LaunchConfiguration1
+      MaxSize: 1
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value: 'EFS Performance Tutorial - Launching...'
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+    CreationPolicy:
+      ResourceSignal:
+        Count: 0
+        Timeout: PT5M
+  LaunchConfiguration1:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          install_all_utilities:
+            - tools-install
+            - smallfile-install
+            - parallel-install
+            - fpart-install
+            - automake-1.14-install
+            - mcp-install
+        tools-install:
+          commands:
+            misctools-install:
+              command: yum --enablerepo=epel install nload sysstat ioping -y
+              ignoreErrors: false             
+            devtools-install:
+              command: yum groupinstall "Development Tools" -y
+        smallfile-install:
+          files:              
+            /tmp/smallfile-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/bengland2/smallfile.git
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            smallfile-install:
+              command: su -l ec2-user /tmp/smallfile-install.sh
+              ignoreErrors: false 
+        parallel-install:
+          files:              
+            /tmp/parallel-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            parallel-install:
+              command: /tmp/parallel-install.sh
+              ignoreErrors: false
+        fpart-install:
+          files:              
+            /tmp/fpart-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/martymac/fpart.git
+                  cd /home/ec2-user/fpart
+                  autoreconf -i
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            fpart-install:
+              command: su -l ec2-user /tmp/fpart-install.sh
+              ignoreErrors: false 
+        automake-1.14-install:
+          files:              
+            /tmp/automake-1.14-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user
+                  wget http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
+                  tar xvzf automake-1.14.tar.gz
+                  cd /home/ec2-user/automake-1.14
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            automake-remove:
+              command: yum remove automake -y
+              ignoreErrors: false 
+            automake-1.14-install:
+              command: su -l ec2-user /tmp/automake-1.14-install.sh
+              ignoreErrors: false
+        mcp-install:
+          files:              
+            /tmp/mcp-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/pkolano/mutil.git
+                  wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.22.tar.xz
+                  tar xvf coreutils-8.22.tar.xz
+                  cd /home/ec2-user/coreutils-8.22
+                  patch -p1 < /home/ec2-user/mutil/patch/coreutils-8.22.patch
+                  ./configure
+                  make
+                  sudo cp src/cp /usr/local/bin/mcp
+                  sudo cp src/md5sum /usr/local/bin/msum
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            mcp-install:
+              command: su -l ec2-user /tmp/mcp-install.sh
+              ignoreErrors: false
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/xvdf
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 20
+            VolumeType: gp2
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
+      InstanceMonitoring: true
+      InstanceType: !Ref InstanceType1
+      KeyName: !Ref KeyName
+      SecurityGroups:
+      - !Ref SecurityGroup
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - git
+            - gcc
+
+            runcmd:
+            - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+            - efs_directory=/efs
+            - mkdir -p $efs_directory
+            - chown ec2-user:ec2-user $efs_directory
+            - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+            - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/dd/$instanceid         
+            - mkdir -p $efs_directory/tutorial/cp/$instanceid
+            - mkdir -p $efs_directory/tutorial/rsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/mcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/fpsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcpio/$instanceid
+            - chown ec2-user:ec2-user $efs_directory/tutorial/ -R
+            
+            - ebs_directory=/ebs
+            - mkdir $ebs_directory
+            - mkfs -t ext4 /dev/xvdf
+            - mount /dev/xvdf $ebs_directory
+            - mkdir -p $ebs_directory/tutorial/dd/$instanceid
+            - mkdir -p $ebs_directory/tutorial/smallfile
+            - mkdir -p $ebs_directory/tutorial/data-1m
+            - chown ec2-user:ec2-user $ebs_directory/tutorial/ -R
+
+            - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
+
+            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
+            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
+            - rm $ebs_directory/tutorial/smallfile/ -r
+
+            - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
+
+  AutoScalingGroup2:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Cooldown: 60
+      HealthCheckGracePeriod: 120
+      HealthCheckType: EC2
+      LaunchConfigurationName: !Ref LaunchConfiguration2
+      MaxSize: 1
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value: 'EFS Performance Tutorial - Launching...'
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+    CreationPolicy:
+      ResourceSignal:
+        Count: 0
+        Timeout: PT5M
+  LaunchConfiguration2:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          install_all_utilities:
+            - tools-install
+            - smallfile-install
+            - parallel-install
+            - fpart-install
+            - automake-1.14-install
+            - mcp-install
+        tools-install:
+          commands:
+            misctools-install:
+              command: yum --enablerepo=epel install nload sysstat ioping -y
+              ignoreErrors: false             
+            devtools-install:
+              command: yum groupinstall "Development Tools" -y
+        smallfile-install:
+          files:              
+            /tmp/smallfile-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/bengland2/smallfile.git
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            smallfile-install:
+              command: su -l ec2-user /tmp/smallfile-install.sh
+              ignoreErrors: false 
+        parallel-install:
+          files:              
+            /tmp/parallel-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            parallel-install:
+              command: /tmp/parallel-install.sh
+              ignoreErrors: false
+        fpart-install:
+          files:              
+            /tmp/fpart-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/martymac/fpart.git
+                  cd /home/ec2-user/fpart
+                  autoreconf -i
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            fpart-install:
+              command: su -l ec2-user /tmp/fpart-install.sh
+              ignoreErrors: false 
+        automake-1.14-install:
+          files:              
+            /tmp/automake-1.14-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user
+                  wget http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
+                  tar xvzf automake-1.14.tar.gz
+                  cd /home/ec2-user/automake-1.14
+                  ./configure
+                  make
+                  sudo make install
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            automake-remove:
+              command: yum remove automake -y
+              ignoreErrors: false 
+            automake-1.14-install:
+              command: su -l ec2-user /tmp/automake-1.14-install.sh
+              ignoreErrors: false
+        mcp-install:
+          files:              
+            /tmp/mcp-install.sh:
+              content:
+                !Sub |
+                  #!/bin/bash -xe
+                  cd /home/ec2-user/
+                  git clone https://github.com/pkolano/mutil.git
+                  wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.22.tar.xz
+                  tar xvf coreutils-8.22.tar.xz
+                  cd /home/ec2-user/coreutils-8.22
+                  patch -p1 < /home/ec2-user/mutil/patch/coreutils-8.22.patch
+                  ./configure
+                  make
+                  sudo cp src/cp /usr/local/bin/mcp
+                  sudo cp src/md5sum /usr/local/bin/msum
+              mode: 000777
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            mcp-install:
+              command: su -l ec2-user /tmp/mcp-install.sh
+              ignoreErrors: false
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/xvdf
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 20
+            VolumeType: gp2
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
+      InstanceMonitoring: true
+      InstanceType: !Ref InstanceType2
+      KeyName: !Ref KeyName
+      SecurityGroups:
+      - !Ref SecurityGroup
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - git
+            - gcc
+
+            runcmd:
+            - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+            - efs_directory=/efs
+            - mkdir -p $efs_directory
+            - chown ec2-user:ec2-user $efs_directory
+            - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+            - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/dd/$instanceid         
+            - mkdir -p $efs_directory/tutorial/cp/$instanceid
+            - mkdir -p $efs_directory/tutorial/rsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/mcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcp/$instanceid
+            - mkdir -p $efs_directory/tutorial/fpsync/$instanceid
+            - mkdir -p $efs_directory/tutorial/parallelcpio/$instanceid
+            - chown ec2-user:ec2-user $efs_directory/tutorial/ -R
+            
+            - ebs_directory=/ebs
+            - mkdir $ebs_directory
+            - mkfs -t ext4 /dev/xvdf
+            - mount /dev/xvdf $ebs_directory
+            - mkdir -p $ebs_directory/tutorial/dd/$instanceid
+            - mkdir -p $ebs_directory/tutorial/smallfile
+            - mkdir -p $ebs_directory/tutorial/data-1m
+            - chown ec2-user:ec2-user $ebs_directory/tutorial/ -R
+
+            - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
+
+            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
+            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
+            - rm $ebs_directory/tutorial/smallfile/ -r
+
+            - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}

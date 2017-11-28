@@ -1,0 +1,268 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates Amazon EFS Dashboard with file system size custom metric
+
+Metadata:
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File System Parameters
+      Parameters:
+        - ElasticFileSystem
+        - DeletionPolicy
+    ParameterLabels:
+      DeletionPolicy:
+        default: Retain or Delete
+      ElasticFileSystem:
+        default: Amazon EFS File System
+
+Parameters:
+
+  DeletionPolicy:
+    AllowedValues:
+      - Delete
+      - Retain
+    Default: Delete
+    Description: Retain or delete the Amazon EFS Dashboard after CloudFormation stack deletion.
+    Type: String
+  ElasticFileSystem:
+    AllowedPattern: ^(fs-)([a-z0-9]{8})$
+    Description: Amazon EFS file system id.
+    Type: String
+
+Conditions:
+
+  Delete:
+    !Equals [ !Ref DeletionPolicy, Delete ]
+  Retain:
+    !Equals [ !Ref DeletionPolicy, Retain ]
+
+Resources:
+
+  EfsDashboardRetain:
+    Type: AWS::CloudWatch::Dashboard
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties:
+      DashboardName: !Ref ElasticFileSystem
+      DashboardBody:
+        {"Fn::Join":["",['{"widgets":[{"type":"metric","x":0,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Sum","period":60}]],"region":"',!Ref 'AWS::Region','","title":"Throughput"}},{"type":"metric","x":18,"y":0,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/EFS","PermittedThroughput","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum"}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":6,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"SampleCount","period":60}]],"region":"',!Ref 'AWS::Region','","title":"IOPS"}},{"type":"metric","x":12,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","BurstCreditBalance","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum","period":60}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":18,"y":3,"width":6,"height":3,"properties":{"view":"singleValue","metrics":[[ "Custom/EFS", "SizeInBytes", "FileSystemId","',!Ref 'ElasticFileSystem','"]],"region":"',!Ref 'AWS::Region','"}}]}']]}
+
+  EfsDashboardDelete:
+    Type: AWS::CloudWatch::Dashboard
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties:
+      DashboardName: !Ref ElasticFileSystem
+      DashboardBody:
+        {"Fn::Join":["",['{"widgets":[{"type":"metric","x":0,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Sum","period":60}]],"region":"',!Ref 'AWS::Region','","title":"Throughput"}},{"type":"metric","x":18,"y":0,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/EFS","PermittedThroughput","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum"}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":6,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"SampleCount","period":60}]],"region":"',!Ref 'AWS::Region','","title":"IOPS"}},{"type":"metric","x":12,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","BurstCreditBalance","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum","period":60}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":18,"y":3,"width":6,"height":3,"properties":{"view":"singleValue","metrics":[[ "Custom/EFS", "SizeInBytes", "FileSystemId","',!Ref 'ElasticFileSystem','"]],"region":"',!Ref 'AWS::Region','"}}]}']]}
+
+  EfsSizeMonitorEventRetain:
+    Type: AWS::Events::Rule
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
+      Name: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor-scheduled-event' ] ]
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt EfsSizeMonitorFunctionRetain.Arn
+          Id: 1
+
+  EfsSizeMonitorEventDelete:
+    Type: AWS::Events::Rule
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
+      Name: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor-scheduled-event' ] ]
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt EfsSizeMonitorFunctionDelete.Arn
+          Id: 1
+
+  EfsLambdaPermissionRetain: 
+    Type: AWS::Lambda::Permission
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      FunctionName: !Ref EfsSizeMonitorFunctionRetain
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EfsSizeMonitorEventRetain.Arn
+
+  EfsLambdaPermissionDelete: 
+    Type: AWS::Lambda::Permission
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      FunctionName: !Ref EfsSizeMonitorFunctionDelete
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EfsSizeMonitorEventDelete.Arn
+
+  EfsSizeMonitorFunctionRetain:
+    Type: AWS::Lambda::Function
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import os
+          import sys
+
+          def handler(event, context):
+              if not os.environ.get('filesystemid'):
+                  print "Unable to get the environment variable filesystemid"
+                  sys.exit(1)
+              else:
+                  filesystemid = os.environ.get('filesystemid')
+
+              if not os.environ.get('region'):
+                  print "Unable to get the environment variable region"
+                  sys.exit(1)
+              else:
+                  region = os.environ.get('region')
+
+              def efs_get_size():
+                  client = boto3.client('efs')
+                  response = client.describe_file_systems(FileSystemId=filesystemid)
+                  k = response['FileSystems'][0]['SizeInBytes']['Value']
+                  return k
+
+              def cloudwatch_put_metric():
+                  client = boto3.client('cloudwatch')
+                  client.put_metric_data(
+                      MetricData=[
+                          {
+                              'MetricName': 'SizeInBytes',
+                              'Dimensions': [
+                                  {
+                                      'Name': 'FileSystemId',
+                                      'Value': filesystemid
+                                  },
+                              ],
+                              'Unit': 'None',
+                              'Value': efs_get_size()
+                          },
+                      ],
+                      Namespace='Custom/EFS'
+                  )
+                  print('CloudWatch metric SizeInBytes sucessfully updated.')
+
+              cloudwatch_put_metric()
+      Description: Lambda function to update the SizeInBytes EFS CloudWatch metric
+      Environment:
+        Variables:
+          filesystemid: !Ref ElasticFileSystem
+          region: !Ref 'AWS::Region'
+      FunctionName: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor' ] ]
+      Handler: index.handler
+      Role: !GetAtt LambdaRoleRetain.Arn
+      Runtime: python2.7
+      Timeout: 60
+
+  EfsSizeMonitorFunctionDelete:
+    Type: AWS::Lambda::Function
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import os
+          import sys
+
+          def handler(event, context):
+              if not os.environ.get('filesystemid'):
+                  print "Unable to get the environment variable filesystemid"
+                  sys.exit(1)
+              else:
+                  filesystemid = os.environ.get('filesystemid')
+
+              if not os.environ.get('region'):
+                  print "Unable to get the environment variable region"
+                  sys.exit(1)
+              else:
+                  region = os.environ.get('region')
+
+              def efs_get_size():
+                  client = boto3.client('efs')
+                  response = client.describe_file_systems(FileSystemId=filesystemid)
+                  k = response['FileSystems'][0]['SizeInBytes']['Value']
+                  return k
+
+              def cloudwatch_put_metric():
+                  client = boto3.client('cloudwatch')
+                  client.put_metric_data(
+                      MetricData=[
+                          {
+                              'MetricName': 'SizeInBytes',
+                              'Dimensions': [
+                                  {
+                                      'Name': 'FileSystemId',
+                                      'Value': filesystemid
+                                  },
+                              ],
+                              'Unit': 'None',
+                              'Value': efs_get_size()
+                          },
+                      ],
+                      Namespace='Custom/EFS'
+                  )
+                  print('CloudWatch metric SizeInBytes sucessfully updated.')
+
+              cloudwatch_put_metric()
+      Description: Lambda function to update the SizeInBytes EFS CloudWatch metric
+      Environment:
+        Variables:
+          filesystemid: !Ref ElasticFileSystem
+          region: !Ref 'AWS::Region'
+      FunctionName: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor' ] ]
+      Handler: index.handler
+      Role: !GetAtt LambdaRoleDelete.Arn
+      Runtime: python2.7
+      Timeout: 60
+
+  LambdaRoleRetain:
+    Type: AWS::IAM::Role
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
+
+  LambdaRoleDelete:
+    Type: AWS::IAM::Role
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess

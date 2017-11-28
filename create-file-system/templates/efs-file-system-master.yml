@@ -1,0 +1,434 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Amazon Elastic File System - Creates a file system with data and optional dashboard and alarms
+
+Metadata:
+
+  AWS::CloudFormation::Interface:
+
+    ParameterGroups:
+    - Label:
+        default: Create Amazon EFS File System
+      Parameters:
+        - Growth
+        - InstanceType0
+        - KeyName
+        - Success
+        - DeletionPolicyEfs
+        - PerformanceMode
+        - EncryptionState
+        - Cmk
+        - SecurityGroup
+        - NumberOfSubnets
+        - Subnet
+    - Label:
+        default: Create EFS Burst Credit Balance CloudWatch Alarms
+      Parameters:
+        - CreateAlarms
+        - DeletionPolicyAlarms
+        - WarningThreshold
+        - CriticalThreshold
+        - EmailAddress
+    - Label:
+        default: Create EFS CloudWatch Dashboard
+      Parameters:
+        - CreateDashboard
+        - DeletionPolicyDashboard
+
+    ParameterLabels:
+      Cmk:
+        default: KMS Key
+      CreateAlarms:
+        default: Create Alarms
+      CreateDashboard:
+        default: Create Dashboard
+      CriticalThreshold:
+        default: Burst Credit Balance Critical Threshold (Minutes)
+      DeletionPolicyAlarms:
+        default: Retain or Delete Alarms
+      DeletionPolicyEfs:
+        default: Retain or Delete File system
+      DeletionPolicyDashboard:
+        default: Retain or Delete Dashboard
+      EmailAddress:
+        default: SNS Email Address
+      EncryptionState:
+        default: Encryption state
+      Growth:
+        default: Add data (GiB)
+      InstanceType0:
+        default: Instance Type
+      KeyName:
+        default: Existing Key Pair
+      NumberOfSubnets:
+        default: Number of subnets
+      PerformanceMode:
+        default: Performance Mode
+      SecurityGroup:
+        default: Security Group
+      Subnet:
+        default: Subnets
+      Success:
+        default: "Success on:"
+      WarningThreshold:
+        default: Burst Credit Balance Warning Threshold (Minutes)
+
+Parameters:
+
+  Cmk:
+    Description: An existing AWS KMS Customer Master Key (CMK) to encrypt file system.
+    Type: String
+  CreateAlarms:
+    AllowedValues:
+      - Yes
+      - No
+    Default: Yes
+    Description: Create burst credit balance alarms.
+    Type: String
+  CreateDashboard:
+    AllowedValues:
+      - Yes
+      - No
+    Default: Yes
+    Description: Create dashboard.
+    Type: String
+  CriticalThreshold:
+    AllowedPattern: ^[0-9]+$
+    ConstraintDescription: Must be an integer.
+    Default: 60
+    Description: Send critical alarm this minutes before burst credit balance is zero.
+    Type: String
+  EmailAddress:
+    AllowedPattern: ^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+    Description: The email address for SNS notifications.
+    Type: String
+  EncryptionState:
+    AllowedValues:
+      - Encrypted
+      - Unencrypted
+    Default: Encrypted
+    Description: Create an encrypted or unencrypted file system.
+    Type: String
+  DeletionPolicyAlarms:
+    AllowedValues:
+      - Delete
+      - Retain
+    Default: Delete
+    Description: Retain or delete the burst credit balance alarms after CloudFormation stack deletion.
+    Type: String
+  DeletionPolicyDashboard:
+    AllowedValues:
+      - Delete
+      - Retain
+    Default: Delete
+    Description: Retain or delete the dashboard after CloudFormation stack deletion.
+    Type: String
+  DeletionPolicyEfs:
+    AllowedValues:
+      - Delete
+      - Retain
+    Default: Delete
+    Description: Retain or delete the Amazon EFS resources after CloudFormation stack deletion.
+    Type: String
+  Growth:
+    ConstraintDescription: Must be an integer.
+    Description: Amount of dummy data (GiB) to add to the file system (max 6144 GiB). Amazon EFS storage charges apply.
+    MaxValue: 6144
+    MinValue: 0
+    Type: Number
+  InstanceType0:
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.16xlarge
+      - i3.large
+      - i3.xlarge
+      - i3.2xlarge
+      - i3.4xlarge
+      - i3.8xlarge
+      - i3.16xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - p2.xlarge
+      - p2.8xlarage
+      - p2.16xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - g3.16xlarge
+      - f1.2xlarge
+      - f1.16xlarge
+      - x1.16xlarge
+      - x1.32xlarge
+    ConstraintDescription: Must be a valid Amazon EC2 instance type.
+    Default: r4.large
+    Description: The Amazon EC2 instance type that adds data to the file system.
+    Type: String
+  KeyName:
+    Description: Name of an existing EC2 key pair
+    Type: AWS::EC2::KeyPair::KeyName
+  NumberOfSubnets:
+    AllowedValues:
+    - 3
+    Default: 3
+    Description: Number of subnets. This must match your selections in the list of Subnets below.
+    Type: String
+  PerformanceMode:
+    AllowedValues:
+      - generalPurpose
+      - maxIO
+    Default: generalPurpose
+    Description: Select the performance mode of the file system.
+    Type: String
+  SecurityGroup:
+    Description: Select the Amazon EFS security group.
+    Type: AWS::EC2::SecurityGroup::Id
+  Subnet:
+    Description: Select existing subnets.
+    Type: List<AWS::EC2::Subnet::Id>
+  Success:
+    AllowedValues:
+      - "File system creation"
+      - "Data load complete"
+    Default: "File system creation"
+    Description: Select which event signals success.
+    Type: String
+  WarningThreshold:
+    AllowedPattern: ^[0-9]+$
+    ConstraintDescription: Must be an integer.
+    Default: 180
+    Description: Send warning alarm this many minutes before burst credit balance is zero.
+    Type: String   
+
+Conditions:
+
+  AvailableAWSRegion:
+    !Or [
+      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ],
+      !Equals [ !Ref 'AWS::Region', eu-central-1 ],
+      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
+      !Equals [ !Ref 'AWS::Region', us-east-1 ],
+      !Equals [ !Ref 'AWS::Region', us-east-2 ],
+      !Equals [ !Ref 'AWS::Region', us-west-2 ]
+    ]
+  CreateAlarms:
+    !Equals [ !Ref CreateAlarms, Yes ]
+  CreateAlarmsAndDashboard: !And
+    - !Condition CreateAlarms
+    - !Condition CreateDashboard
+  CreateAlarmsNoDashboard: !And
+    - !Condition CreateAlarms
+    - !Condition NoDashboard
+  CreateDashboard:
+    !Equals [ !Ref CreateDashboard, Yes ]
+  CreateDashboardNoAlarms: !And
+    - !Condition CreateDashboard
+    - !Condition NoAlarms
+  DeleteAlarms:
+    !Equals [ !Ref DeletionPolicyAlarms, Delete ]
+  DeleteDashboard:
+    !Equals [ !Ref DeletionPolicyDashboard, Delete ]
+  DeleteEfs:
+    !Equals [ !Ref DeletionPolicyEfs, Delete ]
+  MoreThan2AZ:
+    !Or [
+      !Equals [ !Ref 'AWS::Region', us-east-1 ],
+      !Equals [ !Ref 'AWS::Region', us-east-2 ],
+      !Equals [ !Ref 'AWS::Region', us-west-2 ],
+      !Equals [ !Ref 'AWS::Region', eu-central-1 ],
+      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
+      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
+      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
+      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
+    ]
+  MoreThan2AZResourceDelete: !And
+    - !Condition MoreThan2AZ
+    - !Condition DeleteEfs  
+  MoreThan2AZResourceRetain: !And
+    - !Condition MoreThan2AZ
+    - !Condition RetainEfs
+  NoAlarms:
+    !Equals [ !Ref CreateAlarms, No ]
+  NoDashboard:
+    !Equals [ !Ref CreateDashboard, No ]
+  RetainAlarms:
+    !Equals [ !Ref DeletionPolicyAlarms, Retain ]
+  RetainDashboard:
+    !Equals [ !Ref DeletionPolicyDashboard, Retain ]
+  RetainEfs:
+    !Equals [ !Ref DeletionPolicyEfs, Retain ]
+  SuccessFSCreation:
+    !Equals [ 'File system creation', !Ref Success ]
+  UseAWS-ManagedCMK:
+    !Equals [ '', !Ref Cmk ]
+
+Mappings:
+
+  EfsEncrpytionBoolean:
+    Encrypted:
+      Boolean: true
+    Unencrypted:
+      Boolean: false
+  RegionMap:
+    ap-northeast-1:
+      AMI: ami-2a69be4c
+    ap-northeast-2:
+      AMI: ami-9bec36f5
+    ap-south-1:
+      AMI: ami-4fc58420
+    ap-southeast-1:
+      AMI: ami-0797ea64
+    ap-southeast-2:
+      AMI: ami-8536d6e7
+    ca-central-1:
+      AMI: ami-fd55ec99
+    eu-central-1:
+      AMI: ami-c7ee5ca8
+    eu-west-1:
+      AMI: ami-acd005d5
+    eu-west-2:
+      AMI: ami-1a7f6d7e
+    sa-east-1:
+      AMI: ami-f1344b9d
+    us-east-1:
+      AMI: ami-8c1be5f6
+    us-east-2:
+      AMI: ami-c5062ba0
+    us-west-1:
+      AMI: ami-02eada62
+    us-west-2:
+      AMI: ami-e689729e
+
+Resources:
+
+  ElasticFileSystem:
+    Condition: AvailableAWSRegion
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Cmk:
+          !Ref Cmk
+        DeletionPolicy:
+          !Ref DeletionPolicyEfs
+        EncryptionState:
+          !Ref EncryptionState 
+        Growth:
+          !Ref Growth
+        KeyName:
+          !Ref KeyName
+        InstanceType0:
+          !Ref InstanceType0
+        NumberOfSubnets:
+          !Ref NumberOfSubnets
+        PerformanceMode:
+          !Ref PerformanceMode
+        SecurityGroup:
+          !Ref SecurityGroup
+        Success:
+          !Ref Success
+        Subnet:
+          !Join [",", !Ref Subnet ]
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-with-data.yml
+  BurstCreditBalanceAlarms:
+    Condition: CreateAlarmsNoDashboard
+    DependsOn: ElasticFileSystem
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        CriticalThreshold:
+          !Ref CriticalThreshold
+        DeletionPolicy:
+          !Ref DeletionPolicyAlarms
+        ElasticFileSystem:
+          !GetAtt [ ElasticFileSystem, Outputs.ElasticFileSystem ]
+        EmailAddress:
+          !Ref EmailAddress
+        NumberOfSubnets:
+          !Ref NumberOfSubnets
+        SecurityGroup:
+          !Ref SecurityGroup
+        Subnet:
+          !Join [",", !Ref Subnet ]
+        WarningThreshold:
+          !Ref WarningThreshold
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml
+  Dashboard:
+    Condition: CreateDashboardNoAlarms
+    DependsOn: ElasticFileSystem
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DeletionPolicy:
+          !Ref DeletionPolicyDashboard
+        ElasticFileSystem:
+          !GetAtt [ ElasticFileSystem, Outputs.ElasticFileSystem ]
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml
+  BurstCreditBalanceAlarmsAndDashboard:
+    Condition: CreateAlarmsAndDashboard
+    DependsOn: ElasticFileSystem
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        CriticalThreshold:
+          !Ref CriticalThreshold
+        DeletionPolicyAlarms:
+          !Ref DeletionPolicyAlarms
+        DeletionPolicyDashboard:
+          !Ref DeletionPolicyDashboard
+        ElasticFileSystem:
+          !GetAtt [ ElasticFileSystem, Outputs.ElasticFileSystem ]
+        EmailAddress:
+          !Ref EmailAddress
+        NumberOfSubnets:
+          !Ref NumberOfSubnets
+        SecurityGroup:
+          !Ref SecurityGroup
+        Subnet:
+          !Join [",", !Ref Subnet ]
+        WarningThreshold:
+          !Ref WarningThreshold
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml
+
+
