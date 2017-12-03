@@ -13,17 +13,18 @@ Metadata:
       Parameters:
         - ElasticFileSystem
         - Growth
+        - Success
         - SecurityGroup
         - NumberOfSubnets
         - Subnet
-        - InstanceType0
+        - InstanceType
         - KeyName
     ParameterLabels:
       ElasticFileSystem:
         default: File System Id
       Growth:
         default: Add data (GiB)
-      InstanceType0:
+      InstanceType:
         default: Instance Type
       KeyName:
         default: Existing Key Pair
@@ -33,6 +34,8 @@ Metadata:
         default: Security Group
       Subnet:
         default: Subnets
+      Success:
+        default: "Success on:"
 
 Parameters:
 
@@ -42,77 +45,103 @@ Parameters:
     Type: String   
   Growth:
     ConstraintDescription: Must be an integer.
-    Description: Amount of dummy data (GiB) to add to the file system (max 6144 GiB). Amazon EFS storage charges apply. 
+    Description: Amount of dummy data (GiB) to add to the file system (min 0, max 6144). Amazon EFS storage charges apply. 
     MaxValue: 6144
     MinValue: 0
     Type: Number
-  InstanceType0:
+  InstanceType:
     AllowedValues:
-      - t2.nano
-      - t2.micro
-      - t2.small
-      - t2.medium
-      - t2.large
-      - t2.xlarge
-      - t2.2xlarge
-      - m3.medium
-      - m3.large
-      - m3.xlarge
-      - m3.2xlarge
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
-      - m4.4xlarge
-      - m4.10xlarge
-      - m4.16xlarge
-      - c3.large
-      - c3.xlarge
-      - c3.2xlarge
-      - c3.4xlarge
-      - c3.8xlarge
-      - c4.large
-      - c4.xlarge
-      - c4.2xlarge
-      - c4.4xlarge
-      - c4.8xlarge
-      - c5.large
-      - c5.xlarge
-      - c5.2xlarge
-      - c5.4xlarge
-      - c5.8xlarge
-      - r3.large
-      - r3.xlarge
-      - r3.2xlarge
-      - r3.4xlarge
-      - r3.8xlarge
-      - r4.large
-      - r4.xlarge
-      - r4.2xlarge
-      - r4.4xlarge
-      - r4.8xlarge
-      - r4.16xlarge
-      - i3.large
-      - i3.xlarge
-      - i3.2xlarge
-      - i3.4xlarge
-      - i3.8xlarge
-      - i3.16xlarge
-      - d2.xlarge
-      - d2.2xlarge
-      - d2.4xlarge
-      - d2.8xlarge
-      - p2.xlarge
-      - p2.8xlarage
-      - p2.16xlarge
-      - g3.4xlarge
-      - g3.8xlarge
-      - g3.16xlarge
-      - f1.2xlarge
-      - f1.16xlarge
-      - x1.16xlarge
-      - x1.32xlarge
+    - t2.nano 
+    - t2.micro 
+    - t2.small 
+    - t2.medium 
+    - t2.large 
+    - t2.xlarge 
+    - t2.2xlarge 
+    - m3.medium 
+    - m3.large 
+    - m3.xlarge 
+    - m3.2xlarge 
+    - m4.large 
+    - m4.xlarge 
+    - m4.2xlarge 
+    - m4.4xlarge 
+    - m4.10xlarge 
+    - m4.16xlarge 
+    - m5.large 
+    - m5.xlarge 
+    - m5.2xlarge 
+    - m5.4xlarge 
+    - m5.12xlarge 
+    - m5.24xlarge 
+    - c3.large 
+    - c3.xlarge 
+    - c3.2xlarge 
+    - c3.4xlarge 
+    - c3.8xlarge 
+    - c4.large 
+    - c4.xlarge 
+    - c4.2xlarge 
+    - c4.4xlarge 
+    - c4.8xlarge 
+    - c5.large 
+    - c5.xlarge 
+    - c5.2xlarge 
+    - c5.4xlarge 
+    - c5.9xlarge 
+    - c5.18xlarge
+    - r3.large 
+    - r3.xlarge 
+    - r3.2xlarge 
+    - r3.4xlarge 
+    - r3.8xlarge 
+    - r4.large 
+    - r4.xlarge 
+    - r4.2xlarge 
+    - r4.4xlarge 
+    - r4.8xlarge 
+    - r4.16xlarge 
+    - x1.16xlarge 
+    - x1.32xlarge 
+    - x1e.xlarge 
+    - x1e.2xlarge 
+    - x1e.4xlarge 
+    - x1e.8xlarge 
+    - x1e.16xlarge 
+    - x1e.32xlarge
+    - d2.xlarge 
+    - d2.2xlarge 
+    - d2.4xlarge 
+    - d2.8xlarge 
+    - h1.2xlarge 
+    - h1.4xlarge 
+    - h1.8xlarge 
+    - h1.16xlarge 
+    - i2.xlarge 
+    - i2.2xlarge 
+    - i2.4xlarge 
+    - i2.8xlarge 
+    - i3.large 
+    - i3.xlarge 
+    - i3.2xlarge 
+    - i3.4xlarge 
+    - i3.8xlarge 
+    - i3.16xlarge
+    - f1.2xlarge 
+    - f1.16xlarge 
+    - g2.2xlarge 
+    - g2.8xlarge 
+    - g3.4xlarge 
+    - g3.8xlarge 
+    - g3.16xlarge 
+    - p2.xlarge 
+    - p2.8xlarge 
+    - p2.16xlarge 
+    - p3.2xlarge 
+    - p3.8xlarge 
+    - p3.16xlarge
     ConstraintDescription: Must be a valid Amazon EC2 instance type.
-    Default: r4.large
+    Default: m5.large
     Description: The Amazon EC2 instance type that adds data to the file system.
     Type: String
   KeyName:
@@ -120,48 +149,75 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   NumberOfSubnets:
     AllowedValues:
+    - 1
     - 2
-    Default: 2
+    - 3
+    - 4
+    - 5
+    - 6
+    Default: 3
     Description: Number of subnets. This must match your selections in the list of Subnets below.
     Type: String 
   SecurityGroup:
-    Description: Select the Amazon EFS security group.
+    Description: Select the EC2 security group that allows SSH access to the instance and NFS access to the EFS file system.
     Type: AWS::EC2::SecurityGroup::Id
   Subnet:
-    Description: Select existing subnets.
+    Description: Select existing public subnets.
     Type: List<AWS::EC2::Subnet::Id>
+  Success:
+    AllowedValues:
+      - "Data-add start"
+      - "Data-add complete"
+    Default: "Data-add complete"
+    Description: Select which event signals success.
+    Type: String
+
+Conditions:
+
+  NumberofSubnets1:
+      !Equals [ 1, !Ref NumberOfSubnets ]
+  NumberofSubnets2:
+      !Equals [ 2, !Ref NumberOfSubnets ]
+  NumberofSubnets3:
+      !Equals [ 3, !Ref NumberOfSubnets ]
+  NumberofSubnets4:
+      !Equals [ 4, !Ref NumberOfSubnets ]
+  NumberofSubnets5:
+      !Equals [ 5, !Ref NumberOfSubnets ]
+  SuccessStart:
+    !Equals [ 'Data-add start', !Ref Success ]
 
 Mappings:
 
   RegionMap:
     ap-northeast-1:
-      AMI: ami-2a69be4c
+      AMI: ami-da9e2cbc
     ap-northeast-2:
-      AMI: ami-9bec36f5
+      AMI: ami-1196317f
     ap-south-1:
-      AMI: ami-4fc58420
+      AMI: ami-d5c18eba
     ap-southeast-1:
-      AMI: ami-0797ea64
+      AMI: ami-c63d6aa5
     ap-southeast-2:
-      AMI: ami-8536d6e7
+      AMI: ami-ff4ea59d
     ca-central-1:
-      AMI: ami-fd55ec99
+      AMI: ami-d29e25b6
     eu-central-1:
-      AMI: ami-c7ee5ca8
+      AMI: ami-bf2ba8d0
     eu-west-1:
-      AMI: ami-acd005d5
+      AMI: ami-1a962263
     eu-west-2:
-      AMI: ami-1a7f6d7e
+      AMI: ami-e7d6c983
     sa-east-1:
-      AMI: ami-f1344b9d
+      AMI: ami-286f2a44
     us-east-1:
-      AMI: ami-8c1be5f6
+      AMI: ami-55ef662f
     us-east-2:
-      AMI: ami-c5062ba0
+      AMI: ami-15e9c770
     us-west-1:
-      AMI: ami-02eada62
+      AMI: ami-a51f27c5
     us-west-2:
-      AMI: ami-e689729e
+      AMI: ami-bf4193c7
 
 Resources:
 
@@ -185,7 +241,7 @@ Resources:
           - sts:AssumeRole
       Path: /
       Policies:
-      - PolicyName: efs-create-file-system-with-storage
+      - PolicyName: !Join [ '', [ 'policy-', !Ref 'AWS::StackName' ] ]
         PolicyDocument:
           Version: 2012-10-17
           Statement:
@@ -211,10 +267,30 @@ Resources:
           Value: !Join [ '', [ 'EFS ', !Ref ElasticFileSystem, ' data load... will auto terminate.' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ]
+        !If
+          [ NumberofSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberofSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberofSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberofSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberofSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
-        Count: 1
+        Count: !If [ SuccessStart, 0 , 1 ]
         Timeout: PT12H
     UpdatePolicy:
       AutoScalingReplacingUpdate:
@@ -319,26 +395,24 @@ Resources:
       IamInstanceProfile: !Ref InstanceProfile
       ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
       InstanceMonitoring: true
-      InstanceType: !Ref InstanceType0
+      InstanceType: !Ref InstanceType
       KeyName: !Ref KeyName
       SecurityGroups:
         - !Ref SecurityGroup
       UserData:
         "Fn::Base64":
-          !Join [
-            "",[
-            "#cloud-config\n",
-            "repo_update: true\n",
-            "repo_upgrade: all\n",
-            "\n",
-            "packages:\n",
-            "- parallel\n",
-            "\n",
-            "runcmd:\n",
-            "- yum --enablerepo=epel install nload -y\n",
-            "- ntpstat\n",
-            "- /opt/aws/bin/cfn-init --configsets efs_add_storage --verbose --stack ", !Ref 'AWS::StackName', " --resource LaunchConfiguration --region ", !Ref 'AWS::Region',"\n",
-            "- /tmp/efs-add-storage.sh ", !Ref ElasticFileSystem, " throughput_data ", !Ref Growth,"\n",
-            "- /opt/aws/bin/cfn-signal -e $? --stack ", !Ref 'AWS::StackName', " --resource AutoScalingGroup --region ", !Ref 'AWS::Region',"\n"
-            ]
-          ]
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - parallel
+
+            runcmd:
+            - yum --enablerepo=epel install nload -y
+            - ntpstat
+            - /opt/aws/bin/cfn-init --configsets efs_add_storage --verbose --stack ${AWS::StackName} --resource LaunchConfiguration --region ${AWS::Region}
+            - /tmp/efs-add-storage.sh ${ElasticFileSystem} throughput_data ${Growth}
+            - /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource AutoScalingGroup --region ${AWS::Region}
+
