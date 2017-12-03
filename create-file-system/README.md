@@ -94,7 +94,7 @@ Click on the ![cloudformation-launch-stack](/images/deploy_to_aws.png) link belo
 ---
 
 ### Step 2:
-### Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
+### Create an Amazon EFS file system w/ data and CloudWatch dashboard, alarms, and size custom metric
 
 #### Overview
 
