@@ -79,6 +79,11 @@ Parameters:
       - c4.2xlarge
       - c4.4xlarge
       - c4.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.8xlarge
       - r3.large
       - r3.xlarge
       - r3.2xlarge
@@ -143,6 +148,11 @@ Parameters:
       - c4.2xlarge
       - c4.4xlarge
       - c4.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.8xlarge
       - r3.large
       - r3.xlarge
       - r3.2xlarge
@@ -207,6 +217,11 @@ Parameters:
       - c4.2xlarge
       - c4.4xlarge
       - c4.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.8xlarge
       - r3.large
       - r3.xlarge
       - r3.2xlarge
