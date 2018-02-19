@@ -386,7 +386,7 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-tools-results.png)
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/performance+tutorial.pdf)
 
 ## Section 6
 ### Cleanup
