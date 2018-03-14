@@ -337,6 +337,8 @@ Parameters:
     Type: String
   NumberOfSubnets:
     AllowedValues:
+    - 1
+    - 2
     - 3
     Default: 3
     Description: Number of subnets. This must match your selections in the list of Subnets below.
@@ -359,6 +361,7 @@ Conditions:
     !Or [
       !Equals [ !Ref 'AWS::Region', us-east-2 ],
       !Equals [ !Ref 'AWS::Region', us-west-2 ],
+      !Equals [ !Ref 'AWS::Region', us-west-1 ],
       !Equals [ !Ref 'AWS::Region', eu-west-1 ],
       !Equals [ !Ref 'AWS::Region', sa-east-1 ],
       !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
@@ -368,34 +371,36 @@ Conditions:
 Mappings:
 
   RegionMap:
-    ap-northeast-1:
-      AMI: ami-3bd3c45c
-    ap-northeast-2:
-      AMI: ami-e21cc38c
-    ap-south-1:
-      AMI: ami-47205e28
-    ap-southeast-1:
-      AMI: ami-77af2014
-    ap-southeast-2:
-      AMI: ami-10918173
-    ca-central-1:
-      AMI: ami-a7aa15c3
-    eu-central-1:
-      AMI: ami-82be18ed
-    eu-west-1:
-      AMI: ami-d7b9a2b1
-    eu-west-2:
-      AMI: ami-ed100689
-    sa-east-1:
-      AMI: ami-87dab1eb
     us-east-1:
-      AMI: ami-a4c7edb2
+      AMI: ami-97785bed
     us-east-2:
-      AMI: ami-8a7859ef
-    us-west-1:
-      AMI: ami-327f5352
+      AMI: ami-f63b1193
     us-west-2:
-      AMI: ami-6df1e514
+      AMI: ami-f2d3638a
+    us-west-1:
+      AMI: ami-824c4ee2
+    ca-central-1:
+      AMI: ami-a954d1cd
+    eu-west-1:
+      AMI: ami-d834aba1
+    eu-west-2:
+      AMI: ami-403e2524
+    eu-west-3:
+      AMI: ami-8ee056f3
+    eu-central-1:
+      AMI: ami-5652ce39
+    ap-southeast-1:
+      AMI: ami-68097514
+    ap-northeast-2:
+      AMI: ami-863090e8
+    ap-northeast-1:
+      AMI: ami-ceafcba8
+    ap-southeast-2:
+      AMI: ami-942dd1f6
+    ap-south-1:
+      AMI: ami-531a4c3c
+    sa-east-1:
+      AMI: ami-84175ae8
 
 Resources:
 
