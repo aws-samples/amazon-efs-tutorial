@@ -332,14 +332,17 @@ Parameters:
     - p3.8xlarge 
     - p3.16xlarge
     ConstraintDescription: Must be a valid Amazon EC2 instance type.
-    Default: c4.2xlarge
+    Default: c5.2xlarge
     Description: The Amazon EC2 instance type for Auto Scaling group 2.
     Type: String
   NumberOfSubnets:
     AllowedValues:
     - 1
-    - 2
+    - 2  
     - 3
+    - 4
+    - 5
+    - 6
     Default: 3
     Description: Number of subnets. This must match your selections in the list of Subnets below.
     Type: String 
@@ -352,21 +355,45 @@ Parameters:
 
 Conditions:
 
-  MoreThan3AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-1 ],
-      !Equals [ !Ref 'AWS::Region', us-east-1 ]
-    ]
-  MoreThan2AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-2 ],
-      !Equals [ !Ref 'AWS::Region', us-west-2 ],
-      !Equals [ !Ref 'AWS::Region', us-west-1 ],
-      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
-      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
-    ]
+  NumberOfSubnets1:
+    !Equals [ 1, !Ref NumberOfSubnets ]
+  NumberOfSubnets2:
+    !Equals [ 2, !Ref NumberOfSubnets ]
+  NumberOfSubnets3:
+    !Equals [ 3, !Ref NumberOfSubnets ]
+  NumberOfSubnets4:
+    !Equals [ 4, !Ref NumberOfSubnets ]
+  NumberOfSubnets5:
+    !Equals [ 5, !Ref NumberOfSubnets ]
+  NumberOfSubnets6:
+    !Equals [ 6, !Ref NumberOfSubnets ]
+  Subnet0: !Or
+    - !Condition NumberOfSubnets1
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet1: !Or
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet2: !Or
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet3: !Or
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet4: !Or
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet5: !Condition NumberOfSubnets6
+
 
 Mappings:
 
@@ -455,7 +482,27 @@ Resources:
           Value: 'EFS Performance Tutorial - Launching...'
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -468,7 +515,6 @@ Resources:
           install_all_utilities:
             - tools-install
             - smallfile-install
-            - parallel-install
             - fpart-install
             - automake-1.14-install
             - mcp-install
@@ -494,20 +540,6 @@ Resources:
             smallfile-install:
               command: su -l ec2-user /tmp/smallfile-install.sh
               ignoreErrors: false 
-        parallel-install:
-          files:              
-            /tmp/parallel-install.sh:
-              content:
-                !Sub |
-                  #!/bin/bash -xe
-                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
-              mode: 000777
-              owner: root
-              group: root
-          commands:
-            parallel-install:
-              command: /tmp/parallel-install.sh
-              ignoreErrors: false
         fpart-install:
           files:              
             /tmp/fpart-install.sh:
@@ -601,6 +633,7 @@ Resources:
             repo_upgrade: all
 
             packages:
+            - parallel
             - git
             - gcc
 
@@ -612,6 +645,7 @@ Resources:
             - chown ec2-user:ec2-user $efs_directory
             - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
             - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/touch/$instanceid
             - mkdir -p $efs_directory/tutorial/dd/$instanceid         
             - mkdir -p $efs_directory/tutorial/cp/$instanceid
             - mkdir -p $efs_directory/tutorial/rsync/$instanceid
@@ -632,9 +666,9 @@ Resources:
 
             - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
 
-            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
-            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
-            - rm $ebs_directory/tutorial/smallfile/ -r
+            - python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top $ebs_directory/tutorial/smallfile
+            - cp -R $ebs_directory/tutorial/smallfile/file_srcdir $ebs_directory/tutorial/data-1m/
+            #- rm $ebs_directory/tutorial/smallfile/ -r
 
             - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
 
@@ -652,7 +686,27 @@ Resources:
           Value: 'EFS Performance Tutorial - Launching...'
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -665,7 +719,6 @@ Resources:
           install_all_utilities:
             - tools-install
             - smallfile-install
-            - parallel-install
             - fpart-install
             - automake-1.14-install
             - mcp-install
@@ -691,20 +744,6 @@ Resources:
             smallfile-install:
               command: su -l ec2-user /tmp/smallfile-install.sh
               ignoreErrors: false 
-        parallel-install:
-          files:              
-            /tmp/parallel-install.sh:
-              content:
-                !Sub |
-                  #!/bin/bash -xe
-                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
-              mode: 000777
-              owner: root
-              group: root
-          commands:
-            parallel-install:
-              command: /tmp/parallel-install.sh
-              ignoreErrors: false
         fpart-install:
           files:              
             /tmp/fpart-install.sh:
@@ -798,6 +837,7 @@ Resources:
             repo_upgrade: all
 
             packages:
+            - parallel
             - git
             - gcc
 
@@ -809,6 +849,7 @@ Resources:
             - chown ec2-user:ec2-user $efs_directory
             - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
             - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/touch/$instanceid 
             - mkdir -p $efs_directory/tutorial/dd/$instanceid         
             - mkdir -p $efs_directory/tutorial/cp/$instanceid
             - mkdir -p $efs_directory/tutorial/rsync/$instanceid
@@ -829,9 +870,9 @@ Resources:
 
             - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
 
-            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
-            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
-            - rm $ebs_directory/tutorial/smallfile/ -r
+            - python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top $ebs_directory/tutorial/smallfile
+            - cp -R $ebs_directory/tutorial/smallfile/file_srcdir $ebs_directory/tutorial/data-1m/
+            #- rm $ebs_directory/tutorial/smallfile/ -r
 
             - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
 
@@ -849,7 +890,27 @@ Resources:
           Value: 'EFS Performance Tutorial - Launching...'
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -862,7 +923,6 @@ Resources:
           install_all_utilities:
             - tools-install
             - smallfile-install
-            - parallel-install
             - fpart-install
             - automake-1.14-install
             - mcp-install
@@ -888,20 +948,6 @@ Resources:
             smallfile-install:
               command: su -l ec2-user /tmp/smallfile-install.sh
               ignoreErrors: false 
-        parallel-install:
-          files:              
-            /tmp/parallel-install.sh:
-              content:
-                !Sub |
-                  #!/bin/bash -xe
-                  (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
-              mode: 000777
-              owner: root
-              group: root
-          commands:
-            parallel-install:
-              command: /tmp/parallel-install.sh
-              ignoreErrors: false
         fpart-install:
           files:              
             /tmp/fpart-install.sh:
@@ -978,7 +1024,7 @@ Resources:
         - DeviceName: /dev/xvdf
           Ebs:
             DeleteOnTermination: true
-            VolumeSize: 20
+            VolumeSize: 40
             VolumeType: gp2
       IamInstanceProfile: !Ref InstanceProfile
       ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
@@ -995,6 +1041,7 @@ Resources:
             repo_upgrade: all
 
             packages:
+            - parallel
             - git
             - gcc
 
@@ -1006,6 +1053,7 @@ Resources:
             - chown ec2-user:ec2-user $efs_directory
             - echo "${ElasticFileSystem}.efs.${AWS::Region}.amazonaws.com:/ $efs_directory nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
             - mount -a -t nfs4
+            - mkdir -p $efs_directory/tutorial/touch/$instanceid 
             - mkdir -p $efs_directory/tutorial/dd/$instanceid         
             - mkdir -p $efs_directory/tutorial/cp/$instanceid
             - mkdir -p $efs_directory/tutorial/rsync/$instanceid
@@ -1026,8 +1074,8 @@ Resources:
 
             - /opt/aws/bin/cfn-init --configsets install_all_utilities --verbose --stack ${AWS::StackName} --resource LaunchConfiguration0 --region ${AWS::Region}
 
-            - python /home/ec2-user/smallfile/smallfile_cli.py  --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir Y --dirs-per-dir 1 --hash-into-dirs Y --files-per-dir 1000 --top $ebs_directory/tutorial/smallfile
-            - mv $ebs_directory/tutorial/smallfile/file_srcdir/* $ebs_directory/tutorial/data-1m/
-            - rm $ebs_directory/tutorial/smallfile/ -r
+            - python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top $ebs_directory/tutorial/smallfile
+            - cp -R $ebs_directory/tutorial/smallfile/file_srcdir $ebs_directory/tutorial/data-1m/
+            #- rm $ebs_directory/tutorial/smallfile/ -r
 
             - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
