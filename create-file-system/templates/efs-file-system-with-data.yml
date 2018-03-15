@@ -202,41 +202,67 @@ Conditions:
     !Equals [ !Ref DeletionPolicy, Delete ]
   Retain:
     !Equals [ !Ref DeletionPolicy, Retain ]
-  NumberOfSubnets1Delete: !And
+  Subnet0: !Or
     - !Condition NumberOfSubnets1
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet1: !Or
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet2: !Or
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet3: !Or
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet4: !Or
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet5: !Condition NumberOfSubnets6
+  NumberOfSubnets1Delete: !And
+    - !Condition Subnet0
     - !Condition Delete
   NumberOfSubnets1Retain: !And
-    - !Condition NumberOfSubnets1
+    - !Condition Subnet0
     - !Condition Retain
   NumberOfSubnets2Delete: !And
-    - !Condition NumberOfSubnets2
+    - !Condition Subnet1
     - !Condition Delete
   NumberOfSubnets2Retain: !And
-    - !Condition NumberOfSubnets2
+    - !Condition Subnet1
     - !Condition Retain
   NumberOfSubnets3Delete: !And
-    - !Condition NumberOfSubnets3
+    - !Condition Subnet2
     - !Condition Delete
   NumberOfSubnets3Retain: !And
-    - !Condition NumberOfSubnets3
+    - !Condition Subnet2
     - !Condition Retain
   NumberOfSubnets4Delete: !And
-    - !Condition NumberOfSubnets4
+    - !Condition Subnet3
     - !Condition Delete
   NumberOfSubnets4Retain: !And
-    - !Condition NumberOfSubnets4
+    - !Condition Subnet3
     - !Condition Retain
   NumberOfSubnets5Delete: !And
-    - !Condition NumberOfSubnets5
+    - !Condition Subnet4
     - !Condition Delete
   NumberOfSubnets5Retain: !And
-    - !Condition NumberOfSubnets5
+    - !Condition Subnet4
     - !Condition Retain
   NumberOfSubnets6Delete: !And
-    - !Condition NumberOfSubnets6
+    - !Condition Subnet5
     - !Condition Delete  
   NumberOfSubnets6Retain: !And
-    - !Condition NumberOfSubnets6
+    - !Condition Subnet5
     - !Condition Retain
   SuccessFSCreation:
     !Equals [ 'File system creation', !Ref Success ]
