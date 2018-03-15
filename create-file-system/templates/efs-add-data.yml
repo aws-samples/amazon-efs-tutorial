@@ -4,9 +4,17 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Amazon Elastic File System - Add data to grow existing file system
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
-
     ParameterGroups:
     - Label:
         default: Amazon EFS Parameters
@@ -38,7 +46,6 @@ Metadata:
         default: "Success on:"
 
 Parameters:
-
   ElasticFileSystem:
     AllowedPattern: ^(fs-)([a-z0-9]{8})$
     Description: The Amazon EFS file system id.
@@ -141,7 +148,7 @@ Parameters:
     - p3.8xlarge 
     - p3.16xlarge
     ConstraintDescription: Must be a valid Amazon EC2 instance type.
-    Default: m5.large
+    Default: c5.large
     Description: The Amazon EC2 instance type that adds data to the file system.
     Type: String
   KeyName:
@@ -188,39 +195,39 @@ Conditions:
     !Equals [ 'Data-add start', !Ref Success ]
 
 Mappings:
-
   RegionMap:
-    ap-northeast-1:
-      AMI: ami-da9e2cbc
-    ap-northeast-2:
-      AMI: ami-1196317f
-    ap-south-1:
-      AMI: ami-d5c18eba
-    ap-southeast-1:
-      AMI: ami-c63d6aa5
-    ap-southeast-2:
-      AMI: ami-ff4ea59d
-    ca-central-1:
-      AMI: ami-d29e25b6
-    eu-central-1:
-      AMI: ami-bf2ba8d0
-    eu-west-1:
-      AMI: ami-1a962263
-    eu-west-2:
-      AMI: ami-e7d6c983
-    sa-east-1:
-      AMI: ami-286f2a44
     us-east-1:
-      AMI: ami-55ef662f
+      AMI: ami-97785bed
     us-east-2:
-      AMI: ami-15e9c770
-    us-west-1:
-      AMI: ami-a51f27c5
+      AMI: ami-f63b1193
     us-west-2:
-      AMI: ami-bf4193c7
+      AMI: ami-f2d3638a
+    us-west-1:
+      AMI: ami-824c4ee2
+    ca-central-1:
+      AMI: ami-a954d1cd
+    eu-west-1:
+      AMI: ami-d834aba1
+    eu-west-2:
+      AMI: ami-403e2524
+    eu-west-3:
+      AMI: ami-8ee056f3
+    eu-central-1:
+      AMI: ami-5652ce39
+    ap-southeast-1:
+      AMI: ami-68097514
+    ap-northeast-2:
+      AMI: ami-863090e8
+    ap-northeast-1:
+      AMI: ami-ceafcba8
+    ap-southeast-2:
+      AMI: ami-942dd1f6
+    ap-south-1:
+      AMI: ami-531a4c3c
+    sa-east-1:
+      AMI: ami-84175ae8
 
 Resources:
-
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:

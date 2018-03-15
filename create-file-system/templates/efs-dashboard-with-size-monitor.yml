@@ -4,7 +4,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Creates Amazon EFS Dashboard with file system size custom metric
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -19,7 +28,6 @@ Metadata:
         default: Amazon EFS File System
 
 Parameters:
-
   DeletionPolicy:
     AllowedValues:
       - Delete
@@ -33,14 +41,12 @@ Parameters:
     Type: String
 
 Conditions:
-
   Delete:
     !Equals [ !Ref DeletionPolicy, Delete ]
   Retain:
     !Equals [ !Ref DeletionPolicy, Retain ]
 
 Resources:
-
   EfsDashboardRetain:
     Type: AWS::CloudWatch::Dashboard
     Condition: Retain
@@ -49,7 +55,6 @@ Resources:
       DashboardName: !Ref ElasticFileSystem
       DashboardBody:
         {"Fn::Join":["",['{"widgets":[{"type":"metric","x":0,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Sum","period":60}]],"region":"',!Ref 'AWS::Region','","title":"Throughput"}},{"type":"metric","x":18,"y":0,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/EFS","PermittedThroughput","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum"}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":6,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"SampleCount","period":60}]],"region":"',!Ref 'AWS::Region','","title":"IOPS"}},{"type":"metric","x":12,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","BurstCreditBalance","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum","period":60}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":18,"y":3,"width":6,"height":3,"properties":{"view":"singleValue","metrics":[[ "Custom/EFS", "SizeInBytes", "FileSystemId","',!Ref 'ElasticFileSystem','"]],"region":"',!Ref 'AWS::Region','"}}]}']]}
-
   EfsDashboardDelete:
     Type: AWS::CloudWatch::Dashboard
     Condition: Delete
@@ -58,7 +63,6 @@ Resources:
       DashboardName: !Ref ElasticFileSystem
       DashboardBody:
         {"Fn::Join":["",['{"widgets":[{"type":"metric","x":0,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Sum","period":60}]],"region":"',!Ref 'AWS::Region','","title":"Throughput"}},{"type":"metric","x":18,"y":0,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/EFS","PermittedThroughput","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum"}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":6,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"SampleCount","period":60}]],"region":"',!Ref 'AWS::Region','","title":"IOPS"}},{"type":"metric","x":12,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","BurstCreditBalance","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum","period":60}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":18,"y":3,"width":6,"height":3,"properties":{"view":"singleValue","metrics":[[ "Custom/EFS", "SizeInBytes", "FileSystemId","',!Ref 'ElasticFileSystem','"]],"region":"',!Ref 'AWS::Region','"}}]}']]}
-
   EfsSizeMonitorEventRetain:
     Type: AWS::Events::Rule
     Condition: Retain
@@ -71,7 +75,6 @@ Resources:
       Targets:
         - Arn: !GetAtt EfsSizeMonitorFunctionRetain.Arn
           Id: 1
-
   EfsSizeMonitorEventDelete:
     Type: AWS::Events::Rule
     Condition: Delete
@@ -84,7 +87,6 @@ Resources:
       Targets:
         - Arn: !GetAtt EfsSizeMonitorFunctionDelete.Arn
           Id: 1
-
   EfsLambdaPermissionRetain: 
     Type: AWS::Lambda::Permission
     Condition: Retain
@@ -94,7 +96,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EfsSizeMonitorEventRetain.Arn
-
   EfsLambdaPermissionDelete: 
     Type: AWS::Lambda::Permission
     Condition: Delete
@@ -104,7 +105,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EfsSizeMonitorEventDelete.Arn
-
   EfsSizeMonitorFunctionRetain:
     Type: AWS::Lambda::Function
     Condition: Retain
@@ -166,7 +166,6 @@ Resources:
       Role: !GetAtt LambdaRoleRetain.Arn
       Runtime: python2.7
       Timeout: 60
-
   EfsSizeMonitorFunctionDelete:
     Type: AWS::Lambda::Function
     Condition: Delete
@@ -228,7 +227,6 @@ Resources:
       Role: !GetAtt LambdaRoleDelete.Arn
       Runtime: python2.7
       Timeout: 60
-
   LambdaRoleRetain:
     Type: AWS::IAM::Role
     Condition: Retain
@@ -247,7 +245,6 @@ Resources:
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/CloudWatchFullAccess
       - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
-
   LambdaRoleDelete:
     Type: AWS::IAM::Role
     Condition: Delete

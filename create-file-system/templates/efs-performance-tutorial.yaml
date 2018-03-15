@@ -4,7 +4,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Amazon EFS performance tutorial - Creates multiple Auto Scaling groups & mounts an existing EFS file system
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -40,7 +49,6 @@ Metadata:
         default: Subnets
 
 Parameters:
-
   ElasticFileSystem:
     AllowedPattern: ^(fs-)([a-z0-9]{8})$
     Description: The Amazon EFS file system id.
@@ -354,7 +362,6 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
 
 Conditions:
-
   NumberOfSubnets1:
     !Equals [ 1, !Ref NumberOfSubnets ]
   NumberOfSubnets2:
@@ -394,9 +401,7 @@ Conditions:
     - !Condition NumberOfSubnets6
   Subnet5: !Condition NumberOfSubnets6
 
-
 Mappings:
-
   RegionMap:
     us-east-1:
       AMI: ami-97785bed
@@ -430,7 +435,6 @@ Mappings:
       AMI: ami-84175ae8
 
 Resources:
-
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -671,7 +675,6 @@ Resources:
             #- rm $ebs_directory/tutorial/smallfile/ -r
 
             - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
-
   AutoScalingGroup1:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -875,7 +878,6 @@ Resources:
             #- rm $ebs_directory/tutorial/smallfile/ -r
 
             - aws ec2 create-tags --resources $instanceid --tags "Key=Name,Value=EFS Performance Tutorial - Ready" --region ${AWS::Region}
-
   AutoScalingGroup2:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:

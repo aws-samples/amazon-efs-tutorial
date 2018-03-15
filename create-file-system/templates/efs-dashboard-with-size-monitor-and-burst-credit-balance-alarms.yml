@@ -4,7 +4,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Creates AWS CloudWatch dashboard with size monitor and burst credit balance alarms for Amazon EFS
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -26,7 +35,6 @@ Metadata:
         - InstanceType0
         - NumberOfSubnets
         - Subnet
-
     ParameterLabels:
       CriticalThreshold:
         default: Burst Credit Balance Critical Threshold (Minutes)
@@ -50,7 +58,6 @@ Metadata:
         default: Burst Credit Balance Warning Threshold (Minutes)
 
 Parameters:
-
   CriticalThreshold:
     AllowedPattern: ^[0-9]+$
     ConstraintDescription: Must be an integer.
@@ -89,8 +96,13 @@ Parameters:
     Type: String
   NumberOfSubnets:
     AllowedValues:
+    - 1
+    - 2
     - 3
-    Default: 3
+    - 4
+    - 5
+    - 6
+    Default: 2
     Description: Number of subnets. This must match your selections in the list of Subnets below.
     Type: String
   Subnet:
@@ -107,61 +119,47 @@ Parameters:
     Type: String
 
 Conditions:
-
   DeleteAlarms:
     !Equals [ !Ref DeletionPolicyAlarms, Delete ]
   DeleteDashboard:
     !Equals [ !Ref DeletionPolicyDashboard, Delete ]
-  MoreThan3AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-1 ],
-      !Equals [ !Ref 'AWS::Region', us-east-1 ]
-    ]
-  MoreThan2AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-2 ],
-      !Equals [ !Ref 'AWS::Region', us-west-2 ],
-      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
-      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
-    ]
   RetainAlarms:
     !Equals [ !Ref DeletionPolicyAlarms, Retain ]
   RetainDashboard:
     !Equals [ !Ref DeletionPolicyDashboard, Retain ]
 
 Mappings:
-
   RegionMap:
-    ap-northeast-1:
-      AMI: ami-2a69be4c
-    ap-northeast-2:
-      AMI: ami-9bec36f5
-    ap-south-1:
-      AMI: ami-4fc58420
-    ap-southeast-1:
-      AMI: ami-0797ea64
-    ap-southeast-2:
-      AMI: ami-8536d6e7
-    ca-central-1:
-      AMI: ami-fd55ec99
-    eu-central-1:
-      AMI: ami-c7ee5ca8
-    eu-west-1:
-      AMI: ami-acd005d5
-    eu-west-2:
-      AMI: ami-1a7f6d7e
-    sa-east-1:
-      AMI: ami-f1344b9d
     us-east-1:
-      AMI: ami-8c1be5f6
+      AMI: ami-97785bed
     us-east-2:
-      AMI: ami-c5062ba0
-    us-west-1:
-      AMI: ami-02eada62
+      AMI: ami-f63b1193
     us-west-2:
-      AMI: ami-e689729e
+      AMI: ami-f2d3638a
+    us-west-1:
+      AMI: ami-824c4ee2
+    ca-central-1:
+      AMI: ami-a954d1cd
+    eu-west-1:
+      AMI: ami-d834aba1
+    eu-west-2:
+      AMI: ami-403e2524
+    eu-west-3:
+      AMI: ami-8ee056f3
+    eu-central-1:
+      AMI: ami-5652ce39
+    ap-southeast-1:
+      AMI: ami-68097514
+    ap-northeast-2:
+      AMI: ami-863090e8
+    ap-northeast-1:
+      AMI: ami-ceafcba8
+    ap-southeast-2:
+      AMI: ami-942dd1f6
+    ap-south-1:
+      AMI: ami-531a4c3c
+    sa-east-1:
+      AMI: ami-84175ae8
 
 Resources:
 
@@ -183,7 +181,6 @@ Resources:
       DashboardName: !Ref ElasticFileSystem
       DashboardBody:
         {"Fn::Join":["",['{"widgets":[{"type":"metric","x":0,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Sum","period":60}]],"region":"',!Ref 'AWS::Region','","title":"Throughput"}},{"type":"metric","x":18,"y":0,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/EFS","PermittedThroughput","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum"}]],"region":"',!Ref 'AWS::Region','","period": 60}},{"type":"metric","x":6,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","TotalIOBytes","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"SampleCount","period":60}]],"region":"',!Ref 'AWS::Region','","title":"IOPS"}},{"type":"metric","x":12,"y":0,"width":6,"height":6,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EFS","BurstCreditBalance","FileSystemId","',!Ref 'ElasticFileSystem','",{"stat":"Maximum","period":60}]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":18,"y":3,"width":6,"height":3,"properties":{"view":"singleValue","metrics":[[ "Custom/EFS", "SizeInBytes", "FileSystemId","',!Ref 'ElasticFileSystem','"]],"region":"',!Ref 'AWS::Region','"}},{"type":"metric","x":0,"y":6,"width":6,"height":6,"properties":{"title":"Burst credit balance increase threshold","annotations":{"alarms":["',!GetAtt BurstCreditBalanceIncreaseAlarmDelete.Arn,'"]},"view":"timeSeries","stacked":false}},{"type":"metric","x":6,"y":6,"width":6,"height":6,"properties":{"title":"Burst credit balance decrease threshold","annotations":{"alarms":["',!GetAtt BurstCreditBalanceDecreaseAlarmDelete.Arn,'"]},"view":"timeSeries","stacked":false}},{"type":"metric","x":12,"y":6,"width":6,"height":6,"properties":{"title":"Burst credit balance - Critical","annotations":{"alarms":["',!GetAtt CriticalAlarmDelete.Arn,'"]},"view":"timeSeries","stacked":false}},{"type":"metric","x":18,"y":6,"width":6,"height":6,"properties":{"title":"Burst credit balance - Warning","annotations":{"alarms":["',!GetAtt WarningAlarmDelete.Arn,'"]},"view":"timeSeries","stacked":false}}]}']]}
-
   EfsSizeMonitorEventRetain:
     Type: AWS::Events::Rule
     Condition: RetainDashboard
@@ -208,7 +205,6 @@ Resources:
       Targets:
         - Arn: !GetAtt EfsSizeMonitorFunctionDelete.Arn
           Id: 1
-
   EfsLambdaPermissionRetain: 
     Type: AWS::Lambda::Permission
     Condition: RetainDashboard
@@ -218,7 +214,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EfsSizeMonitorEventRetain.Arn
-
   EfsLambdaPermissionDelete: 
     Type: AWS::Lambda::Permission
     Condition: DeleteDashboard
@@ -228,7 +223,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EfsSizeMonitorEventDelete.Arn
-
   EfsSizeMonitorFunctionRetain:
     Type: AWS::Lambda::Function
     Condition: RetainDashboard
@@ -290,7 +284,6 @@ Resources:
       Role: !GetAtt LambdaRoleRetain.Arn
       Runtime: python2.7
       Timeout: 60
-
   EfsSizeMonitorFunctionDelete:
     Type: AWS::Lambda::Function
     Condition: DeleteDashboard
@@ -352,7 +345,6 @@ Resources:
       Role: !GetAtt LambdaRoleDelete.Arn
       Runtime: python2.7
       Timeout: 60
-
   LambdaRoleRetain:
     Type: AWS::IAM::Role
     Condition: RetainDashboard
@@ -371,7 +363,6 @@ Resources:
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/CloudWatchFullAccess
       - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
-
   LambdaRoleDelete:
     Type: AWS::IAM::Role
     Condition: DeleteDashboard
@@ -390,7 +381,6 @@ Resources:
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/CloudWatchFullAccess
       - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
-
   SNSTopicDelete: 
     Type: AWS::SNS::Topic
     Condition: DeleteAlarms
@@ -411,7 +401,6 @@ Resources:
       - Endpoint: !Ref EmailAddress
         Protocol: "email"
       TopicName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
-
   WarningAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: DeleteAlarms
@@ -452,7 +441,6 @@ Resources:
       Statistic: Maximum
       Threshold: 0
       TreatMissingData: missing
-
   CriticalAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: DeleteAlarms
@@ -493,7 +481,6 @@ Resources:
       Statistic: Maximum
       Threshold: 0
       TreatMissingData: missing
-
   BurstCreditBalanceIncreaseAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: DeleteAlarms
@@ -536,7 +523,6 @@ Resources:
       Statistic: Maximum
       Threshold: 0
       TreatMissingData: missing
-
   BurstCreditBalanceDecreaseAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: DeleteAlarms
@@ -579,7 +565,6 @@ Resources:
       Statistic: Maximum
       Threshold: 0
       TreatMissingData: missing
-
   InstanceProfileDelete:
     Type: AWS::IAM::InstanceProfile
     Condition: DeleteAlarms
@@ -596,7 +581,6 @@ Resources:
       Path: /
       Roles:
       - !Ref InstanceRoleRetain
-
   InstanceRoleDelete:
     Type: AWS::IAM::Role
     Condition: DeleteAlarms
@@ -665,7 +649,6 @@ Resources:
             Action:
               - sns:Publish
             Resource: !Ref SNSTopicRetain
-
   AutoScalingGroup0Delete:
     Type: AWS::AutoScaling::AutoScalingGroup
     Condition: DeleteAlarms
@@ -683,7 +666,27 @@ Resources:
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -705,12 +708,31 @@ Resources:
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
         Timeout: PT5M
-
   AutoScalingPolicy0Delete:
     Type: AWS::AutoScaling::ScalingPolicy
     Condition: DeleteAlarms
@@ -731,7 +753,6 @@ Resources:
       Cooldown: 60
       PolicyType: SimpleScaling
       ScalingAdjustment: 1
-
   LaunchConfiguration0Delete:
     Type: AWS::AutoScaling::LaunchConfiguration
     Condition: DeleteAlarms

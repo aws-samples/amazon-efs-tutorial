@@ -4,9 +4,17 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Amazon Elastic File System - Creates a file system with data
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
-
     ParameterGroups:
     - Label:
         default: Amazon EFS Parameters
@@ -47,7 +55,6 @@ Metadata:
         default: "Success on:"
 
 Parameters:
-
   EncryptionState:
     AllowedValues:
       - Encrypted
@@ -138,7 +145,7 @@ Parameters:
       - x1.16xlarge
       - x1.32xlarge
     ConstraintDescription: Must be a valid Amazon EC2 instance type.
-    Default: r4.large
+    Default: c5.2xlarge
     Description: The Amazon EC2 instance type that adds data to the file system.
     Type: String
   KeyName:
@@ -146,8 +153,13 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   NumberOfSubnets:
     AllowedValues:
+    - 1
+    - 2
     - 3
-    Default: 3
+    - 4
+    - 5
+    - 6
+    Default: 2
     Description: Number of subnets. This must match your selections in the list of Subnets below.
     Type: String 
   PerformanceMode:
@@ -172,72 +184,102 @@ Parameters:
     Type: String
 
 Conditions:
-  
+  NumberOfSubnets1:
+      !Equals [ 1, !Ref NumberOfSubnets ]
+  NumberOfSubnets2:
+      !Equals [ 2, !Ref NumberOfSubnets ]
+  NumberOfSubnets3:
+      !Equals [ 3, !Ref NumberOfSubnets ]
+  NumberOfSubnets4:
+      !Equals [ 4, !Ref NumberOfSubnets ]
+  NumberOfSubnets5:
+      !Equals [ 5, !Ref NumberOfSubnets ]
+  NumberOfSubnets6:
+      !Equals [ 6, !Ref NumberOfSubnets ]
   UseAWS-ManagedCMK:
     !Equals [ '', !Ref Cmk ]
-  MoreThan2AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-1 ],
-      !Equals [ !Ref 'AWS::Region', us-east-2 ],
-      !Equals [ !Ref 'AWS::Region', us-west-2 ],
-      !Equals [ !Ref 'AWS::Region', eu-central-1 ],
-      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
-      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
-    ]
   Delete:
     !Equals [ !Ref DeletionPolicy, Delete ]
   Retain:
     !Equals [ !Ref DeletionPolicy, Retain ]
-  MoreThan2AZResourceDelete: !And
-    - !Condition MoreThan2AZ
+  NumberOfSubnets1Delete: !And
+    - !Condition NumberOfSubnets1
     - !Condition Delete
-  MoreThan2AZResourceRetain: !And
-    - !Condition MoreThan2AZ
+  NumberOfSubnets1Retain: !And
+    - !Condition NumberOfSubnets1
+    - !Condition Retain
+  NumberOfSubnets2Delete: !And
+    - !Condition NumberOfSubnets2
+    - !Condition Delete
+  NumberOfSubnets2Retain: !And
+    - !Condition NumberOfSubnets2
+    - !Condition Retain
+  NumberOfSubnets3Delete: !And
+    - !Condition NumberOfSubnets3
+    - !Condition Delete
+  NumberOfSubnets3Retain: !And
+    - !Condition NumberOfSubnets3
+    - !Condition Retain
+  NumberOfSubnets4Delete: !And
+    - !Condition NumberOfSubnets4
+    - !Condition Delete
+  NumberOfSubnets4Retain: !And
+    - !Condition NumberOfSubnets4
+    - !Condition Retain
+  NumberOfSubnets5Delete: !And
+    - !Condition NumberOfSubnets5
+    - !Condition Delete
+  NumberOfSubnets5Retain: !And
+    - !Condition NumberOfSubnets5
+    - !Condition Retain
+  NumberOfSubnets6Delete: !And
+    - !Condition NumberOfSubnets6
+    - !Condition Delete  
+  NumberOfSubnets6Retain: !And
+    - !Condition NumberOfSubnets6
     - !Condition Retain
   SuccessFSCreation:
     !Equals [ 'File system creation', !Ref Success ]
 
 Mappings:
-
   EncrpytionBoolean:
     Encrypted:
       Boolean: true
     Unencrypted:
       Boolean: false
   RegionMap:
-    ap-northeast-1:
-      AMI: ami-2a69be4c
-    ap-northeast-2:
-      AMI: ami-9bec36f5
-    ap-south-1:
-      AMI: ami-4fc58420
-    ap-southeast-1:
-      AMI: ami-0797ea64
-    ap-southeast-2:
-      AMI: ami-8536d6e7
-    ca-central-1:
-      AMI: ami-fd55ec99
-    eu-central-1:
-      AMI: ami-c7ee5ca8
-    eu-west-1:
-      AMI: ami-acd005d5
-    eu-west-2:
-      AMI: ami-1a7f6d7e
-    sa-east-1:
-      AMI: ami-f1344b9d
     us-east-1:
-      AMI: ami-8c1be5f6
+      AMI: ami-97785bed
     us-east-2:
-      AMI: ami-c5062ba0
-    us-west-1:
-      AMI: ami-02eada62
+      AMI: ami-f63b1193
     us-west-2:
-      AMI: ami-e689729e
+      AMI: ami-f2d3638a
+    us-west-1:
+      AMI: ami-824c4ee2
+    ca-central-1:
+      AMI: ami-a954d1cd
+    eu-west-1:
+      AMI: ami-d834aba1
+    eu-west-2:
+      AMI: ami-403e2524
+    eu-west-3:
+      AMI: ami-8ee056f3
+    eu-central-1:
+      AMI: ami-5652ce39
+    ap-southeast-1:
+      AMI: ami-68097514
+    ap-northeast-2:
+      AMI: ami-863090e8
+    ap-northeast-1:
+      AMI: ami-ceafcba8
+    ap-southeast-2:
+      AMI: ami-942dd1f6
+    ap-south-1:
+      AMI: ami-531a4c3c
+    sa-east-1:
+      AMI: ami-84175ae8
 
 Resources:
-
   ElasticFileSystemRetain:
     Type: AWS::EFS::FileSystem
     Condition: Retain
@@ -263,43 +305,43 @@ Resources:
           Value: !Ref 'AWS::StackName'
       PerformanceMode: !Ref PerformanceMode
   ElasticFileSystemMountTarget0Retain:
-    Type: AWS::EFS::MountTarget
-    Condition: Retain
+    Condition: NumberOfSubnets1Retain
     DeletionPolicy: Retain
+    Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !Ref ElasticFileSystemRetain
       SecurityGroups:
       - !Ref SecurityGroup
       SubnetId: !Select [ 0, !Ref Subnet ]
   ElasticFileSystemMountTarget0Delete:
-    Type: AWS::EFS::MountTarget
-    Condition: Delete
+    Condition: NumberOfSubnets1Delete
     DeletionPolicy: Delete
+    Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !Ref ElasticFileSystemDelete
       SecurityGroups:
       - !Ref SecurityGroup
       SubnetId: !Select [ 0, !Ref Subnet ]
   ElasticFileSystemMountTarget1Retain:
-    Type: AWS::EFS::MountTarget
-    Condition: Retain
+    Condition: NumberOfSubnets2Retain
     DeletionPolicy: Retain
+    Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !Ref ElasticFileSystemRetain
       SecurityGroups:
       - !Ref SecurityGroup
       SubnetId: !Select [ 1, !Ref Subnet ]
   ElasticFileSystemMountTarget1Delete:
-    Type: AWS::EFS::MountTarget
-    Condition : Delete
+    Condition : NumberOfSubnets2Delete
     DeletionPolicy: Delete
+    Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !Ref ElasticFileSystemDelete
       SecurityGroups:
       - !Ref SecurityGroup
       SubnetId: !Select [ 1, !Ref Subnet ]
   ElasticFileSystemMountTarget2Retain:
-    Condition: MoreThan2AZResourceRetain
+    Condition: NumberOfSubnets3Retain
     DeletionPolicy: Retain
     Type: AWS::EFS::MountTarget
     Properties:
@@ -308,7 +350,7 @@ Resources:
       - !Ref SecurityGroup
       SubnetId: !Select [ 2, !Ref Subnet ]
   ElasticFileSystemMountTarget2Delete:
-    Condition: MoreThan2AZResourceDelete
+    Condition: NumberOfSubnets3Delete
     DeletionPolicy: Delete
     Type: AWS::EFS::MountTarget
     Properties:
@@ -316,6 +358,60 @@ Resources:
       SecurityGroups:
       - !Ref SecurityGroup
       SubnetId: !Select [ 2, !Ref Subnet ]
+  ElasticFileSystemMountTarget3Retain:
+    Condition: NumberOfSubnets4Retain
+    DeletionPolicy: Retain
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemRetain
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 3, !Ref Subnet ]
+  ElasticFileSystemMountTarget3Delete:
+    Condition: NumberOfSubnets4Delete
+    DeletionPolicy: Delete
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemDelete
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 3, !Ref Subnet ]
+  ElasticFileSystemMountTarget4Retain:
+    Condition: NumberOfSubnets5Retain
+    DeletionPolicy: Retain
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemRetain
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 4, !Ref Subnet ]
+  ElasticFileSystemMountTarget4Delete:
+    Condition: NumberOfSubnets5Delete
+    DeletionPolicy: Delete
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemDelete
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 4, !Ref Subnet ]
+  ElasticFileSystemMountTarget5Retain:
+    Condition: NumberOfSubnets6Retain
+    DeletionPolicy: Retain
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemRetain
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 5, !Ref Subnet ]
+  ElasticFileSystemMountTarget5Delete:
+    Condition: NumberOfSubnets6Delete
+    DeletionPolicy: Delete
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref ElasticFileSystemDelete
+      SecurityGroups:
+      - !Ref SecurityGroup
+      SubnetId: !Select [ 5, !Ref Subnet ]
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     DeletionPolicy: Delete
@@ -365,7 +461,27 @@ Resources:
           Value: !Join [ '', [ 'EFS ', !If [ Delete, !Ref ElasticFileSystemDelete, !Ref ElasticFileSystemRetain ], ' data load... will auto terminate.' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: !If [ SuccessFSCreation, 0 , 1 ]

@@ -4,7 +4,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Sets AWS CloudWatch alarms for Amazon EFS Burst Credit Balance - Creates one Auto Scaling group used to dynamically set & update burst credit balance alarms
 
 Metadata:
-
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -25,7 +34,6 @@ Metadata:
         - InstanceType0
         - NumberOfSubnets
         - Subnet
-
     ParameterLabels:
       CriticalThreshold:
         default: Burst Credit Balance Critical Threshold (Minutes)
@@ -47,7 +55,6 @@ Metadata:
         default: Burst Credit Balance Warning Threshold (Minutes)
 
 Parameters:
-
   CriticalThreshold:
     AllowedPattern: ^[0-9]+$
     ConstraintDescription: Must be an integer.
@@ -100,57 +107,81 @@ Conditions:
 
   Delete:
     !Equals [ !Ref DeletionPolicy, Delete ]
-  MoreThan3AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-1 ],
-      !Equals [ !Ref 'AWS::Region', us-east-1 ]
-    ]
-  MoreThan2AZ:
-    !Or [
-      !Equals [ !Ref 'AWS::Region', us-east-2 ],
-      !Equals [ !Ref 'AWS::Region', us-west-2 ],
-      !Equals [ !Ref 'AWS::Region', eu-west-1 ],
-      !Equals [ !Ref 'AWS::Region', sa-east-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-northeast-1 ],
-      !Equals [ !Ref 'AWS::Region', ap-southeast-2 ]
-    ]
   Retain:
     !Equals [ !Ref DeletionPolicy, Retain ]
+  NumberOfSubnets1:
+    !Equals [ 1, !Ref NumberOfSubnets ]
+  NumberOfSubnets2:
+    !Equals [ 2, !Ref NumberOfSubnets ]
+  NumberOfSubnets3:
+    !Equals [ 3, !Ref NumberOfSubnets ]
+  NumberOfSubnets4:
+    !Equals [ 4, !Ref NumberOfSubnets ]
+  NumberOfSubnets5:
+    !Equals [ 5, !Ref NumberOfSubnets ]
+  NumberOfSubnets6:
+    !Equals [ 6, !Ref NumberOfSubnets ]
+  Subnet0: !Or
+    - !Condition NumberOfSubnets1
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet1: !Or
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet2: !Or
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet3: !Or
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet4: !Or
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet5: !Condition NumberOfSubnets6
 
 Mappings:
-
   RegionMap:
-    ap-northeast-1:
-      AMI: ami-2a69be4c
-    ap-northeast-2:
-      AMI: ami-9bec36f5
-    ap-south-1:
-      AMI: ami-4fc58420
-    ap-southeast-1:
-      AMI: ami-0797ea64
-    ap-southeast-2:
-      AMI: ami-8536d6e7
-    ca-central-1:
-      AMI: ami-fd55ec99
-    eu-central-1:
-      AMI: ami-c7ee5ca8
-    eu-west-1:
-      AMI: ami-acd005d5
-    eu-west-2:
-      AMI: ami-1a7f6d7e
-    sa-east-1:
-      AMI: ami-f1344b9d
     us-east-1:
-      AMI: ami-8c1be5f6
+      AMI: ami-97785bed
     us-east-2:
-      AMI: ami-c5062ba0
-    us-west-1:
-      AMI: ami-02eada62
+      AMI: ami-f63b1193
     us-west-2:
-      AMI: ami-e689729e
+      AMI: ami-f2d3638a
+    us-west-1:
+      AMI: ami-824c4ee2
+    ca-central-1:
+      AMI: ami-a954d1cd
+    eu-west-1:
+      AMI: ami-d834aba1
+    eu-west-2:
+      AMI: ami-403e2524
+    eu-west-3:
+      AMI: ami-8ee056f3
+    eu-central-1:
+      AMI: ami-5652ce39
+    ap-southeast-1:
+      AMI: ami-68097514
+    ap-northeast-2:
+      AMI: ami-863090e8
+    ap-northeast-1:
+      AMI: ami-ceafcba8
+    ap-southeast-2:
+      AMI: ami-942dd1f6
+    ap-south-1:
+      AMI: ami-531a4c3c
+    sa-east-1:
+      AMI: ami-84175ae8
 
 Resources:
-
   SNSTopicDelete: 
     Type: AWS::SNS::Topic
     Condition: Delete
@@ -171,7 +202,6 @@ Resources:
       - Endpoint: !Ref EmailAddress
         Protocol: "email"
       TopicName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
-
   WarningAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: Delete
@@ -212,7 +242,6 @@ Resources:
       Statistic: Sum
       Threshold: 0
       TreatMissingData: missing
-
   CriticalAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: Delete
@@ -253,7 +282,6 @@ Resources:
       Statistic: Sum
       Threshold: 0
       TreatMissingData: missing
-
   BurstCreditBalanceIncreaseAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: Delete
@@ -296,7 +324,6 @@ Resources:
       Statistic: Sum
       Threshold: 0
       TreatMissingData: missing
-
   BurstCreditBalanceDecreaseAlarmDelete:
     Type: AWS::CloudWatch::Alarm
     Condition: Delete
@@ -339,7 +366,6 @@ Resources:
       Statistic: Sum
       Threshold: 0
       TreatMissingData: missing
-
   InstanceProfileDelete:
     Type: AWS::IAM::InstanceProfile
     Condition: Delete
@@ -356,7 +382,6 @@ Resources:
       Path: /
       Roles:
       - !Ref InstanceRoleRetain
-
   InstanceRoleDelete:
     Type: AWS::IAM::Role
     Condition: Delete
@@ -425,7 +450,6 @@ Resources:
             Action:
               - sns:Publish
             Resource: !Ref SNSTopicRetain
-
   AutoScalingGroup0Delete:
     Type: AWS::AutoScaling::AutoScalingGroup
     Condition: Delete
@@ -443,7 +467,27 @@ Resources:
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -465,12 +509,31 @@ Resources:
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ]
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
     CreationPolicy:
       ResourceSignal:
         Count: 0
         Timeout: PT5M
-
   AutoScalingPolicy0Delete:
     Type: AWS::AutoScaling::ScalingPolicy
     Condition: Delete
@@ -491,7 +554,6 @@ Resources:
       Cooldown: 60
       PolicyType: SimpleScaling
       ScalingAdjustment: 1
-
   LaunchConfiguration0Delete:
     Type: AWS::AutoScaling::LaunchConfiguration
     Condition: Delete
