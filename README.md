@@ -6,9 +6,9 @@
 
 ## Tutorials
 
-### Version 1.0.1
+### Version 1.1.1
 
-efs-t-1.0.1
+efs-t-1.1.1
 
 ---
 
@@ -25,13 +25,15 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 [2. Performance](#2-performance) 
 
-[3. Scale-out](#3-scale-out) 
+[3. Scale-out](#3-scale-out)
+
+[4. Monitoring](#4-monitoring)
 
 ---
 
 ### Tutorials
 
-These three (3) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
+These four (4) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
 #
 ### 1. Create a file system
 This tutorial is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
@@ -63,6 +65,15 @@ Click on the ![](/images/efs_tutorial.png) link below to go to the **Scale-out**
 | Tutorial | Link
 | --- | ---
 | **Scale-out** | [![](/images/efs_tutorial.png)](/scale-out) |
+
+### 4. Monitoring
+This tutorial is designed to help you better understand how Amazon EFS is performing by using Amazon CloudWatch and Metric Math to monitor file system performance.
+
+Click on the ![](/images/efs_tutorial.png) link below to go to the **Monitoring** tutorial.
+
+| Tutorial | Link
+| --- | ---
+| **Monitoring** | [![](/images/efs_tutorial.png)](/monitoring) |
 
 ---
 

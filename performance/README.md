@@ -5,9 +5,9 @@
 
 ## Performance Tutorial
 
-### Version 1.1.1
+### Version 1.1.2
 
-efs-pt-1.1.1
+efs-pt-1.1.2
 
 ---
 
@@ -61,17 +61,17 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Launch the AWS CloudFormation Stack
 
-Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
+Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial. It creates three separate autoscaling groups and launches one instance per group. You can select different attributes per instance, including the instance type, Linux distribution (Amazon Linux, Amazon Linux 2), and whether the Amazon EFS file system automatically mounts over TLS (enabling encryption of data in transit). Select the instance type and Linux distribution you want to use to complete the tutorial.
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/performance/templates/latest/efs-performance-tutorial.yaml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
 
 After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
 
@@ -89,36 +89,36 @@ This section will demonstrate the best methods to generate lots of small files.
 - Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
 
 ### 1.2.  SSH into the c5.2xlarge EC2 instance
-### 1.3.  Use 'touch' to generate lots of zero-byte files using a single thread
-Run this command against the c5.2xlarge instance to generate 16,384 zero-byte files.
+### 1.3.  Use 'touch' to generate zero-byte files using a single thread
+Run this command against the c5.2xlarge instance to generate 1,024 zero-byte files.
 ```sh
 
 directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
-mkdir -p /efs/tutorial/touch/${directory}
+mkdir -p /mnt/efs/01/tutorial/touch/${directory}
 
-time for i in {1..16384}; do
-  touch /efs/tutorial/touch/${directory}/test-1.3-$i;
+time for i in {1..1024}; do
+  touch /mnt/efs/01/tutorial/touch/${directory}/test-1.3-$i;
   done;
 ```
 Record run time.
-### 1.4.  Use 'touch' to generate lots of zero-byte files using multiple threads
-Run this command against the c5.2xlarge instance to generate 16,384 zero-byte files using multiple threads.
+### 1.4.  Use 'touch' to generate zero-byte files using multiple threads
+Run this command against the c5.2xlarge instance to generate 1,024 zero-byte files using multiple threads.
 ```sh
 
 directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
-mkdir -p /efs/tutorial/touch/${directory}
+mkdir -p /mnt/efs/01/tutorial/touch/${directory}
 
-time seq 1 16384 | parallel --will-cite -j 128 touch /efs/tutorial/touch/${directory}/test-1.4-{}
+time seq 1 1024 | parallel --will-cite -j 128 touch /mnt/efs/01/tutorial/touch/${directory}/test-1.4-{}
 ```
 Record run time.
-### 1.5.  Use 'touch' to generate lots of zero-byte files in multiple directories using multiple threads
-Run this command against the c5.2xlarge instance to generate 16,384 zero-byte files using multiple threads 
+### 1.5.  Use 'touch' to generate zero-byte files in multiple directories using multiple threads
+Run this command against the c5.2xlarge instance to generate 1,024 zero-byte files using multiple threads 
 ```sh
 
 directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
-mkdir -p /efs/tutorial/touch/${directory}/{1..128}
+mkdir -p /mnt/efs/01/tutorial/touch/${directory}/{1..32}
 
-time seq 1 128 | parallel --will-cite -j 128 touch /efs/tutorial/touch/${directory}/{}/test1.5{1..128}
+time seq 1 32 | parallel --will-cite -j 32 touch /mnt/efs/01/tutorial/touch/${directory}/{}/test1.5{1..32}
 ```
 Record run time.
 ### 1.6.  Close all SSH sessions
@@ -127,11 +127,13 @@ Record run time.
 ### Results
 To best way to leverage the distributed data storage design of Amazon EFS is to use multiple threads and inodes in parallel.
 
-| Step | EC2 Instance Type | File Count | Duration |
-| :--- | :--- | --- | --- |
-| 1.3. | c5.2xlarge | 16,384 | 4 min. 16 sec. |
-| 1.4. | c5.2xlarge | 16,384 | 2 min. 35 sec. |
-| 1.5. | c5.2xlarge | 16,384 | 0 min. 14 sec. |
+| Step | EC2 Instance Type | File Count | Duration | Files/s |
+| :--- | :--- | --- | --- | --- |
+| 1.3. | c5.2xlarge | 1,024 | 16.219 sec. | 63 |
+| 1.4. | c5.2xlarge | 1,024 | 8.061 sec. | 127 |
+| 1.5. | c5.2xlarge | 1,024 | 0.901 sec. | 1136 |
+
+![](/images/efs_performance_tutorial_touch_results.png)
 
 ## Section 2
 ### Compare the network performance of different EC2 instance types accessing EFS
@@ -157,7 +159,7 @@ This section will demonstrate that not all Amazon EC2 instance types are created
 ### 2.3.  Use dd to write 20 GB of data to EFS from each instance
 Run this command against all three instances to create a 20 GB file on EFS and monitor network traffic and throughput in real-time
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=20480 conv=fsync &
+time dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=20480 conv=fsync &
 nload -u M
 ```
 
@@ -190,7 +192,7 @@ Record run time.
 ### 3.3.  Write to EFS using 1 MB block size and sync once after each file
 Run this command against the c5.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
+time dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
 ```
 Record run time.
 ### 3.4.  Write to EBS using 16 MB block size and sync once after each file
@@ -202,7 +204,7 @@ Record run time.
 ### 3.5.  Write to EFS using 16 MB block size and sync once after each file
 Run this command against the c5.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
+time dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
 ```
 Record run time.
 ### 3.6.  Write to EBS using 1 MB block size and sync after each block
@@ -214,7 +216,7 @@ Record run time.
 ### 3.7.  Write to EFS using 1 MB block size and sync after each block
 Run this command against the c5.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
+time dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
 ```
 Record run time.
 ### 3.8.  Write to EBS using 16 MB block size and sync after each block
@@ -226,7 +228,7 @@ Record run time.
 ### 3.9.  Write to EFS using 16 MB block size and sync after each block
 Run this command against the c5.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
+time dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
 ```
 Record run time.
 #
@@ -262,7 +264,7 @@ Record run time.
 ### 4.3.  Write to EFS using 4 threads and sync after each block
 Run this command against the c5.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
-time seq 0 3 | parallel --will-cite -j 4 dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
+time seq 0 3 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
 ```
 Record run time.
 ### 4.4.  Write to EBS using 16 threads and sync after each block
@@ -274,7 +276,7 @@ Record run time.
 ### 4.5.  Write to EFS using 16 threads and sync after each block
 Run this command against the c5.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
 ```sh
-time seq 0 15 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+time seq 0 15 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
 ```
 Record run time.
 #
@@ -306,7 +308,7 @@ find /ebs/tutorial/data-1m/. -type f | wc -l
 ### 5.3.  Set the $instanceid variable
 Run this command against the c5.2xlarge instance to set the $instanceid variable which will be used in the preceeding steps.
 ```sh
-instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 ```
 ### 5.4.  Transfer files from EBS to EFS using ***rsync***
 Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
@@ -314,7 +316,7 @@ Run this command against the c5.2xlarge instance to drop caches and transfer 5,0
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time rsync -r /ebs/tutorial/data-1m/ /efs/tutorial/rsync/${instanceid} &
+time rsync -r /ebs/tutorial/data-1m/ /mnt/efs/01/tutorial/rsync/${instance_id} &
 nload -u M
 ```
 ### 5.5.  Transfer files from EBS to EFS using ***cp***
@@ -323,7 +325,7 @@ Run this command against the c5.2xlarge instance to drop caches and transfer 5,0
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time cp -r /ebs/tutorial/data-1m/* /efs/tutorial/cp/${instanceid} &
+time cp -r /ebs/tutorial/data-1m/* /mnt/efs/01/tutorial/cp/${instance_id} &
 nload -u M
 ```
 ### 5.6.  Set the $threads variable
@@ -337,7 +339,7 @@ Run this command against the c5.2xlarge instance to drop caches and transfer 5,0
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time /usr/local/bin/fpsync -n ${threads} -v /ebs/tutorial/data-1m/ /efs/tutorial/fpsync/${instanceid} &
+time /usr/local/bin/fpsync -n ${threads} -v /ebs/tutorial/data-1m/ /mnt/efs/01/tutorial/fpsync/${instance_id} &
 nload -u M
 ```
 ### 5.8.  Transfer files from EBS to EFS using ***mcp***
@@ -346,7 +348,7 @@ Run this command against the c5.2xlarge instance to drop caches and transfer 5,0
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time mcp -r --threads=${threads} /ebs/tutorial/data-1m/* /efs/tutorial/mcp/${instanceid} &
+time mcp -r --threads=${threads} /ebs/tutorial/data-1m/* /mnt/efs/01/tutorial/mcp/${instance_id} &
 nload -u M
 ```
 ### 5.9.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
@@ -355,7 +357,7 @@ Run this command against the c5.2xlarge instance to drop caches and transfer 5,0
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time find /ebs/tutorial/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /efs/tutorial/parallelcp &
+time find /ebs/tutorial/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /mnt/efs/01/tutorial/parallelcp &
 nload -u M
 ```
 ### 5.10.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
@@ -367,7 +369,7 @@ exit
 cd /ebs/tutorial/smallfile
 time /usr/local/bin/fpart -Z -n 1 -o /home/ec2-user/fpart-files-to-transfer .
 head /home/ec2-user/fpart-files-to-transfer.0
-time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /efs/tutorial/parallelcpio/${instanceid}" &
+time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /mnt/efs/01/tutorial/parallelcpio/${instance_id}" &
 nload -u M
 ```
 #
@@ -387,21 +389,20 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-file-transfer-tools-test-results.png)
+![](/images/efs_performance_tutorial_file_transfer_results.png)
 
 ## Section 6
 ### Cleanup
 Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don't continue to incur additional charges for these resources.
 
 ### 6.1.  Delete all files on the EFS file system created during the tutorial
-Run this command on the c5.2xlarge instance to delete the /efs/tutorial data.
+Run this command on the c5.2xlarge instance to delete the /mnt/efs/01/tutorial data.
 ```sh
-cd /efs/tutorial/;
+cd /mnt/efs/01/tutorial/;
 time /bin/ls -d -- */ | parallel --will-cite -j$(($(nproc --all) * 8)) sudo rm {} -r & 
 ```
 ### 6.2.  Delete the AWS CloudFormation stack you launched during the tutorial
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-delete-cf-stack-screenshot.png)
-
 
 ## Conclusion
 The distributed data storage design of Amazon EFS enables high levels of availability, durability, and scalability. This distributed architecture results in a small latency overhead for each file operation. Due to this per-operation latency, overall throughput generally increases as the average I/O size increases, because the overhead is amortized over a larger amount of data. Amazon EFS supports highly parallelized workloads (for example, using concurrent operations from multiple threads and multiple Amazon EC2 instances), which enables high levels of aggregate throughput and operations per second.
