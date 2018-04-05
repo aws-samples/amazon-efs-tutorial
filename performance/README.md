@@ -63,6 +63,27 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial. It creates three separate autoscaling groups and launches one instance per group. You can select different attributes per instance, including the instance type, Linux distribution (Amazon Linux, Amazon Linux 2), and whether the Amazon EFS file system automatically mounts over TLS (enabling encryption of data in transit). Select the instance type and Linux distribution you want to use to complete the tutorial.
 
+Amazon Elastic File System (EFS) now allows you to encrypt data in transit when using an EFS file system.  Previously, there was no way to encrypt network communications between an EFS file system and its clients. EFS uses industry-standard Transport Layer Security (TLS) 1.2 to encrypt network communications. To simplify the experience of encrypting data in transit, AWS has published an EFS-specific mount helper that manages tunneling your EFS traffic over a TLS network tunnel. 
+
+The EFS mount helper, amazon-efs-utils, is available in the Amazon repository, so if you’re running Amazon Linux or Amazon Linux 2 you install it using a simple sudo yum install amazon-efs-utils command. We have opened sourced the EFS mount helper and its available in the AWS repository on github. So for other Linux distributions, you can download, build, and install the package yourself. We’ve verified the package against the latest version of Amazon Linux, Amazon Linux 2, CentOS7, RHEL7, Debian 9, and Ubuntu 16.04. We’re working to add efs-utils to other Linux repositories.
+
+If you choose not to automatically mount the file system as a part of the Cloudformation template, you must run the commands below to mount the file system and build the directory structure to run the tutorial.
+
+```sh
+instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+efs_mount_point=/mnt/efs/01
+sudo mount -t efs ***file-system-id*** ${efs_mount_point}
+sudo mkdir -p ${efs_mount_point}/tutorial/touch/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/dd/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/cp/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/rsync/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/mcp/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/parallelcp/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/fpsync/${instance_id}
+sudo mkdir -p ${efs_mount_point}/tutorial/parallelcpio/${instance_id}
+sudo chown ec2-user:ec2-user ${efs_mount_point}/tutorial/ -R
+```
+
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
 | us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.2.yaml) |
@@ -75,7 +96,7 @@ Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below 
 
 After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-ec2-console-screenshot.png)
+![](/images/efs_tutorial_parameters_screenshot_01)
 
 ## Section 1
 ### Demonstrate different methods to evaluate IOPS performance and generate lots files
