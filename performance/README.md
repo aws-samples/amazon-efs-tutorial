@@ -96,7 +96,7 @@ sudo chown ec2-user:ec2-user ${efs_mount_point}/tutorial/ -R
 
 After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
 
-![](/images/efs_tutorial_parameters_screenshot_01)
+![](/images/efs_tutorial_parameters_screenshot_01.png)
 
 ## Section 1
 ### Demonstrate different methods to evaluate IOPS performance and generate lots files
