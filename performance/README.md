@@ -67,6 +67,12 @@ Amazon Elastic File System (EFS) now allows you to encrypt data in transit when 
 
 The EFS mount helper, amazon-efs-utils, is available in the Amazon repository, so if you’re running Amazon Linux or Amazon Linux 2 you install it using a simple sudo yum install amazon-efs-utils command. We have opened sourced the EFS mount helper and its available in the AWS repository on github. So for other Linux distributions, you can download, build, and install the package yourself. We’ve verified the package against the latest version of Amazon Linux, Amazon Linux 2, CentOS7, RHEL7, Debian 9, and Ubuntu 16.04. We’re working to add efs-utils to other Linux repositories.
 
+
+
+![](/images/efs_tutorial_parameters_screenshot_01.png)
+
+
+
 If you choose not to automatically mount the file system as a part of the Cloudformation template, you must run the commands below to mount the file system and build the directory structure to run the tutorial.
 
 ```sh
@@ -96,10 +102,8 @@ sudo chown ec2-user:ec2-user ${efs_mount_point}/tutorial/ -R
 
 After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
 
-![](/images/efs_tutorial_parameters_screenshot_01.png)
-
 ## Section 1
-### Demonstrate different methods to evaluate IOPS performance and generate lots files
+### Demonstrate different methods to evaluate IOPS performance and generate 1024 files
  ___
 This section will demonstrate the best methods to generate lots of small files.
 
