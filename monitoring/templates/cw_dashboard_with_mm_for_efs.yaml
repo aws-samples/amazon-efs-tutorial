@@ -72,10 +72,10 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ { "expression": "(m1/1024/1024)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
-                              [ { "expression": "(m2/1024/1024)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
-                              [ { "expression": "(m3/1024/1024)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
-                              [ { "expression": "(m4/1024/1024)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
+                              [ { "expression": "(m1/1048576)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2/1048576)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1048576)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4/1048576)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
                               [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "Sum", "period": 60, "yAxis": "right", "visible": false } ],
                               [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m2", "yAxis": "right", "visible": false } ],
                               [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "yAxis": "right", "visible": false } ],
@@ -121,14 +121,15 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ { "expression": "(m1/1024/1024)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c" } ],
-                              [ { "expression": "e3-e1", "label": "Available Throughput (MiB/s)", "id": "e2", "color": "#17becf" } ],
-                              [ { "expression": "(m2/1024/1024)", "label": "Permitted Throughput (MiB/s)", "id": "e3", "color": "#7f7f7f" } ],
-                              [ "AWS/EFS", "PermittedThroughput", "FileSystemId", "${ElasticFileSystem}", { "id": "m2", "period": 60, "visible": false } ],
-                              [ ".", "TotalIOBytes", ".", ".", { "id": "m1", "period": 60, "stat": "Sum", "visible": false } ]
+                              [ { "expression": "((m1/1048576)/PERIOD(m1))", "label": "Avgerage Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c", "yAxis": "right" } ],
+                              [ { "expression": "(m2/1048576)", "label": "Permitted Throughput", "id": "e2" } ],
+                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],
+                              [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "fs-5b7d0192", { "id": "m1", "visible": false } ],
+                              [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
                           ],
                           "region": "${AWS::Region}",
-                          "title": "Available Throughput (MiB/s)",
+                          "title": "Throughput Utilization (MiB/s)",
                           "period": 60
                       }
                   },
@@ -175,7 +176,7 @@ Resources:
                           ],
                           "region": "${AWS::Region}",
                           "stacked": false,
-                          "title": "Percent IOPS",
+                          "title": "Percent IOPS Type",
                           "period": 60
                       }
                   },
@@ -198,7 +199,7 @@ Resources:
                           ],
                           "region": "${AWS::Region}",
                           "stacked": false,
-                          "title": "Percent Throughput",
+                          "title": "Percent Throughput Type",
                           "period": 60
                       }
                   },
@@ -222,9 +223,10 @@ Resources:
                       "properties": {
                           "view": "singleValue",
                           "metrics": [
-                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size (Bytes)", "period": 60 } ],
-                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "period": 60 } ],
-                              [ "AWS/EFS", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "period": 60 } ]
+                              [ { "expression": "m2/1048576", "label": "Permitted Throughput (MiB/s)", "id": "e1" } ],
+                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size (Bytes)", "id": "m1" } ],
+                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "id": "m2", "visible": false } ],
+                              [ ".", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "id": "m3" } ]
                           ],
                           "region": "${AWS::Region}",
                           "period": 60,
@@ -254,10 +256,10 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ { "expression": "(m1/1024/1024)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
-                              [ { "expression": "(m2/1024/1024)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
-                              [ { "expression": "(m3/1024/1024)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
-                              [ { "expression": "(m4/1024/1024)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
+                              [ { "expression": "(m1/1048576)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2/1048576)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1048576)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4/1048576)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
                               [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "Sum", "period": 60, "yAxis": "right", "visible": false } ],
                               [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m2", "yAxis": "right", "visible": false } ],
                               [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "yAxis": "right", "visible": false } ],
@@ -303,14 +305,15 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ { "expression": "(m1/1024/1024)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c" } ],
-                              [ { "expression": "e3-e1", "label": "Available Throughput (MiB/s)", "id": "e2", "color": "#17becf" } ],
-                              [ { "expression": "(m2/1024/1024)", "label": "Permitted Throughput (MiB/s)", "id": "e3", "color": "#7f7f7f" } ],
-                              [ "AWS/EFS", "PermittedThroughput", "FileSystemId", "${ElasticFileSystem}", { "id": "m2", "period": 60, "visible": false } ],
-                              [ ".", "TotalIOBytes", ".", ".", { "id": "m1", "period": 60, "stat": "Sum", "visible": false } ]
+                              [ { "expression": "((m1/1048576)/PERIOD(m1))", "label": "Avgerage Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c", "yAxis": "right" } ],
+                              [ { "expression": "(m2/1048576)", "label": "Permitted Throughput (MiB/s)", "id": "e2" } ],
+                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],
+                              [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "visible": false } ],
+                              [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
                           ],
                           "region": "${AWS::Region}",
-                          "title": "Available Throughput (MiB/s)",
+                          "title": "Throughput Utilization",
                           "period": 60
                       }
                   },
@@ -404,9 +407,10 @@ Resources:
                       "properties": {
                           "view": "singleValue",
                           "metrics": [
-                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size (Bytes)", "period": 60 } ],
-                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "period": 60 } ],
-                              [ "AWS/EFS", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "period": 60 } ]
+                              [ { "expression": "m2/1048576", "label": "Permitted Throughput (MiB/s)", "id": "e1" } ],
+                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size (Bytes)", "id": "m1" } ],
+                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "id": "m2", "visible": false } ],
+                              [ ".", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "id": "m3" } ]
                           ],
                           "region": "${AWS::Region}",
                           "period": 60,
