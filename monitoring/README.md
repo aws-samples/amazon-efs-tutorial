@@ -5,9 +5,9 @@
 
 ## Monitoring Tutorial
 
-### Version 1.0.0
+### Version 1.0.1
 
-efs-mt-1.0.0
+efs-mt-1.0.1
 
 ---
 
@@ -63,19 +63,20 @@ Logic: ( sum of …IOBytes x 100(to convert to %) ) ÷ sum of TotalIOBytes
 | Metric | m1 | TotalIOBytes | Sum | 1 Minute |
 | Metric | m2 | …IOBytes | Sum | 1 Minute |
 
-#### Available Throughput (MiB/s)
+#### Throughput Utilization
 
-To calculate the available throughput (MiB/s), find the difference between PermittedThroughput (MiB/s) and calculated Total Throughput (MiB/s).
+To calculate the percent throughput utilization for a time period, first calculate the average throughput (in MiB/second) for a time period by dividing the sum statistic of TotalIOBytes by 1048576 (to convert it to MiB) and divide by the number of seconds in the period. Then take that result and multiply by 100, divide by the sum statistic of PermittedThroughput multiplied by 1048576 (to convert to it MiB).
 
-Logic: ( avg. permitted throughput ÷ 1048576(to convert to MiB) ) - ( ( sum of …IOBytes ÷ 1048576(to convert to MiB) ) ÷ seconds in the period )
+Logic: ((( sum of TotalIOBytes ÷ 1048576 (to convert to MiB) ) ÷ seconds in the period ) x 100 ) ÷ ( sum of PermittedThroughput ÷ seconds in the period )
 
 | CloudWatch Attribute | Id | Details | Statistic | Period |
 | --- | --- | --- | --- | ---
 | Metric math expression | e1 | (m1/1048576)/PERIOD(m1) | | |
 | Metric math expression | e2 | m2/1048576 | | |
 | Metric math expression | e3 | e2-e1 | | |
+| Metric math expression | e4 | ((e1)*100)/(e2) | | |
 | Metric | m1 | TotalIOBytes | Sum | 1 Minute |
-| Metric | m2 | PermittedThroughput | Average | 1 Minute |
+| Metric | m2 | PermittedThroughput | Sum | 1 Minute |
 
 #### Throughput IOPS
 
