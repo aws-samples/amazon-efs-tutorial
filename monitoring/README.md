@@ -36,7 +36,7 @@ Metric Math, a feature within Amazon CloudWatch, makes it easy to perform math a
 
 Amazon CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor your resources in a single view. You can use CloudWatch dashboards to create customized views of the metrics and alarms for your AWS resources. You can have up to 500 dashboards in your AWS account. All dashboards are global, not region-specific.
 
-![](/images/cw_dashboard_mm_efs_02.png)
+![](/images/cw_dashboard_mm_efs_03.png)
 
 Below are some useful metric math expressions for EFS file systems.
 
