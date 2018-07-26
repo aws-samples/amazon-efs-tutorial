@@ -131,7 +131,7 @@ Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below 
 
 After launching the AWS CloudFormation Stack above, you should see a new dashboard in your Amazon CloudWatch console using the naming convention ***aws-region***_***efs-filesystem-id***_mm.
 
-![](/images/cw_dashboard_mm_efs_02.png)
+![](/images/cw_dashboard_mm_efs_03.png)
 
 ## Troubleshooting
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
