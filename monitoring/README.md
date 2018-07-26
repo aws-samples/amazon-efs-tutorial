@@ -51,6 +51,17 @@ Logic: ( sum of …IOBytes ÷ 1048576(to convert to MiB) ) ÷ seconds in the per
 | Metric math expression | e1 | (m1/1048576)/PERIOD(m1) | | |
 | Metric | m1 | …IOBytes | Sum | 1 Minute |
 
+#### IOPS
+
+To calculate the average operations per second (iops) for a period, divide the respective IOBytes sample count statistic (Total, DataRead, DataWrite, Metadata) by the number of seconds in the period.
+
+Logic: ( sample count of …IOBytes ) ÷ seconds in the period
+
+| CloudWatch Attribute | Id | Details | Statistic | Period |
+| --- | --- | --- | --- | ---
+| Metric math expression | e1 | m1/PERIOD(m1) | | |
+| Metric | m1 | …IOBytes | Sample count | 1 Minute |
+
 #### Percent Throughput (%)
 
 To calculate the percent throughput (%) of the different IO types (DataRead, DataWrite, Metadata) for a period, multiple the respective IOBytes sum statistic by 100 and divide by the sum statistic of TotalIOBytes for the same period.
@@ -62,6 +73,18 @@ Logic: ( sum of …IOBytes x 100(to convert to %) ) ÷ sum of TotalIOBytes
 | Metric math expression | e1 | (m2*100)/m1 | | |
 | Metric | m1 | TotalIOBytes | Sum | 1 Minute |
 | Metric | m2 | …IOBytes | Sum | 1 Minute |
+
+#### Percent IOPS (%)
+
+To calculate the percent operations per second (%) of the different IO types (DataRead, DataWrite, Metadata) for a period, multiple the respective IOBytes sample count statistic by 100 and divide by the sample count statistic of TotalIOBytes for the same period.
+
+Logic: ( sample count of …IOBytes x 100(to convert to %) ) ÷ sample count of TotalIOBytes
+
+| CloudWatch Attribute | Id | Details | Statistic | Period |
+| --- | --- | --- | --- | ---
+| Metric math expression | e1 | (m2*100)/m1 | | |
+| Metric | m1 | TotalIOBytes | Sample count | 1 Minute |
+| Metric | m2 | …IOBytes | Sample count | 1 Minute |
 
 #### Throughput Utilization
 
@@ -78,28 +101,13 @@ Logic: ((( sum of TotalIOBytes ÷ 1048576 (to convert to MiB) ) ÷ seconds in th
 | Metric | m1 | TotalIOBytes | Sum | 1 Minute |
 | Metric | m2 | PermittedThroughput | Sum | 1 Minute |
 
-#### Throughput IOPS
+#### IOPS Utilization
 
-To calculate the average operations per second (iops) for a period, divide the respective IOBytes sample count statistic (Total, DataRead, DataWrite, Metadata) by the number of seconds in the period.
-
-Logic: ( sample count of …IOBytes ) ÷ seconds in the period
+No metric math is needed to calculate the percent of IOPS utilization for General Purpose performance mode file systems. This metric is available as PercentIOLimit. This metric is not available for Max I/O performance mode file systems.
 
 | CloudWatch Attribute | Id | Details | Statistic | Period |
 | --- | --- | --- | --- | ---
-| Metric math expression | e1 | m1/PERIOD(m1) | | |
-| Metric | m1 | …IOBytes | Sample count | 1 Minute |
-
-#### Percent IOPS (%)
-
-To calculate the percent operations per second (%) of the different IO types (DataRead, DataWrite, Metadata) for a period, multiple the respective IOBytes sample count statistic by 100 and divide by the sample count statistic of TotalIOBytes for the same period.
-
-Logic: ( sample count of …IOBytes x 100(to convert to %) ) ÷ sample count of TotalIOBytes
-
-| CloudWatch Attribute | Id | Details | Statistic | Period |
-| --- | --- | --- | --- | ---
-| Metric math expression | e1 | (m2*100)/m1 | | |
-| Metric | m1 | TotalIOBytes | Sample count | 1 Minute |
-| Metric | m2 | …IOBytes | Sample count | 1 Minute |
+| Metric | m1 | PercentIOLimit | Average | 1 Minute |
 
 #### Average IO Size (KiB)
 
