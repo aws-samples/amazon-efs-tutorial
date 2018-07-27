@@ -5,9 +5,9 @@
 
 ## Performance Tutorial
 
-### Version 1.1.3
+### Version 1.1.4
 
-efs-pt-1.1.3
+efs-pt-1.1.4
 
 ---
 
@@ -48,8 +48,6 @@ The AWS CloudFormation template will launch three EC2 instances, each in their o
 
 - **GNU Parallel -** [https://www.gnu.org/software/parallel/](https://www.gnu.org/software/parallel/) - used to parallelize single-threaded commands; O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47
 
-- **Mutil *mcp -*** [https://github.com/pkolano/mutil](https://github.com/pkolano/mutil) - multi-threaded drop-in replacement of cp; Author Paul Kolano (NASA)
-
 - **fpart -** [https://github.com/martymac/fpart](https://github.com/martymac/fpart) - sorts file trees and packs them into partitions; Author Ganaël Laplanche
 
 - **fpsync -** wraps fpart + rsync together as a multi-threaded transfer utility - included in the tools/ directory of fpart
@@ -83,7 +81,6 @@ sudo mkdir -p ${efs_mount_point}/tutorial/touch/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/dd/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/cp/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/rsync/${instance_id}
-sudo mkdir -p ${efs_mount_point}/tutorial/mcp/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/parallelcp/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/fpsync/${instance_id}
 sudo mkdir -p ${efs_mount_point}/tutorial/parallelcpio/${instance_id}
@@ -92,15 +89,15 @@ sudo chown ec2-user:ec2-user ${efs_mount_point}/tutorial/ -R
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| ap-northeast-1 |AP (Tokyo)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
-| ap-northeast-2 |AP (Seoul)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.3.yaml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| ap-northeast-1 |AP (Tokyo)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
+| ap-northeast-2 |AP (Seoul)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/performance/templates/efs_performance_tutorial_1.1.4.yaml) |
 
 After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
 
@@ -369,16 +366,7 @@ exit
 time /usr/local/bin/fpsync -n ${threads} -v /ebs/tutorial/data-1m/ /mnt/efs/01/tutorial/fpsync/${instance_id} &
 nload -u M
 ```
-### 5.8.  Transfer files from EBS to EFS using ***mcp***
-Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using mcp.
-```sh
-sudo su
-sync && echo 3 > /proc/sys/vm/drop_caches
-exit
-time mcp -r --threads=${threads} /ebs/tutorial/data-1m/* /mnt/efs/01/tutorial/mcp/${instance_id} &
-nload -u M
-```
-### 5.9.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
+### 5.8.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
 Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp + GNU Parallel.
 ```sh
 sudo su
@@ -387,7 +375,7 @@ exit
 time find /ebs/tutorial/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /mnt/efs/01/tutorial/parallelcp &
 nload -u M
 ```
-### 5.10.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
+### 5.9.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
 Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpart + cpio + GNU Parallel.
 ```sh
 sudo su
@@ -410,9 +398,8 @@ Not all file transfer utilities are created equal. File systems are distributed 
 | 5.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s* |
 | 5.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s* |
 | 5.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s* |
-| 5.8 | mcp | 5000 | 1 MB | 5 GB | 32 | 87 seconds | 58.9 MB/s* |
-| 5.9 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s* |
-| 5.10 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 42 seconds | 122 MB/s* |
+| 5.8 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s* |
+| 5.9 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 42 seconds | 122 MB/s* |
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
