@@ -403,7 +403,7 @@ Not all file transfer utilities are created equal. File systems are distributed 
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
-![](/images/efs_performance_tutorial_file_transfer_results_20180727.png)
+![](/images/efs_performance_tutorial_file_transfer_results_20180726.png)
 
 ## Section 6
 ### Cleanup
