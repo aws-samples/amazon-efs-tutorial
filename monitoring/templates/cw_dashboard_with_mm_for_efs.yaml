@@ -125,7 +125,7 @@ Resources:
                               [ { "expression": "(m2/1048576)", "label": "Permitted Throughput", "id": "e2" } ],
                               [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],
                               [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
-                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "fs-5b7d0192", { "id": "m1", "visible": false } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "visible": false } ],
                               [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
                           ],
                           "region": "${AWS::Region}",
