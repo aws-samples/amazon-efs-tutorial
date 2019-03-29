@@ -75,6 +75,16 @@ Click on the ![](/images/efs_tutorial.png) link below to go to the **Monitoring*
 | --- | ---
 | **Monitoring** | [![](/images/efs_tutorial.png)](/monitoring) |
 
+### 5. In-cloud Transfer
+The AWS DataSync In-cloud Transfer Quick Start and Scheduler creates a one-time or recurring schedule to transfer files between source and destination Amazon EFS file systems. These file systems could be in the same or different AWS regions.
+
+Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Transfer** Quick Start.
+
+| Quick Start | Link
+| --- | ---
+| **In-cloud Transfer** | [![](/images/efs_tutorial.png)](/in-cloud-transfer) |
+
+
 ---
 
 ## Troubleshooting
