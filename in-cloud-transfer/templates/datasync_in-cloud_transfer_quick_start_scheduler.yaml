@@ -299,6 +299,7 @@ Resources:
             Groups:
               - !Ref SourceSecurityGroupId
             SubnetId: !Ref SourceSubnetId
+            AssociatePublicIpAddress: true
         TagSpecifications:
           - ResourceType: instance
             Tags:
@@ -484,6 +485,7 @@ Resources:
                 - export PATH=/usr/local/bin:$PATH
                 - source /tmp/functions_datasync.sh
                 - agentIp=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+                - sleep 30
                 - echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Execute\tCreating datasync resources" >> /tmp/datasync_setup.log 2>&1
                 - /tmp/create_datasync_resources.sh ${!agentIp} ${SourceDnsName} ${SourceSubdirectory} ${DestinationEfsFilesystemId} ${DestinationSubdirectory} ${DestinationSubnetId} ${DestinationSecurityGroupId} ${DestinationLocationRegion} ${AWS::AccountId} ${AWS::StackName}
                 - if [ "$?" != "0" ]; then echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Error\t\tFailed to create datasync resources" >> /tmp/datasync_setup.log 2>&1; else echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Success\tCreated datasync resources" >> /tmp/datasync_setup.log 2>&1; fi
