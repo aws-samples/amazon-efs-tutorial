@@ -92,6 +92,7 @@ Shell script to launch the CloudFormation stack using a local parameter file and
 To launch the Quick Start, click on the link below if the source AWS region and enter the input parameters based on their descriptions below.
 
 
+
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
 | us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
