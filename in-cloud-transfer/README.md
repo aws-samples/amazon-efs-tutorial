@@ -71,7 +71,7 @@ For a detailed description of all the resources created by this template, please
 
 ### Launching the Quick Start
 
-To better understand how the CloudFormation template and input parameters map to resources found in the quick start’s architecture, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf) 
+To better understand how the CloudFormation template and input parameters map to resources found in the quick start’s architecture, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf) 
 
 You can optionally launch the CloudFormation template from a command line using a parameter file. Links to these sample scripts are below:
 
