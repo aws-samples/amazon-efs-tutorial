@@ -299,7 +299,6 @@ Resources:
             Groups:
               - !Ref SourceSecurityGroupId
             SubnetId: !Ref SourceSubnetId
-            AssociatePublicIpAddress: true
         TagSpecifications:
           - ResourceType: instance
             Tags:
@@ -320,13 +319,19 @@ Resources:
                 - content: |
                     #!/bin/bash
 
-                    function createAgent
+                    function getActivationKey
                     {
                         local destinationLocationRegion=$1
-                        local agentIp=$2
-                        local stackName=$3
 
-                        local activationKey=$(curl --silent --head --connect-timeout 2 "${!agentIp}?gatewayType=SYNC&activationRegion=${!destinationLocationRegion}" | grep activationKey | sed -e 's/.*activationKey=//' | cut -c 1-29)
+                        curl --silent "localhost:8080/?gatewayType=SYNC&activationRegion=${!destinationLocationRegion}&no_redirect"
+                    }
+
+                    function createAgent
+                    {
+                        local agentIp=$1
+                        local destinationLocationRegion=$2
+                        local stackName=$3
+                        local activationKey=$4
 
                         aws datasync create-agent --activation-key ${!activationKey} --agent-name ${!agentIp} --region ${!destinationLocationRegion} --tags Key=StackName,Value=${!stackName} --output text
                     }
@@ -421,12 +426,22 @@ Resources:
                     # start create delete datasync resources script
                     echo -e "aws cloudformation delete-stack --stack-name ${!stackName} --region ${AWS::Region}" >> /tmp/delete_datasync_resources.sh
 
-                    # activate agent
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Execute\tSelf-activating and creating agent in ${!destinationLocationRegion} for ${!agentIp}" >> /tmp/datasync_setup.log 2>&1
-                    agentArn=$(createAgent ${!destinationLocationRegion} ${!agentIp} ${!stackName})
+                    # get activation key
+                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Execute\tSelf-activating and generating activation key on agent on ${!agentIp}" >> /tmp/datasync_setup.log 2>&1
+                    activationKey=$(getActivationKey ${!destinationLocationRegion})                    
                     if [ "$?" != "0" ]
                     then
-                        echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to self-activate or create agent in ${!destinationLocationRegion} for ${!agentIp}" >> /tmp/datasync_setup.log 2>&1
+                       echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to self-activate or generate activation key on ${!agentIp}" >> /tmp/datasync_setup.log 2>&1
+                       exit 1
+                    fi
+                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tKey generated: ${!activationKey}" >> /tmp/datasync_setup.log 2>&1
+
+                    # activate agent
+                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Execute\tCreating agent in ${!destinationLocationRegion} for ${!agentIp} using activation key ${!activationKey}" >> /tmp/datasync_setup.log 2>&1
+                    agentArn=$(createAgent ${!agentIp} ${!destinationLocationRegion} ${!stackName} ${!activationKey})
+                    if [ "$?" != "0" ]
+                    then
+                        echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to create agent in ${!destinationLocationRegion} for ${!agentIp} using activation key ${!activationKey}" >> /tmp/datasync_setup.log 2>&1
                         exit 1
                     fi
                     echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tAgent created: ${!agentArn}" >> /tmp/datasync_setup.log 2>&1
@@ -440,7 +455,7 @@ Resources:
                         echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to create source location for ${!sourceDnsName}" >> /tmp/datasync_setup.log 2>&1
                         exit 1
                     fi
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tSource location (nfs) created: ${!sourceLocationArn}" >> /tmp/datasync_setup.log 2>&1
+                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tSource location(nfs) created: ${!sourceLocationArn}" >> /tmp/datasync_setup.log 2>&1
                     sed -i "1iaws datasync delete-location --location-arn ${!sourceLocationArn} --region ${!destinationLocationRegion}" /tmp/delete_datasync_resources.sh
 
                     # create destination location (efs)
@@ -451,7 +466,7 @@ Resources:
                         echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to create destination location for ${!destinationEfsFilesystemId}" >> /tmp/datasync_setup.log 2>&1
                         exit 1
                     fi
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tDestination location (efs) created: ${!destinationLocationArn}" >> /tmp/datasync_setup.log 2>&1
+                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tDestination location(efs) created: ${!destinationLocationArn}" >> /tmp/datasync_setup.log 2>&1
                     sed -i "1iaws datasync delete-location --location-arn ${!destinationLocationArn} --region ${!destinationLocationRegion}" /tmp/delete_datasync_resources.sh
 
                     # create task
@@ -484,8 +499,9 @@ Resources:
                 - ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
                 - export PATH=/usr/local/bin:$PATH
                 - source /tmp/functions_datasync.sh
-                - agentIp=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-                - sleep 30
+                - agentIp=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+                - sleep 60
+                - echo /tmp/create_datasync_resources.sh ${!agentIp} ${SourceDnsName} ${SourceSubdirectory} ${DestinationEfsFilesystemId} ${DestinationSubdirectory} ${DestinationSubnetId} ${DestinationSecurityGroupId} ${DestinationLocationRegion} ${AWS::AccountId} ${AWS::StackName}
                 - echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Execute\tCreating datasync resources" >> /tmp/datasync_setup.log 2>&1
                 - /tmp/create_datasync_resources.sh ${!agentIp} ${SourceDnsName} ${SourceSubdirectory} ${DestinationEfsFilesystemId} ${DestinationSubdirectory} ${DestinationSubnetId} ${DestinationSecurityGroupId} ${DestinationLocationRegion} ${AWS::AccountId} ${AWS::StackName}
                 - if [ "$?" != "0" ]; then echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Error\t\tFailed to create datasync resources" >> /tmp/datasync_setup.log 2>&1; else echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Success\tCreated datasync resources" >> /tmp/datasync_setup.log 2>&1; fi
