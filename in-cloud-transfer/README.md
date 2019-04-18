@@ -71,25 +71,26 @@ For a detailed description of all the resources created by this template, please
 
 ### Launching the Quick Start
 
-To better understand how the CloudFormation template and input parameters map to resources found in the quick start’s architecture, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf) 
+To better understand how the CloudFormation template and input parameters map to resources found in the quick start’s architecture, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf) 
 
 You can optionally launch the CloudFormation template from a command line using a parameter file. Links to these sample scripts are below:
 
 The CloudFormation template.
 
-![https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml)
+[https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml)
 
 
 A CloudFormation parameter file.
 
-![https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_parameter_file.json](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_parameter_file.json)
+[https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_parameter_file.json](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_parameter_file.json)
 
 Shell script to launch the CloudFormation stack using a local parameter file and template from an Amazon S3 bucket.
 
-![https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh)
+[https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh)
 
 
 To launch the Quick Start, click on the link below if the source AWS region and enter the input parameters based on their descriptions below.
+
 
 
 | AWS Region Code | Name | Launch |
@@ -108,7 +109,7 @@ To launch the Quick Start, click on the link below if the source AWS region and 
 
 ## Managing the Quick Start
 
-For a detailed description and examples on how to manage, run, edit, etc. in-cloud transfers, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf)
+For a detailed description and examples on how to manage, run, edit, etc. in-cloud transfers, please refer to the [AWS DataSync In-cloud Transfer Quick Start and Scheduler user guide.](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler_ug.pdf)
 
 ## Deleting resources
 AWS DataSync resources can’t be created natively with AWS CloudFormation so non-DataSync resources are created as a part of the CloudFormation stack while DataSync resources are created from a shell script on the DataSync agent EC2 instance. If you delete the CloudFormation stack it will only delete the non-DataSync resources and the DataSync resources will remain. In order to clean up all AWS resources created with this quick start, go to the Outputs of the CloudFormation stack in the source AWS region. Copy the value of the ViewDeleteDataSyncResourcesScript key and execute it in a terminal window. The output of this script will return commands that you copy, paste, and run in a terminal window to delete the resources. This will properly delete all DataSync resources, including the agent, source and destination locations (not the actual file systems but the DataSync locations for the file systems), task, and the CloudFormation stack. When the CloudFormation stack is deleted with this script, all non-DataSync resources created by the stack will be deleted as well.
@@ -133,4 +134,4 @@ For feedback, suggestions, or corrections, please email me at [darrylo@amazon.co
 
 
 ## License
-This library is licensed under the Amazon Software License.
+This sample code is made available under the MIT-0 license. See the LICENSE file.
