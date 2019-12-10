@@ -315,7 +315,7 @@ Resources:
       FunctionName: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor' ] ]
       Handler: index.handler
       Role: !GetAtt LambdaRoleRetain.Arn
-      Runtime: python2.7
+      Runtime: python3.8
       Timeout: 60
   EfsSizeMonitorFunctionDelete:
     Type: AWS::Lambda::Function
@@ -376,7 +376,7 @@ Resources:
       FunctionName: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor' ] ]
       Handler: index.handler
       Role: !GetAtt LambdaRoleDelete.Arn
-      Runtime: python2.7
+      Runtime: python3.8
       Timeout: 60
   LambdaRoleRetain:
     Type: AWS::IAM::Role
