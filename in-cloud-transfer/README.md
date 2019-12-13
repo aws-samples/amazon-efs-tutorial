@@ -89,7 +89,7 @@ Shell script to launch the CloudFormation stack using a local parameter file and
 [https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.sh)
 
 
-To launch the Quick Start, click on the link below if the source AWS region and enter the input parameters based on their descriptions below.
+To launch the Quick Start, click on the link below for the source AWS region and enter the input parameters.
 
 
 
