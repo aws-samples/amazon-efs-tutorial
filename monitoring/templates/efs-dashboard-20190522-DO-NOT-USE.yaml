@@ -1,0 +1,626 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an Amazon CloudWatch dashboard with Metric Math expressions to monitor an Amazon EFS file system. It also includes a file system size custom metric to display the metered size of the file system.
+
+Metadata:
+
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      SPDX-License-Identifier: MIT-0'
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File System Parameters
+      Parameters:
+        - ElasticFileSystem
+        - DeletionPolicy
+    ParameterLabels:
+      DeletionPolicy:
+        default: Retain or Delete
+      ElasticFileSystem:
+        default: Amazon EFS File System
+
+Parameters:
+
+  DeletionPolicy:
+    AllowedValues:
+      - Delete
+      - Retain
+    Default: Delete
+    Description: Retain or delete the Amazon EFS Dashboard after the CloudFormation stack is deleted.
+    Type: String
+  ElasticFileSystem:
+    AllowedPattern: ^(fs-)([a-z0-9]{8})$
+    Description: Amazon EFS file system id.
+    Type: String
+
+Conditions:
+
+  Delete:
+    !Equals [ !Ref DeletionPolicy, Delete ]
+  Retain:
+    !Equals [ !Ref DeletionPolicy, Retain ]
+
+Resources:
+
+  EfsDashboardRetain:
+    Type: AWS::CloudWatch::Dashboard
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties:
+      DashboardName: !Join [ '_', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, 'mm' ] ]
+      DashboardBody:
+        !Sub |
+          {
+              "widgets": [
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 3,
+                      "width": 15,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1/1048576)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2/1048576)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1048576)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4/1048576)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "Sum", "period": 60, "yAxis": "right", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m2", "yAxis": "right", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "yAxis": "right", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m4", "yAxis": "right", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "Total Throughput (MiB/s)"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 18,
+                      "width": 9,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1/1024)/m2", "label": "Data Write IO Size (KiB)", "id": "e1", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1024)/m4", "label": "Data Read IO Size (KiB)", "id": "e2", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m5/1024)/m6", "label": "Metadata IO Size (KiB)", "id": "e3", "color": "#d62728" } ],
+                              [ "AWS/EFS", "DataWriteIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "Sum", "period": 60, "id": "m1", "visible": false } ],
+                              [ "...", { "stat": "SampleCount", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "visible": false } ],
+                              [ "...", { "period": 60, "stat": "SampleCount", "id": "m4", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m5", "visible": false } ],
+                              [ "...", { "period": 60, "stat": "SampleCount", "id": "m6", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "title": "Avg. IO Size (KiB)",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 18,
+                      "width": 15,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "((m1/1048576)/PERIOD(m1))", "label": "Avgerage Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c", "yAxis": "right" } ],
+                              [ { "expression": "(m2/1048576)", "label": "Permitted Throughput", "id": "e2" } ],
+                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],                              
+                              [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "visible": false } ],
+                              [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "title": "Throughput Utilization (MiB/s)",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 3,
+                      "width": 9,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1)/PERIOD(m1)", "label": "Total iops", "id": "e1", "yAxis": "left", "stat": "SampleCount", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2)/PERIOD(m2)", "label": "Data Write iops", "id": "e2", "stat": "SampleCount", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3)/PERIOD(m3)", "label": "Data Read iops", "id": "e3", "stat": "SampleCount", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4)/PERIOD(m4)", "label": "Metadata iops", "id": "e4", "stat": "SampleCount", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "SampleCount", "period": 60, "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "Total IOPS"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 12,
+                      "width": 9,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "metrics": [
+                              [ { "expression": "m2*100/m1", "label": "Data Write (%)", "id": "e1", "color": "#1f77b4" } ],
+                              [ { "expression": "m3*100/m1", "label": "Data Read (%)", "id": "e2", "color": "#ff7f0e" } ],
+                              [ { "expression": "m4*100/m1", "label": "Metadata (%)", "id": "e3", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "SampleCount", "period": 60, "id": "m1", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "stat": "SampleCount", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "stat": "SampleCount", "period": 60,  "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "stat": "SampleCount", "period": 60, "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "stacked": false,
+                          "title": "Percent IOPS Type",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 12,
+                      "width": 15,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "metrics": [
+                              [ { "expression": "m2*100/m1", "label": "Data Write (%)", "id": "e1", "stat": "Sum", "color": "#1f77b4" } ],
+                              [ { "expression": "m3*100/m1", "label": "Data Read (%)", "id": "e2", "stat": "Sum", "color": "#ff7f0e" } ],
+                              [ { "expression": "m4*100/m1", "label": "Metadata (%)", "id": "e3", "stat": "Sum", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "Sum", "period": 60, "id": "m1", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "stacked": false,
+                          "title": "Percent Throughput Type",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "text",
+                      "x": 15,
+                      "y": 0,
+                      "width": 9,
+                      "height": 3,
+                      "properties": {
+                          "markdown": "\n# Amazon EFS file system: ${ElasticFileSystem}\n## Region: ${AWS::Region}\n"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 0,
+                      "width": 15,
+                      "height": 3,
+                      "styles": "undefined",
+                      "properties": {
+                          "view": "singleValue",
+                          "metrics": [
+                              [ { "expression": "m2/1048576", "label": "Permitted Throughput (MiB/s)", "id": "e1" } ],
+                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size (Bytes)", "id": "m1" } ],
+                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "id": "m2", "visible": false } ],
+                              [ ".", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "id": "m3" } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "File system metrics"
+                      }
+                  }
+              ]
+          }
+
+  EfsDashboardDelete:
+    Type: AWS::CloudWatch::Dashboard
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties:
+      DashboardName: !Join [ '_', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, 'mm' ] ]
+      DashboardBody:
+        !Sub |
+          {
+              "widgets": [
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 3,
+                      "width": 15,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1/1048576)/PERIOD(m1)", "label": "Total Throughput (MiB/s)", "id": "e1", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2/1048576)/PERIOD(m2)", "label": "Data Write Throughput (MiB/s)", "id": "e2", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1048576)/PERIOD(m3)", "label": "Data Read Throughput (MiB/s)", "id": "e3", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4/1048576)/PERIOD(m4)", "label": "Metadata Throughput (MiB/s)", "id": "e4", "yAxis": "left", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "Sum", "period": 60, "yAxis": "right", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m2", "yAxis": "right", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "yAxis": "right", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m4", "yAxis": "right", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "Total Throughput (MiB/s)"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 18,
+                      "width": 9,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1/1024)/m2", "label": "Data Write IO Size (KiB)", "id": "e1", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3/1024)/m4", "label": "Data Read IO Size (KiB)", "id": "e2", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m5/1024)/m6", "label": "Metadata IO Size (KiB)", "id": "e3", "color": "#d62728" } ],
+                              [ "AWS/EFS", "DataWriteIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "Sum", "period": 60, "id": "m1", "visible": false } ],
+                              [ "...", { "stat": "SampleCount", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m3", "visible": false } ],
+                              [ "...", { "period": 60, "stat": "SampleCount", "id": "m4", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "m5", "visible": false } ],
+                              [ "...", { "period": 60, "stat": "SampleCount", "id": "m6", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "title": "Avg. IO Size (KiB)",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 18,
+                      "width": 15,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "((m1/1048576)/PERIOD(m1))", "label": "Avgerage Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c", "yAxis": "right" } ],
+                              [ { "expression": "(m2/1048576)", "label": "Permitted Throughput (MiB/s)", "id": "e2" } ],
+                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],
+                              [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "visible": false } ],
+                              [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "title": "Throughput Utilization",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 3,
+                      "width": 9,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "(m1)/PERIOD(m1)", "label": "Total iops", "id": "e1", "yAxis": "left", "stat": "SampleCount", "color": "#2ca02c" } ],
+                              [ { "expression": "(m2)/PERIOD(m2)", "label": "Data Write iops", "id": "e2", "stat": "SampleCount", "color": "#1f77b4" } ],
+                              [ { "expression": "(m3)/PERIOD(m3)", "label": "Data Read iops", "id": "e3", "stat": "SampleCount", "color": "#ff7f0e" } ],
+                              [ { "expression": "(m4)/PERIOD(m4)", "label": "Metadata iops", "id": "e4", "stat": "SampleCount", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "stat": "SampleCount", "period": 60, "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "period": 60, "stat": "SampleCount", "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "Total IOPS"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 12,
+                      "width": 9,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "metrics": [
+                              [ { "expression": "m2*100/m1", "label": "Data Write (%)", "id": "e1", "color": "#1f77b4" } ],
+                              [ { "expression": "m3*100/m1", "label": "Data Read (%)", "id": "e2", "color": "#ff7f0e" } ],
+                              [ { "expression": "m4*100/m1", "label": "Metadata (%)", "id": "e3", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "SampleCount", "period": 60, "id": "m1", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "stat": "SampleCount", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "stat": "SampleCount", "period": 60,  "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "stat": "SampleCount", "period": 60, "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "stacked": false,
+                          "title": "Percent IOPS",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 12,
+                      "width": 15,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "metrics": [
+                              [ { "expression": "m2*100/m1", "label": "Data Write (%)", "id": "e1", "stat": "Sum", "color": "#1f77b4" } ],
+                              [ { "expression": "m3*100/m1", "label": "Data Read (%)", "id": "e2", "stat": "Sum", "color": "#ff7f0e" } ],
+                              [ { "expression": "m4*100/m1", "label": "Metadata (%)", "id": "e3", "stat": "Sum", "color": "#d62728" } ],
+                              [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "stat": "Sum", "period": 60, "id": "m1", "visible": false } ],
+                              [ ".", "DataWriteIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m2", "visible": false } ],
+                              [ ".", "DataReadIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m3", "visible": false } ],
+                              [ ".", "MetadataIOBytes", ".", ".", { "stat": "Sum", "period": 60, "id": "m4", "visible": false } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "stacked": false,
+                          "title": "Percent Throughput",
+                          "period": 60
+                      }
+                  },
+                  {
+                      "type": "text",
+                      "x": 15,
+                      "y": 0,
+                      "width": 9,
+                      "height": 3,
+                      "properties": {
+                          "markdown": "\n# Amazon EFS file system: ${ElasticFileSystem}\n## Region: ${AWS::Region}\n"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 0,
+                      "width": 15,
+                      "height": 3,
+                      "styles": "undefined",
+                      "properties": {
+                          "view": "singleValue",
+                          "metrics": [
+                              [ { "expression": "m2/1048576", "label": "Permitted Throughput (MiB/s)", "id": "e1" } ],
+                              [ "Custom/EFS", "SizeInBytes", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size Total (Bytes)", "id": "m1" } ],
+                              [ "Custom/EFS", "SizeInBytesStandard", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size Standard (Bytes)", "id": "m2" } ],
+                              [ "Custom/EFS", "SizeInBytesIA", "FileSystemId", "${ElasticFileSystem}", { "label": "Metered Size IA (Bytes)", "id": "m3" } ],
+                              [ "AWS/EFS", "PermittedThroughput", ".", ".", { "label": "Permitted Throughput", "id": "m4", "visible": false } ],
+                              [ ".", "BurstCreditBalance", ".", ".", { "label": "BurstCreditBalance", "id": "m5" } ]
+                          ],
+                          "region": "${AWS::Region}",
+                          "period": 60,
+                          "title": "File system metrics"
+                      }
+                  }
+              ]
+          }
+
+  EfsSizeMonitorEventRetain:
+    Type: AWS::Events::Rule
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
+      Name: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor-scheduled-event', !Ref 'AWS::StackName' ] ]
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt EfsSizeMonitorFunctionRetain.Arn
+          Id: 1
+
+  EfsSizeMonitorEventDelete:
+    Type: AWS::Events::Rule
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
+      Name: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor-scheduled-event', !Ref 'AWS::StackName' ] ]
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt EfsSizeMonitorFunctionDelete.Arn
+          Id: 1
+
+  EfsLambdaPermissionRetain: 
+    Type: AWS::Lambda::Permission
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      FunctionName: !Ref EfsSizeMonitorFunctionRetain
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EfsSizeMonitorEventRetain.Arn
+
+  EfsLambdaPermissionDelete: 
+    Type: AWS::Lambda::Permission
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      FunctionName: !Ref EfsSizeMonitorFunctionDelete
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EfsSizeMonitorEventDelete.Arn
+
+  EfsSizeMonitorFunctionRetain:
+    Type: AWS::Lambda::Function
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties: 
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import os
+          import sys
+
+          def handler(event, context):
+              if not os.environ.get('filesystemid'):
+                  print "Unable to get the environment variable filesystemid"
+                  sys.exit(1)
+              else:
+                  filesystemid = os.environ.get('filesystemid')
+
+              if not os.environ.get('region'):
+                  print "Unable to get the environment variable region"
+                  sys.exit(1)
+              else:
+                  region = os.environ.get('region')
+
+              def efs_get_size():
+                  client = boto3.client('efs')
+                  response = client.describe_file_systems(FileSystemId=filesystemid)
+                  k = response['FileSystems'][0]['SizeInBytes']['ValueInIA']
+                  return k
+
+              def cloudwatch_put_metric():
+                  client = boto3.client('cloudwatch')
+                  client.put_metric_data(
+                      MetricData=[
+                          {
+                              'MetricName': 'SizeInBytes',
+                              'Dimensions': [
+                                  {
+                                      'Name': 'FileSystemId',
+                                      'Value': filesystemid
+                                  },
+                              ],
+                              'Unit': 'None',
+                              'Value': efs_get_size()
+                          },
+                      ],
+                      Namespace='Custom/EFS'
+                  )
+                  print('CloudWatch metric SizeInBytes sucessfully updated.')
+
+              cloudwatch_put_metric()
+      Description: Lambda function to update the SizeInBytes EFS CloudWatch metric
+      Environment:
+        Variables:
+          filesystemid: !Ref ElasticFileSystem
+          region: !Ref 'AWS::Region'
+      FunctionName: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor', !Ref 'AWS::StackName' ] ]
+      Handler: index.handler
+      Role: !GetAtt LambdaRoleRetain.Arn
+      Runtime: python2.7
+      Timeout: 60
+
+  EfsSizeMonitorFunctionDelete:
+    Type: AWS::Lambda::Function
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties: 
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import os
+          import sys
+
+          def handler(event, context):
+              if not os.environ.get('filesystemid'):
+                  print "Unable to get the environment variable filesystemid"
+                  sys.exit(1)
+              else:
+                  filesystemid = os.environ.get('filesystemid')
+
+              if not os.environ.get('region'):
+                  print "Unable to get the environment variable region"
+                  sys.exit(1)
+              else:
+                  region = os.environ.get('region')
+
+              def efs_get_size():
+                  client = boto3.client('efs')
+                  response = client.describe_file_systems(FileSystemId=filesystemid)
+                  k = response['FileSystems'][0]['SizeInBytes']['ValueInIA']
+                  return k
+
+              def cloudwatch_put_metric():
+                  client = boto3.client('cloudwatch')
+                  client.put_metric_data(
+                      MetricData=[
+                          {
+                              'MetricName': 'SizeInBytes',
+                              'Dimensions': [
+                                  {
+                                      'Name': 'FileSystemId',
+                                      'Value': filesystemid
+                                  },
+                              ],
+                              'Unit': 'None',
+                              'Value': efs_get_size()
+                          },
+                      ],
+                      Namespace='Custom/EFS'
+                  )
+                  print('CloudWatch metric SizeInBytes sucessfully updated.')
+
+              cloudwatch_put_metric()
+      Description: Lambda function to update the SizeInBytes EFS CloudWatch metric
+      Environment:
+        Variables:
+          filesystemid: !Ref ElasticFileSystem
+          region: !Ref 'AWS::Region'
+      FunctionName: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor', !Ref 'AWS::StackName' ] ]
+      Handler: index.handler
+      Role: !GetAtt LambdaRoleDelete.Arn
+      Runtime: python2.7
+      Timeout: 60
+
+  LambdaRoleRetain:
+    Type: AWS::IAM::Role
+    Condition: Retain
+    DeletionPolicy: Retain
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
+
+  LambdaRoleDelete:
+    Type: AWS::IAM::Role
+    Condition: Delete
+    DeletionPolicy: Delete
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
