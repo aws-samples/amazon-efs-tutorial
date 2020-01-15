@@ -383,7 +383,7 @@ sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
 cd /ebs/tutorial/smallfile
-time /usr/local/bin/fpart -Z -n 1 -o /home/ec2-user/fpart-files-to-transfer .
+time /usr/local/bin/fpart -z -n 1 -o /home/ec2-user/fpart-files-to-transfer .
 head /home/ec2-user/fpart-files-to-transfer.0
 time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /mnt/efs/01/tutorial/parallelcpio/${instance_id}" &
 nload -u M
