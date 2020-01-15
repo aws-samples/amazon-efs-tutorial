@@ -136,7 +136,7 @@ Resources:
         S3Bucket: !Sub solution-references-${AWS::Region}
         S3Key: datasync/amilookup-datasync-agent.zip
       Handler: amilookup-datasync-agent.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       Timeout: 30
       Role: !GetAtt LambdaExecutionRole.Arn
   AmiInfo:
