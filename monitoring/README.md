@@ -100,7 +100,7 @@ Logic: ((( sum of TotalIOBytes ÷ 1048576 (to convert to MiB) ) ÷ seconds in th
 | Metric math expression | e3 | e2-e1 | | |
 | Metric math expression | e4 | ((e1)*100)/(e2) | | |
 | Metric | m1 | TotalIOBytes | Sum | 1 Minute |
-| Metric | m2 | PermittedThroughput | Sum | 1 Minute |
+| Metric | m2 | PermittedThroughput | Average | 1 Minute |
 
 #### IOPS Utilization
 
