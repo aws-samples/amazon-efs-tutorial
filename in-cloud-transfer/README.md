@@ -16,13 +16,13 @@
 
 ## AWS DataSync Quick Start In-cloud Transfer and Scheduler
 
-### Version 1.0.0
+### Version 1.1.0
 
-efs-ts-1.0.0
+efs-ts-1.1.0
 
 ---
 
-© 2019 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
+© 2020 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
@@ -57,11 +57,11 @@ The AWS DataSync In-cloud Transfer Quick Start and Scheduler can be used for a w
 
 ### The Environment and architecture
 
-The AWS DataSync In-cloud Transfer Quick Start and Scheduler is an AWS CloudFormation template that must be launched in the AWS region where the source file system resides. A DataSync agent is deployed as an EC2 instance in the source region. This instance must have network access to the source NFS or EFS file system. The agent will self-activate in the destination region and setup DataSync locations in the destination region for the source and destination file systems.  A data transfer task, using the default task configuration settings (e.g. which attributes will transfers, verification task, etc.) is also created in the destination region. For more information on DataSync task configuration settings, please refer to the Working with Tasks section of the [AWS DataSync User Guide.](https://docs.aws.amazon.com/datasync/latest/userguide/working-with-tasks.html) DataSync does not support Amazon CloudFormation so all DataSync resources are created by a script run on the agent EC2 instance. This EC2 instance fulfills three main roles. First, it runs a script once to create DataSync resources in the destination AWS region. Second, it runs a script to start task executions triggered by an AWS System Manager Maintenance Window based on the cron expression schedule setup when launching the CloudFormation stack. And third, it is the DataSync agent transferring files from the source location to the destination location over a TLS 1.2 connection. Please refer to How AWS DataSync Works in the [AWS DataSync User Guide.](https://docs.aws.amazon.com/datasync/latest/userguide/how-datasync-works.html) 
+The AWS DataSync In-cloud Transfer Quick Start and Scheduler is an AWS CloudFormation template that must be launched in the AWS region where the source file system resides. A DataSync agent is deployed as an EC2 instance in the source region. This instance must have network access to the source NFS or EFS file system. The agent will self-activate in the destination region and setup DataSync locations in the destination region for the source and destination file systems.  A data transfer task, using the default task configuration settings (e.g. which attributes will transfers, verification task, etc.) is also created in the destination region. For more information on DataSync task configuration settings, please refer to the Working with Tasks section of the [AWS DataSync User Guide.](https://docs.aws.amazon.com/datasync/latest/userguide/working-with-tasks.html) DataSync does not support Amazon CloudFormation so all DataSync resources are created by a script run on the agent EC2 instance. This EC2 instance fulfills two main roles. First, it runs a script once to create DataSync resources in the destination AWS region. And second, it is the DataSync agent transferring files from the source location to the destination location over a TLS 1.2 connection. Please refer to How AWS DataSync Works in the [AWS DataSync User Guide.](https://docs.aws.amazon.com/datasync/latest/userguide/how-datasync-works.html) 
 
 There are many variables involved in determining how fast these transfers will perform. For example, transferring larger files will result in higher throughput while smaller files will yield slower throughput. Performance characteristics of the source or destination EFS file systems, i.e. bursting or provisioned throughput, general purpose or Max I/O performance modes, will also play a role in the overall transfer speed. Please refer to Amazon EFS Performance in the [Amazon EFS User Guide.](https://docs.aws.amazon.com/efs/latest/ug/performance.html) 
 
-![](https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/in-cloud-transfer/AWS_DataSync_Task_Scheduler_Architecture_20190305.png)
+![](https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/AWS_DataSync_Task_Scheduler_Architecture_20200221.png)
 
 ### Resources created
 
@@ -77,7 +77,7 @@ You can optionally launch the CloudFormation template from a command line using 
 
 The CloudFormation template.
 
-[https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml](https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml)
+[https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml](https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml)
 
 
 A CloudFormation parameter file.
@@ -95,16 +95,16 @@ To launch the Quick Start, click on the link below for the source AWS region and
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| ap-northeast-1 |AP (Tokyo)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| ap-northeast-2 |AP (Seoul)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| ap-southeast-1 |AP (Singapore)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://s3.amazonaws.com/solution-references/datasync/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| ap-northeast-1 |AP (Tokyo)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| ap-northeast-2 |AP (Seoul)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| ap-southeast-1 |AP (Singapore)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=in-cloud-transfer&templateURL=https://aws-us-east-1.s3.amazonaws.com/amazon-efs-tutorial/in-cloud-transfer/datasync_in-cloud_transfer_quick_start_scheduler.yaml) |
 
 
 ## Managing the Quick Start
