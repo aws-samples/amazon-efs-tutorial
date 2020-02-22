@@ -67,12 +67,10 @@ Metadata:
         default: Schedule of task run
 Parameters:
   DestinationEfsFilesystemId:
-    Default: fs-4a038fe0
     AllowedPattern: ^(fs-)([a-z0-9]{8})$
     Description: Destination EFS filesystem id.
     Type: String
   DestinationLocationRegion:
-    Default: us-west-2
     AllowedValues:
     - us-east-1
     - us-east-2
@@ -87,7 +85,6 @@ Parameters:
     Description: Destination AWS region.
     Type: String 
   DestinationSecurityGroupId:
-    Default: sg-a7f1fac5
     AllowedPattern: ^(sg-)(?=[a-z0-9]*?)(?:.{8}|.{17})$
     Description: Destination EFS security group id.
     Type: String
@@ -96,12 +93,10 @@ Parameters:
     Type: String
     Default: "/"
   DestinationSubnetId:
-    Default: subnet-b94015ff
     AllowedPattern: ^(subnet-)(?=[a-z0-9]*?)(?:.{8}|.{17})$
     Description: Destination EFS subnet id.
     Type: String    
   Ec2KeyName:
-    Default: darryl-aws-key
     Description: Name of an EC2 key pair.
     Type: AWS::EC2::KeyPair::KeyName
   InstanceType:
@@ -117,11 +112,9 @@ Parameters:
     Description: Instance type
     Type: String
   SourceDnsName:
-    Default: fs-2a5ad780.efs.us-west-2.amazonaws.com
     Description: The DNS name of the source NFS file system.
     Type: String
   SourceSecurityGroupId:
-    Default: sg-a7f1fac5
     Description: Select the security group that has NFS (TCP 2049) network access to the source file system.
     Type: AWS::EC2::SecurityGroup::Id          
   SourceSubdirectory:
@@ -129,11 +122,9 @@ Parameters:
     Description: The directory of the source NFS file system.
     Type: String
   SourceSubnetId:
-    Default: subnet-b94015ff
     Description: Select existing subnets.
     Type: AWS::EC2::Subnet::Id
   TaskSchedule:
-    Default: "0 0/6 * * ? *"
     Description: Task cron schedule (cron format in UTC - [minute hour day/of/month month day/of/week year], e.g. every day @ 1:15pm UTC would be 15 13 ? * * *)
     Type: String
 Resources:
