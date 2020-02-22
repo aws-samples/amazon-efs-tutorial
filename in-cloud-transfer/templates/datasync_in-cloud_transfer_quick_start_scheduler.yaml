@@ -67,10 +67,12 @@ Metadata:
         default: Schedule of task run
 Parameters:
   DestinationEfsFilesystemId:
+    Default: fs-4a038fe0
     AllowedPattern: ^(fs-)([a-z0-9]{8})$
     Description: Destination EFS filesystem id.
     Type: String
   DestinationLocationRegion:
+    Default: us-west-2
     AllowedValues:
     - us-east-1
     - us-east-2
@@ -85,6 +87,7 @@ Parameters:
     Description: Destination AWS region.
     Type: String 
   DestinationSecurityGroupId:
+    Default: sg-a7f1fac5
     AllowedPattern: ^(sg-)(?=[a-z0-9]*?)(?:.{8}|.{17})$
     Description: Destination EFS security group id.
     Type: String
@@ -93,10 +96,12 @@ Parameters:
     Type: String
     Default: "/"
   DestinationSubnetId:
+    Default: subnet-b94015ff
     AllowedPattern: ^(subnet-)(?=[a-z0-9]*?)(?:.{8}|.{17})$
     Description: Destination EFS subnet id.
     Type: String    
   Ec2KeyName:
+    Default: darryl-aws-key
     Description: Name of an EC2 key pair.
     Type: AWS::EC2::KeyPair::KeyName
   InstanceType:
@@ -112,9 +117,11 @@ Parameters:
     Description: Instance type
     Type: String
   SourceDnsName:
+    Default: fs-2a5ad780.efs.us-west-2.amazonaws.com
     Description: The DNS name of the source NFS file system.
     Type: String
   SourceSecurityGroupId:
+    Default: sg-a7f1fac5
     Description: Select the security group that has NFS (TCP 2049) network access to the source file system.
     Type: AWS::EC2::SecurityGroup::Id          
   SourceSubdirectory:
@@ -122,10 +129,11 @@ Parameters:
     Description: The directory of the source NFS file system.
     Type: String
   SourceSubnetId:
+    Default: subnet-b94015ff
     Description: Select existing subnets.
     Type: AWS::EC2::Subnet::Id
   TaskSchedule:
-    Default: 0 0/1 * * ? *
+    Default: "0 0/6 * * ? *"
     Description: Task cron schedule (cron format in UTC - [minute hour day/of/month month day/of/week year], e.g. every day @ 1:15pm UTC would be 15 13 ? * * *)
     Type: String
 Resources:
@@ -169,63 +177,6 @@ Resources:
             Action:
             - ec2:DescribeImages
             Resource: "*"
-  DataSyncTaskExecutionServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ssm.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonSSMMaintenanceWindowRole
-      Policies:
-        - PolicyName: PassRole
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - iam:PassRole
-                Resource:
-                  - '*'
-  DataSyncTaskExecutionSchedule:
-    DependsOn: AgentFleet
-    Type: AWS::SSM::MaintenanceWindow
-    Properties:
-      Name: !Join [ '', [ 'DataSync-TaskExecution-', !Ref 'AWS::StackName' ] ]
-      AllowUnassociatedTargets: False
-      Schedule: !Join [ '', [ 'cron(', !Ref TaskSchedule, ')' ] ]
-      Duration: 1
-      Cutoff: 0
-  DataSyncTaskExecutionTask:
-    Type: AWS::SSM::MaintenanceWindowTask
-    Properties:
-      MaxErrors: 0
-      ServiceRoleArn: !GetAtt DataSyncTaskExecutionServiceRole.Arn
-      Priority: 1
-      MaxConcurrency: 1
-      Targets:
-      - Key: WindowTargetIds
-        Values:
-          - !Ref DataSyncTaskExecutionTarget
-      TaskArn: !Ref StartDataSyncTaskExecution
-      WindowId: !Ref DataSyncTaskExecutionSchedule
-      TaskType: RUN_COMMAND
-  DataSyncTaskExecutionTarget:
-    Type: AWS::SSM::MaintenanceWindowTarget
-    Properties:
-      WindowId: !Ref DataSyncTaskExecutionSchedule
-      ResourceType: INSTANCE
-      Targets:
-        - Key: tag:aws:ec2:fleet-id
-          Values:
-          - !Ref AgentFleet
   AgentFleet:
     Type: AWS::EC2::EC2Fleet
     Properties:
@@ -259,29 +210,8 @@ Resources:
           - sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - arn:aws:iam::aws:policy/AWSDataSyncFullAccess
       Path: /
-      Policies:
-      - PolicyName: datasync-all
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Action: datasync:*
-            Resource: '*'
-      - PolicyName: ec2-all
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Action: ec2:*
-            Resource: '*'
-      - PolicyName: efs-read
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Action: elasticfilesystem:Describe*
-            Resource: '*'
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
@@ -309,7 +239,7 @@ Resources:
                 Key: StackName
                 Value: !Ref 'AWS::StackName'
         UserData:
-            Fn::Base64:
+          Fn::Base64:
               !Sub |
                 #cloud-config
                 repo_update: true
@@ -371,34 +301,11 @@ Resources:
                         local destinationLocationRegion=$3
                         local agentIp=$4
                         local stackName=$5
-                        
-                        aws datasync create-task --source-location-arn ${!sourceLocationArn} --destination-location-arn ${!destinationLocationArn} --name "Stack:${!stackName} Agent:${!agentIp}" --region ${!destinationLocationRegion} --tags Key=StackName,Value=${!stackName} --output text
-                    }
 
-                    function startDataSyncTaskExecution
-                    {
-                        local taskArn=$1
-                        local destinationLocationRegion=$2
-
-                        aws datasync start-task-execution --task-arn ${!taskArn} --region ${!destinationLocationRegion} --output text
+                        aws datasync create-task --source-location-arn ${!sourceLocationArn} --destination-location-arn ${!destinationLocationArn} --schedule ScheduleExpression='"cron(${TaskSchedule})"' --name "Stack:${!stackName} Agent:${!agentIp}" --region ${!destinationLocationRegion} --tags Key=StackName,Value=${!stackName} --output text
                     }
 
                   path: /tmp/functions_datasync.sh
-                  permissions: 0777
-
-                - content: |
-                    #!/bin/bash
-
-                    source /tmp/functions_datasync.sh
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Execute\tRunning task execution function startDataSyncTaskExecution()" >> /tmp/datasync_task_execution.log 2>&1
-                    if [ "$?" != "0" ]
-                    then
-                        echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to run task execution function" >> /tmp/datasync_task_execution.log 2>&1
-                        exit 1
-                    fi
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tTask executed ${!executionId}" >> /tmp/datasync_task_execution.log 2>&1
-
-                  path: /tmp/start_datasync_task_execution.sh
                   permissions: 0777
 
                 - content: |
@@ -416,7 +323,7 @@ Resources:
                     stackName=${!10}
 
                     if [ $# -lt 10 ]; then
-                      echo "Invalid # of arguments. Require: Source DNS name; Source Subdirectory; Destination EFS Filesystem Id; Destination Subdirectory; Destination Subnet Id; Destination Security Group Id; Destination Location Region; Account Id; Stack Name"
+                      echo "Invalid # of arguments. Require: Source DNS name; Source Subdirectory; Destination EFS Filesystem Id; Destination Subdirectory; Destination Subnet Id; Destination Security Group Id; Destination Location Region; Account Id; Stack Name; Schedule"
                       exit 1
                     fi
 
@@ -480,16 +387,6 @@ Resources:
                     echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tTask created: ${!taskArn}" >> /tmp/datasync_setup.log 2>&1
                     sed -i "1iaws datasync delete-task --task-arn ${!taskArn} --region ${!destinationLocationRegion}" /tmp/delete_datasync_resources.sh
 
-                    # update datasync task execution script with task arn
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Execute\tUpdating /tmp/start_datasync_task_execution.sh with task arn" >> /tmp/datasync_setup.log 2>&1
-                    sed -i -e "5i executionId=\$\(startDataSyncTaskExecution ${!taskArn} ${!destinationLocationRegion}\)" /tmp/start_datasync_task_execution.sh
-                    if [ "$?" != "0" ]
-                    then
-                        echo -e "$(date -u +%FT%T.%3N)\tDataSync: Error\t\tFailed to update /tmp/start_datasync_task_execution.sh" >> /tmp/datasync_setup.log 2>&1
-                        exit 1
-                    fi
-                    echo -e "$(date -u +%FT%T.%3N)\tDataSync: Success\tDatasync task execution script /tmp/start_datasync_task_execution.sh updated with task arn" >> /tmp/datasync_setup.log 2>&1
-
                   path: /tmp/create_datasync_resources.sh
                   permissions: 0777
 
@@ -505,52 +402,12 @@ Resources:
                 - echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Execute\tCreating datasync resources" >> /tmp/datasync_setup.log 2>&1
                 - /tmp/create_datasync_resources.sh ${!agentIp} ${SourceDnsName} ${SourceSubdirectory} ${DestinationEfsFilesystemId} ${DestinationSubdirectory} ${DestinationSubnetId} ${DestinationSecurityGroupId} ${DestinationLocationRegion} ${AWS::AccountId} ${AWS::StackName}
                 - if [ "$?" != "0" ]; then echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Error\t\tFailed to create datasync resources" >> /tmp/datasync_setup.log 2>&1; else echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Success\tCreated datasync resources" >> /tmp/datasync_setup.log 2>&1; fi
-  StartDataSyncTaskExecution:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        schemaVersion: "2.2"
-        description: Start a task from the DataSync agent
-        mainSteps:
-        - action: aws:runShellScript
-          name: StartDataSyncTaskExecution
-          inputs:
-            runCommand:
-              - echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Execute\tStarting /tmp/start_datasync_task_execution.sh" > /tmp/datasync_task_execution.log 2>&1
-              - /tmp/start_datasync_task_execution.sh
-              - if [ "$?" != "0" ]; then echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Error\t\tFailed to run /tmp/start_datasync_task_execution.sh" >> /tmp/datasync_task_execution.log 2>&1 exit 1; else echo -e "$(date -u +%FT%T.%3N)\tDataSync":" Success\tExecuted /tmp/start_datasync_task_execution.sh" >> /tmp/datasync_task_execution.log 2>&1; fi
 Outputs:
   ViewDataSyncSetupLog:
     Description: SSM command to view DataSync setup log
     Value:
       !Sub |
         commandId=$(aws ssm send-command --max-concurrency 1 --max-errors 0 --targets Key=tag:aws:ec2:fleet-id,Values=${AgentFleet} --document-name "AWS-RunShellScript" --parameters commands="sudo cat /tmp/datasync_setup.log" --query 'Command.CommandId' --output text --region ${AWS::Region}); instanceId=$(aws ec2 describe-fleet-instances --fleet-id ${AgentFleet} --query 'ActiveInstances[0].InstanceId' --output text --region ${AWS::Region}); aws ssm get-command-invocation --command-id ${!commandId} --instance-id ${!instanceId} --query 'StandardOutputContent' --output text --region ${AWS::Region}
-  ViewDataSyncTaskExecutionLog:
-    Description: SSM command to view DataSync task execution log
-    Value:
-      !Sub |
-        commandId=$(aws ssm send-command --max-concurrency 1 --max-errors 0 --targets Key=tag:aws:ec2:fleet-id,Values=${AgentFleet} --document-name "AWS-RunShellScript" --parameters commands="sudo cat /tmp/datasync_task_execution.log" --query 'Command.CommandId' --output text --region ${AWS::Region}); instanceId=$(aws ec2 describe-fleet-instances --fleet-id ${AgentFleet} --query 'ActiveInstances[0].InstanceId' --output text --region ${AWS::Region}); aws ssm get-command-invocation --command-id ${!commandId} --instance-id ${!instanceId} --query 'StandardOutputContent' --output text --region ${AWS::Region}
-  DisableDataSyncTaskExecutionSchedule:
-    Description: SSM command to disable DataSync task execution schedule
-    Value:
-      !Sub |
-        aws ssm update-maintenance-window --window-id ${DataSyncTaskExecutionSchedule} --no-enabled --no-replace --output json --region ${AWS::Region}
-  EnableDataSyncTaskExecutionSchedule:
-    Description: SSM command to enable DataSync task execution schedule
-    Value:
-      !Sub |
-        aws ssm update-maintenance-window --window-id ${DataSyncTaskExecutionSchedule} --enabled --no-replace --output json --region ${AWS::Region}
-  UpdateDataSyncTaskExecutionSchedule:
-    Description: SSM command to update DataSync task execution schedule
-    Value:
-      !Sub |
-        aws ssm update-maintenance-window --window-id ${DataSyncTaskExecutionSchedule} --schedule "cron()" --no-replace --output json --region ${AWS::Region}
-  OnDemandDataSyncTaskExecution:
-    Description: SSM command to immediately execute DataSync task
-    Value:
-      !Sub |
-        aws ssm send-command --max-concurrency 1 --max-errors 0 --document-name ${StartDataSyncTaskExecution} --targets Key=tag:aws:ec2:fleet-id,Values=${AgentFleet} --output json --region ${AWS::Region}
   ViewDeleteDataSyncResourcesScript:
     Description: SSM command to view delete DataSync resources script
     Value:
