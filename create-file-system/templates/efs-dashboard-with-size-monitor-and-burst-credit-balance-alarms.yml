@@ -28,7 +28,6 @@ Metadata:
       Parameters:
         - SecurityGroup
         - InstanceType0
-        - NumberOfSubnets
         - Subnet
     ParameterLabels:
       CriticalThreshold:
@@ -43,8 +42,6 @@ Metadata:
         default: Amazon EFS File System
       InstanceType0:
         default: Instance Type
-      NumberOfSubnets:
-        default: Number of subnets
       Subnet:
         default: Subnets
       SecurityGroup:
@@ -89,17 +86,7 @@ Parameters:
     Default: t2.nano
     Description: The Amazon EC2 instance type.
     Type: String
-  NumberOfSubnets:
-    AllowedValues:
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    Default: 2
-    Description: Number of subnets. This must match your selections in the list of Subnets below.
-    Type: String
+
   Subnet:
     Description: Select existing subnets.
     Type: List<AWS::EC2::Subnet::Id>
@@ -122,44 +109,6 @@ Conditions:
     !Equals [ !Ref DeletionPolicyAlarms, Retain ]
   RetainDashboard:
     !Equals [ !Ref DeletionPolicyDashboard, Retain ]
-  NumberOfSubnets1:
-    !Equals [ 1, !Ref NumberOfSubnets ]
-  NumberOfSubnets2:
-    !Equals [ 2, !Ref NumberOfSubnets ]
-  NumberOfSubnets3:
-    !Equals [ 3, !Ref NumberOfSubnets ]
-  NumberOfSubnets4:
-    !Equals [ 4, !Ref NumberOfSubnets ]
-  NumberOfSubnets5:
-    !Equals [ 5, !Ref NumberOfSubnets ]
-  NumberOfSubnets6:
-    !Equals [ 6, !Ref NumberOfSubnets ]
-  Subnet0: !Or
-    - !Condition NumberOfSubnets1
-    - !Condition NumberOfSubnets2
-    - !Condition NumberOfSubnets3
-    - !Condition NumberOfSubnets4
-    - !Condition NumberOfSubnets5
-    - !Condition NumberOfSubnets6
-  Subnet1: !Or
-    - !Condition NumberOfSubnets2
-    - !Condition NumberOfSubnets3
-    - !Condition NumberOfSubnets4
-    - !Condition NumberOfSubnets5
-    - !Condition NumberOfSubnets6
-  Subnet2: !Or
-    - !Condition NumberOfSubnets3
-    - !Condition NumberOfSubnets4
-    - !Condition NumberOfSubnets5
-    - !Condition NumberOfSubnets6
-  Subnet3: !Or
-    - !Condition NumberOfSubnets4
-    - !Condition NumberOfSubnets5
-    - !Condition NumberOfSubnets6
-  Subnet4: !Or
-    - !Condition NumberOfSubnets5
-    - !Condition NumberOfSubnets6
-  Subnet5: !Condition NumberOfSubnets6
 
 Mappings:
   RegionMap:
@@ -218,7 +167,7 @@ Resources:
     Type: AWS::Events::Rule
     Condition: RetainDashboard
     DeletionPolicy: Retain
-    Properties: 
+    Properties:
       Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
       Name: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor-scheduled-event' ] ]
       ScheduleExpression: rate(1 minute)
@@ -230,7 +179,7 @@ Resources:
     Type: AWS::Events::Rule
     Condition: DeleteDashboard
     DeletionPolicy: Delete
-    Properties: 
+    Properties:
       Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
       Name: !Join [ '', [ 'efs-', !Ref ElasticFileSystem, '-size-monitor-scheduled-event' ] ]
       ScheduleExpression: rate(1 minute)
@@ -238,20 +187,20 @@ Resources:
       Targets:
         - Arn: !GetAtt EfsSizeMonitorFunctionDelete.Arn
           Id: 1
-  EfsLambdaPermissionRetain: 
+  EfsLambdaPermissionRetain:
     Type: AWS::Lambda::Permission
     Condition: RetainDashboard
     DeletionPolicy: Retain
-    Properties: 
+    Properties:
       FunctionName: !Ref EfsSizeMonitorFunctionRetain
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EfsSizeMonitorEventRetain.Arn
-  EfsLambdaPermissionDelete: 
+  EfsLambdaPermissionDelete:
     Type: AWS::Lambda::Permission
     Condition: DeleteDashboard
     DeletionPolicy: Delete
-    Properties: 
+    Properties:
       FunctionName: !Ref EfsSizeMonitorFunctionDelete
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
@@ -260,7 +209,7 @@ Resources:
     Type: AWS::Lambda::Function
     Condition: RetainDashboard
     DeletionPolicy: Retain
-    Properties: 
+    Properties:
       Code:
         ZipFile: !Sub |
           import boto3
@@ -321,7 +270,7 @@ Resources:
     Type: AWS::Lambda::Function
     Condition: DeleteDashboard
     DeletionPolicy: Delete
-    Properties: 
+    Properties:
       Code:
         ZipFile: !Sub |
           import boto3
@@ -414,21 +363,21 @@ Resources:
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/CloudWatchFullAccess
       - arn:aws:iam::aws:policy/AmazonElasticFileSystemReadOnlyAccess
-  SNSTopicDelete: 
+  SNSTopicDelete:
     Type: AWS::SNS::Topic
     Condition: DeleteAlarms
     DeletionPolicy: Delete
-    Properties: 
+    Properties:
       DisplayName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
       Subscription:
       - Endpoint: !Ref EmailAddress
         Protocol: "email"
       TopicName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
-  SNSTopicRetain: 
+  SNSTopicRetain:
     Type: AWS::SNS::Topic
     Condition: RetainAlarms
     DeletionPolicy: Retain
-    Properties: 
+    Properties:
       DisplayName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
       Subscription:
       - Endpoint: !Ref EmailAddress
@@ -698,28 +647,8 @@ Resources:
         - Key: Name
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
-      VPCZoneIdentifier:
-        !If
-          [ NumberOfSubnets1,
-          [ !Select [ 0, !Ref Subnet ] ],
-          !If
-            [ NumberOfSubnets2,
-            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
-            !If
-              [ NumberOfSubnets3,
-              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
-              !If
-                [ NumberOfSubnets4,
-                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
-                !If
-                  [ NumberOfSubnets5,
-                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
-                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
-                  ]
-                ]
-              ]
-            ]
-          ]
+      VPCZoneIdentifier: !Split [ ',', !Ref Subnet ]
+
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -740,28 +669,8 @@ Resources:
         - Key: Name
           Value: !Join [ '', [ 'Updating ', !Ref 'ElasticFileSystem', ' burst credit balance Cloudwatch alarms.. will auto terminate' ] ]
           PropagateAtLaunch: true
-      VPCZoneIdentifier:
-        !If
-          [ NumberOfSubnets1,
-          [ !Select [ 0, !Ref Subnet ] ],
-          !If
-            [ NumberOfSubnets2,
-            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
-            !If
-              [ NumberOfSubnets3,
-              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
-              !If
-                [ NumberOfSubnets4,
-                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
-                !If
-                  [ NumberOfSubnets5,
-                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
-                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
-                  ]
-                ]
-              ]
-            ]
-          ]
+      VPCZoneIdentifier: !Split [ ',', !Ref Subnet ]
+
     CreationPolicy:
       ResourceSignal:
         Count: 0
@@ -796,7 +705,7 @@ Resources:
           set_cloudwatch_alarms:
             - set-cloudwatch-alarms
         set-cloudwatch-alarms:
-          files:              
+          files:
             /tmp/set-cloudwatch-alarms.sh:
               content:
                 !Join [
@@ -852,7 +761,7 @@ Resources:
                     "\n",
                     "# calculate new burst credit balance critical threshold\n",
                     "burst_credit_balance_threshold_critical=$(( ${burst_credit_balance:0:-2} - ( ( ( ${burst_credit_balance:0:-2} / ( ${permitted_throughput:0:-2} * 60 ) ) - $CRITICAL_THRESHOLD_MINUTES ) * ( ${permitted_throughput:0:-2} * 60 ) ) ))\n",
-                    "\n",                    
+                    "\n",
                     "# update warning alarm with new burst credit balance warning threshold\n",
                     "aws cloudwatch put-metric-alarm --alarm-name ''${FILE_SYSTEM_ID}' burst credit balance - Warning - '", !Ref 'AWS::StackName', " --alarm-description ''${FILE_SYSTEM_ID}' burst credit balance - Warning - '", !Ref 'AWS::StackName', " --actions-enabled --alarm-actions ${SNS_ARN} --metric-name BurstCreditBalance --namespace AWS/EFS --statistic Maximum --dimensions Name=FileSystemId,Value=${FILE_SYSTEM_ID} --period 60 --evaluation-periods 5 --threshold ${burst_credit_balance_threshold_warning} --comparison-operator LessThanThreshold --treat-missing-data missing --region ${region}\n",
                     "result=$?\n",
@@ -891,12 +800,12 @@ Resources:
                     "   else\n",
                     "   aws sns publish --topic-arn ${SNS_ARN} --region ${region} --message 'Amazon EFS burst credit balance CloudWatch alarm error. Check CloudWatch alarms for file system '${FILE_SYSTEM_ID}'.'\n",
                     "fi\n",
-                    "\n"                    
+                    "\n"
                   ]
                 ]
               mode: 000777
               owner: root
-              group: root             
+              group: root
     Properties:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
@@ -933,7 +842,7 @@ Resources:
           set_cloudwatch_alarms:
             - set-cloudwatch-alarms
         set-cloudwatch-alarms:
-          files:              
+          files:
             /tmp/set-cloudwatch-alarms.sh:
               content:
                 !Join [
@@ -989,7 +898,7 @@ Resources:
                     "\n",
                     "# calculate new burst credit balance critical threshold\n",
                     "burst_credit_balance_threshold_critical=$(( ${burst_credit_balance:0:-2} - ( ( ( ${burst_credit_balance:0:-2} / ( ${permitted_throughput:0:-2} * 60 ) ) - $CRITICAL_THRESHOLD_MINUTES ) * ( ${permitted_throughput:0:-2} * 60 ) ) ))\n",
-                    "\n",                    
+                    "\n",
                     "# update warning alarm with new burst credit balance warning threshold\n",
                     "aws cloudwatch put-metric-alarm --alarm-name ''${FILE_SYSTEM_ID}' burst credit balance - Warning - '", !Ref 'AWS::StackName', " --alarm-description ''${FILE_SYSTEM_ID}' burst credit balance - Warning - '", !Ref 'AWS::StackName', " --actions-enabled --alarm-actions ${SNS_ARN} --metric-name BurstCreditBalance --namespace AWS/EFS --statistic Maximum --dimensions Name=FileSystemId,Value=${FILE_SYSTEM_ID} --period 60 --evaluation-periods 5 --threshold ${burst_credit_balance_threshold_warning} --comparison-operator LessThanThreshold --treat-missing-data missing --region ${region}\n",
                     "result=$?\n",
@@ -1028,12 +937,12 @@ Resources:
                     "   else\n",
                     "   aws sns publish --topic-arn ${SNS_ARN} --region ${region} --message 'Amazon EFS burst credit balance CloudWatch alarm error. Check CloudWatch alarms for file system '${FILE_SYSTEM_ID}'.'\n",
                     "fi\n",
-                    "\n"                    
+                    "\n"
                   ]
                 ]
               mode: 000777
               owner: root
-              group: root             
+              group: root
     Properties:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
