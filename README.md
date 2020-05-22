@@ -6,9 +6,9 @@
 
 ## Tutorials
 
-### Version 1.1.1
+### Version 1.2.1
 
-efs-t-1.1.1
+efs-t-1.2.1
 
 ---
 
@@ -31,6 +31,9 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 [4. Monitoring](#4-monitoring)
 
 [5. In-cloud Transfer](#5-in-cloud-transfer)
+
+[6. Data science workshop](#6-in-cloud-transfer)
+
 
 ---
 
@@ -86,6 +89,15 @@ Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Tr
 | Quick Start | Link
 | --- | ---
 | **In-cloud Transfer** | [![](/images/efs_tutorial.png)](/in-cloud-transfer) |
+
+### 5. Data sciense workshop
+This tutorial covers how to use Amazon EFS, a highly available, highly durable and elastic cloud native file storage for Data Science workloads.
+
+Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Transfer** tutorial.
+
+| Tutorial | Link
+| --- | ---
+| **Data sciense workshop** | [![](/images/efs_tutorial.png)]("/Data Sciense Workshop") |
 
 
 ---
