@@ -12,7 +12,7 @@ efs-t-1.1.1
 
 ---
 
-© 2018 Amazon Web Services, Inc. and its affiliates. All rights reserved.
+© 2020 Amazon Web Services, Inc. and its affiliates. All rights reserved.
 This sample code is made available under the MIT-0 license. See the LICENSE file.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).

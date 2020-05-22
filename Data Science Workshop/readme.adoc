@@ -1,0 +1,41 @@
+= Data Science with Cloud-Native File Storage Workshop!
+:icons:
+:linkattrs:
+:imagesdir: resources/images
+
+image:datascience-efs-tutorial.png[alt="Amazon EFS", align="left",width=420]
+
+This tutorial covers how to use *Amazon EFS*, a highly available, highly durable and elastic cloud native file storage for *Data Science* workloads.
+
+Organizations need the agility to spin up storage and compute resources on-demand, and the elasticity to scale to ensure they are applying the right amount of resources for their analytics workloads.Data scientists and teams need the ability to access shared data sets, run data analytics and Machine Learning(ML) training at scale, and share notebook files and ML model artifacts.
+
+With AWS, you have access to virtually unlimited infrastructure that allows you to scale on-demand, innovate faster, and only pay for what you use. You can deploy your infrastructure in minutes using fully managed services that free up staff to focus on activities that matter most.
+Amazon Elastic File System (Amazon EFS) enables greater collaboration with secure access to data across teams and geographies. Amazon EFS works seamlessly with AWS SageMaker and container services to provide persistent shared storage for your modern applications.
+
+*Amazon EFS* is a fully managed cloud native file service that delivers the simplicity and performance needed for your data science workloads. It is designed to provide massively parallel shared access to thousands of Amazon Elastic Compute Cloud (Amazon EC2), enabling your applications to achieve high levels of aggregate throughput and IOPS with consistent low latencies. It provides a POSIX compliant interface that integrates with existing workflows.
+
+Data science teams can use Amazon EFS to host user home directories, store and share notebook files, shared data sets, and model artifacts,
+and enable access from multiple AZs. Amazon SageMaker integrates with Amazon EFS allowing data scientists to iterate quickly using Jupyter Notebook, and train machine learning models.
+
+This is a tutorial designed for architects and engineers who would like to learn how to use *Amazon EFS* to modernize your *Data Science* workloads.
+
+== Diagram
+
+image::efs-datascience-architecture.png[align="left", width=600]
+
+=== Duration
+
+NOTE: It will take approximately 45 minutes to complete and you will run it using your own AWS account.
+
+=== Pricing
+
+NOTE: You will incur charges for this tutorial.
+
+
+Click the button below to start the *Amazon EFS for Data Science* tutorial.
+
+image::01-create-environment.png[link=01-create-environment/, align="left",width=420]
+
+=== Participation
+
+We encourage participation; if you find anything, please submit an issue. However, if you want to help raise the bar, **submit a PR**!

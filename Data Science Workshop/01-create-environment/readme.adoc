@@ -1,0 +1,100 @@
+= Create Environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+Build a new AWS environment for use during this tutorial. It will take approximately 10 minutes for the tutorial environment to be created.
+
+== Environment Diagram
+
+image::01-create-environment-diagram.png[align="left", width=600]
+
+== Step-by-step Guide
+
+. Using the instructions below, create the tutorial environment using AWS CloudFormation. It will take approximately 8 minutes for the CloudFormation stack to be fully deployed.
+
+=== CloudFormation
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::01-create-environment.gif[align="left", width=600]
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
++
+Amazon EFS is currently available in all AWS regions. *Deploy* links have been provided below for select regions.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
++
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *N. California* (us-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Stockholm* (eu-north-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-datascience-tutorial&templateURL=https://amazon-elastic-file-system.s3.amazonaws.com/tutorial/datascience/efs-datascience-workshop.yaml]
+|===
++
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+
+| *EFS Performance Mode*
+a| Select between general purpose or maxIO performance modes for your EFS file system.
+
+| *EFS Throughput Mode*
+a| Select between bursting or provisioned throughput mode for your EFS file system.
+
+|===
++
+. After you have entered values for all parameters, *_click_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_click_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Click_* both checkboxes in the blue *Capabilities* box at the bottom of the page.
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. *_Click_* *Create stack*.
+
+The tutorial environment will be available in approximately 8 minutes.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::02-create-access-point.png[link=../02-create-access-points/, align="right",width=420]
+

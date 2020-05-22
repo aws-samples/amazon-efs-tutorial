@@ -1,0 +1,156 @@
+= Enable EFS Access point on SageMaker Notebook
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will enable *EFS Access point* you created in the previous section on the *SageMaker Notebook instance*. Lets begin by checking if the EFS file system has been successfully mounted on the SageMaker Notebook instance. This step was automatically completed when you created the workshop environment. 
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Check EFS file system mount on sagemaker notebook instance
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::03-enable-access-point.gif[align="left", width=600]
+
+
+. Open the link:https://console.aws.amazon.com/sagemaker/[Amazon SageMaker] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github tutorial and the Amazon SageMaker console.
++
+
+. Go to *Notebook* and *_Click_* *Notebook instances*.
+
+. *_Select_* the notebook instance named *efs-datascience-workshop* then *_Click_* *Open Jupyter*.
+
+. Go to top right corner *_Select_* *New* >> *Terminal*.
+
+. *_Copy_* the script below into your notebook terminal window.
++
+[source,bash]
+----
+mount -t nfs4
+
+----
++
+
+. You should see the *EFS file system* mounted on the *notebook instance*. An example output has been shown below:
++
+[source,bash]
+----
+127.0.0.1:/ on /home/ec2-user/SageMaker/efs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,noresvport,proto=tcp,port=20197,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1,local_lock=none,addr=127.0.0.1)
+
+----
++
+
+. Go to *Notebook* *_Select_* *Lifecycle configurations*.
+
+. *_Select_* the Lifecycle configuration created as part of this tutorial.
+
+. Go to *Scripts* *_Click_* *View script* under Start Notebook. You will see the script that was executed to mount the EFS file system upon start of the Notebook.
+
+. *_Click_* *Close* Go to *Scripts* *_Click_* *View script* under Create Notebook. You will see the script that was executed upon creation of the Notebook.
+
+. *_Click_* *Close* and Go to the Notebook terminal window
+
+. *_Copy_* the script below into your notebook terminal window.
++
+[source,bash]
+----
+cd SageMaker/efs
+
+# Check the directory permission
+ls -ld .
+
+# Check your user ID
+id
+
+#Create a test file
+echo "Creating test file" >> datascience-tutorial-testfile
+
+----
++
+
+. What behavior did you observe? 
+
+. The /home/ec2-user/SageMaker/efs mount path is owned by *root:root* with permissions *755*. You recieved a permisson denied error when you attempted to create a new file because the posix permissions on the directory prevented you from creating a new file as *ec2-user*. Data Science teams need the flexibility to access shared notebooks and EFS Access points makes this possible.
+
+. *_Copy_* the script below in your notebook terminal window to create a test directory in the EFS file system root.
+
++
+[source,bash]
+----
+sudo mkdir datascience-test-dir
+ls -ld datascience-test-dir
+
+----
++
+
+. *_Copy_* the script below into your notebook terminal window. Replace the Access point name with the one you created in previous section and file ssytem DNS name with the file system for your lab
++
+[source,bash]
+----
+cd
+sudo umount /home/ec2-user/SageMaker/efs
+sudo mount -t efs -o tls,accesspoint=<Access point> <EFS file system DNS name>:/ /home/ec2-user/SageMaker/efs
+Ex: sudo mount -t efs -o tls,accesspoint=fsap-07228bb71d33e2b23 fs-ba453210.efs.us-west-2.amazonaws.com:/ /home/ec2-user/SageMaker/efs
+
+----
++
+
+. *_Copy_* the script below into your notebook terminal window.
++
+[source,bash]
+----
+cd /home/ec2-user/SageMaker/efs
+ls
+
+----
++
+
+. Since you specified */notebooks* as the path for your Access point, this directory will be created and mounted as root of your EFS mount. You can no longer see the test directory *datascience-test-dir* that you had created earlier. Next let's see if you can create files in /home/ec2-user/SageMaker/efs mount path using your user id ec2-user.
+
++
+[source,bash]
+----
+echo "Creating test file" >> datascience-tutorial-testfile
+cat datascience-tutorial-testfile
+ls -lt datascience-tutorial-testfile
+----
++
+
+. You were able to create the file successfully as *ec2-user:ec2-user*. All files will inherit *1001:1001* and *755* permissions that you defined at the time of Access point creation.  Using EFS Access Point you were able, you were now able to create files on the shared notebook directory and make this directory available to data scientists and users.
+
+. Finally lets create a directory to store your training dataset and download the *MNIST* dataset in recordIO format.
+
++
+[source,bash]
+----
+cd /home/ec2-user/SageMaker/efs
+mkdir training
+cd training
+aws s3 cp  s3://amazon-elastic-file-system/tutorial/datascience/DEMO-linear-mnist/train/recordio-pb-data recordio-pb-data
+----
++
+
+. Continue with the next section.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::04-run-ml-training.png[link=../04-run-machine-learning-training/, align="left",width=420]
+
+
+
+

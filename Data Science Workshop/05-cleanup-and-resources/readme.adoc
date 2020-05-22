@@ -1,0 +1,48 @@
+= Clean up tutorial resources and learn from additional resources
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will clean-up resources created as part of your tutorial and provide you with additional learning resources to enable your journey to accelerate your Data Science workload using Amazon EFS.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::05-cleanup-and-resources.gif[align="left", width=600]
+
+. Open the link:https://console.aws.amazon.com/cloudformation/[Amazon Cloudformation] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github tutorial and the Amazon Cloudformation console.
++
+. *_Click_* *Stacks* Select *efs-datascience-tutorial* and *_Click_* *Delete* then *_Click_* *Delete Stack* to delete your workshop environment.
+
+. Below are some *additional resources* to continue your learning:
++
+[cols="3,10"]
+|===
+| *Data Analytics and Data Science Webinar*
+a| link:https://pages.awscloud.com/Accelerate-Data-Analytics-with-AWS-File-Storage_2020_0223-STG_OD.html?&trk=el_a131L0000083Y4VQAU&trkCampaign=February_2020_0223-STG&sc_channel=el&sc_campaign=pac_Q1-2020_exlinks_PMM_OTT_02DGAB&sc_outcome=Product_Adoption_Campaigns&sc_geo=NAMER&sc_country=mult/[Data Analytics and Data Science Webinar]
+| *Data Analytics and Data Science Solution Brief*
+a| link:https://d1.awsstatic.com/cloud-storage/Storage/Solution%20Brief_EFS%20for%20Data%20Science.pdf[Data Analytics and Data Science Solution Brief]
+| *EFS Access Points Blog*
+a| link:https://aws.amazon.com/blogs/aws/new-for-amazon-efs-iam-authorization-and-access-points/[EFS Access Points Blog]
+| *SageMaker training using EFS Blog*
+a| link:https://aws.amazon.com/blogs/machine-learning/speed-up-training-on-amazon-sagemaker-using-amazon-efs-or-amazon-fsx-for-lustre-file-systems/[SageMaker training using EFS Blog]
+|===
++
+
+
+
+
+

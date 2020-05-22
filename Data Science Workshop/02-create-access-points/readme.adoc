@@ -1,0 +1,69 @@
+= Create EFS Access Point
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will create a new *EFS Access Point* for the *Amazon EFS file system*.
+
+*Amazon EFS Access Points* is a EFS feature that simplifies providing applications and teams access to shared data sets in an EFS file system. EFS Access Points work together with AWS IAM and enforce an operating system user and group, and a directory for every file system request made through the access point.  
+
+We will use this Access Point to create shared notebook and ML training directories on EFS file system.
+
+== Duration
+
+NOTE: It will take approximately 3 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::02-create-access-point.gif[align="left", width=600]
+
+
+. Open the link:https://console.aws.amazon.com/efs/[Amazon EFS] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github tutorial and the Amazon EFS console.
++
+. *Choose* the *EFS file system* created as part of this tutorial by selecting the radio button next to file system Name.
+. *_Select_* Actions *Manage Client Access*.
+. *_Select_* *+Add access point*.
+. *_Complete_* the *Create access point...* wizard with the following settings:
++
+[cols="3,10"]
+|===
+| *Name*
+a| *_Enter_* - *datascience-AP*
+| *User ID*
+a| *_Enter_* - *1001*
+| *Group ID*
+a| *_Enter_* - *1001*
+| *Path*
+a| *_Enter_* - */notebooks*
+| *Owner User ID*
+a| *_Enter_* - *1001*
+| *Owner Group ID*
+a| *_Enter_* - *1001*
+| *Permissions*
+a| *_Enter_* - *755*
+|===
++
+. *_Select_* *Save access points*
+
+
+NOTE: It will take approximately 2 minutes to create a new access point. Continue with the next section while the new access point is created in the background.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::03-enable-access-point.png[link=../03-test-access-point/, align="left",width=420]
+
+
+
+
