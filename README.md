@@ -32,14 +32,14 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 [5. In-cloud Transfer](#5-in-cloud-transfer)
 
-[6. Data science workshop](#6-in-cloud-transfer)
+[6. Data science](#6-data-science)
 
 
 ---
 
 ### Tutorials
 
-These four (4) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
+These six (6) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
 #
 ### 1. Create a file system
 This tutorial is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
@@ -97,7 +97,7 @@ Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Tr
 
 | Tutorial | Link
 | --- | ---
-| **Data sciense workshop** | [![](/images/efs_tutorial.png)](/Data Sciense Workshop) |
+| **Data science** | [![](/images/efs_tutorial.png)](/data-science) |
 
 
 ---
