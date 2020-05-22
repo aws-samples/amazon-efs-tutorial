@@ -90,14 +90,14 @@ Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Tr
 | --- | ---
 | **In-cloud Transfer** | [![](/images/efs_tutorial.png)](/in-cloud-transfer) |
 
-### 5. Data sciense workshop
+### 6. Data sciense workshop
 This tutorial covers how to use Amazon EFS, a highly available, highly durable and elastic cloud native file storage for Data Science workloads.
 
 Click on the ![](/images/efs_tutorial.png) link below to go to the **In-cloud Transfer** tutorial.
 
 | Tutorial | Link
 | --- | ---
-| **Data sciense workshop** | [![](/images/efs_tutorial.png)]("/Data Sciense Workshop") |
+| **Data sciense workshop** | [![](/images/efs_tutorial.png)](/Data Sciense Workshop) |
 
 
 ---
