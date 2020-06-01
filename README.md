@@ -6,7 +6,7 @@
 
 ## Tutorials
 
-### Version 1.2.1
+### Version 1.2.2
 
 efs-t-1.2.1
 
