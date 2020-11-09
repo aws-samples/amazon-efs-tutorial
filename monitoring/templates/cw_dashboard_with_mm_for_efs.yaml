@@ -9,7 +9,12 @@ Metadata:
     Description: Darryl Osborne (darrylo@amazon.com)
   License:
     Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
-      SPDX-License-Identifier: MIT-0'
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
 
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -52,7 +57,7 @@ Resources:
     Condition: Retain
     DeletionPolicy: Retain
     Properties:
-      DashboardName: !Join [ '_', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, 'mm' ] ]
+      DashboardName: !Join [ '-', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, !Ref 'AWS::StackName' ] ]
       DashboardBody:
         !Sub |
           {
@@ -118,7 +123,7 @@ Resources:
                           "metrics": [
                               [ { "expression": "((m1/1048576)/PERIOD(m1))", "label": "Avgerage Throughput (MiB/s)", "id": "e1", "period": 60, "color": "#2ca02c", "yAxis": "right" } ],
                               [ { "expression": "(m2/1048576)", "label": "Permitted Throughput", "id": "e2" } ],
-                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],                              
+                              [ { "expression": "e2-e1", "label": "Available Throughput (MiB/s)", "id": "e3", "color": "#17becf" } ],
                               [ { "expression": "((e1)*100)/(e2)", "label": "Percent Throughput Utilization (%)", "id": "e3" } ],
                               [ "AWS/EFS", "TotalIOBytes", "FileSystemId", "${ElasticFileSystem}", { "id": "m1", "visible": false } ],
                               [ ".", "PermittedThroughput", ".", ".", { "id": "m2", "visible": false, "stat": "Average" } ]
@@ -236,7 +241,7 @@ Resources:
     Condition: Delete
     DeletionPolicy: Delete
     Properties:
-      DashboardName: !Join [ '_', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, 'mm' ] ]
+      DashboardName: !Join [ '-', [ !Ref 'AWS::Region', !Ref ElasticFileSystem, !Ref 'AWS::StackName' ] ]
       DashboardBody:
         !Sub |
           {
@@ -421,7 +426,7 @@ Resources:
     DeletionPolicy: Retain
     Properties: 
       Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
-      Name: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor-scheduled-event', !Ref 'AWS::StackName' ] ]
+      Name: !Join [ '-', [ !Ref ElasticFileSystem, !Ref 'AWS::StackName' ] ]
       ScheduleExpression: rate(1 minute)
       State: ENABLED
       Targets:
@@ -434,7 +439,7 @@ Resources:
     DeletionPolicy: Delete
     Properties: 
       Description: Scheduled event to update SizeInBytes EFS CloudWatch metric
-      Name: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor-scheduled-event', !Ref 'AWS::StackName' ] ]
+      Name: !Join [ '-', [ !Ref ElasticFileSystem, !Ref 'AWS::StackName' ] ]
       ScheduleExpression: rate(1 minute)
       State: ENABLED
       Targets:
@@ -517,7 +522,6 @@ Resources:
         Variables:
           filesystemid: !Ref ElasticFileSystem
           region: !Ref 'AWS::Region'
-      FunctionName: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor', !Ref 'AWS::StackName' ] ]
       Handler: index.handler
       Role: !GetAtt LambdaRoleRetain.Arn
       Runtime: python2.7
@@ -579,7 +583,6 @@ Resources:
         Variables:
           filesystemid: !Ref ElasticFileSystem
           region: !Ref 'AWS::Region'
-      FunctionName: !Join [ '-', [ !Ref ElasticFileSystem, 'size-monitor', !Ref 'AWS::StackName' ] ]
       Handler: index.handler
       Role: !GetAtt LambdaRoleDelete.Arn
       Runtime: python2.7
