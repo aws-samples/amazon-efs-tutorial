@@ -67,7 +67,6 @@ Metadata:
         default: Schedule of task run
 Parameters:
   DestinationEfsFilesystemId:
-    AllowedPattern: ^(fs-)([a-z0-9]{8})$
     Description: Destination EFS filesystem id.
     Type: String
   DestinationLocationRegion:
