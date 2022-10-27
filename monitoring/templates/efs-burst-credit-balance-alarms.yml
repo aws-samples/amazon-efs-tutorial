@@ -192,6 +192,7 @@ Resources:
     Condition: Retain
     DeletionPolicy: Retain
     Properties: 
+      KmsMasterKeyId: String
       DisplayName: !Join [ '', [ !Ref ElasticFileSystem, '-alarm-notification' ] ]
       Subscription:
       - Endpoint: !Ref EmailAddress
