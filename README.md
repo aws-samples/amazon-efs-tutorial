@@ -1,6 +1,6 @@
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_storage.png)
 
 # **Amazon Elastic File System (Amazon EFS)**
 
