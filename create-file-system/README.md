@@ -1,6 +1,6 @@
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
 ## Create File System Tutorial
@@ -74,7 +74,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 - Use the default NAT instance size
 
 ---
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.png)
 
 ---
 
@@ -84,13 +84,13 @@ Click on the ![cloudformation-launch-stack](/images/deploy_to_aws.png) link belo
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
 
 ---
 
@@ -107,7 +107,7 @@ If a workload accessing a file system relies on the burst throughput for normal 
 
 #### Sample dashboard
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
 
 
 #### Parameters
@@ -125,7 +125,7 @@ If a workload accessing a file system relies on the burst throughput for normal 
 - Accept all other parameter defaults
 
 ---
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-file-system.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-file-system.png)
 
 ---
 
@@ -142,13 +142,13 @@ This file system will be used in the **Performance** and **Scale-out** tutorials
 
 | AWS Region Code | Name | Launch |
 | :--- | :--- | :--- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
 
 ---
 
@@ -157,7 +157,7 @@ This file system will be used in the **Performance** and **Scale-out** tutorials
 
 The email address entered as an input parameter will automatically be subscribed to the SNS topic and will receive an **AWS Notification - Subscription Confirmation email**. Click on the ***Confirm subscription*** link in the email.
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit-balance-notifications-confirm-subscription.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-burst-credit-balance-notifications-confirm-subscription.png)
 
 ---
 
@@ -166,7 +166,7 @@ The email address entered as an input parameter will automatically be subscribed
 
 Verify all four CloudWatch alarms have been created. See the **AWS Resources** section below for the alarm names.
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-alarms.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-alarms.png)
 
 ### Step 5:
 ### Verify the EC2 instances terminate after a few minutes
@@ -211,7 +211,7 @@ CloudWatch Alarm Examples:
 
 | Warning Alarm | Critical Alarm | Permitted Throughput Increase | Permitted Throughput Decrease |
 | --- | --- | --- | ---
-| ![burst-credit-balance-warning](https://s3.amazonaws.com/aws-us-east-1/tutorial/burst-credit-balance-warning-screenshot.png) | ![burst-credit-balance-critical](https://s3.amazonaws.com/aws-us-east-1/tutorial/burst-credit-balance-critical-screenshot.png) | ![permitted-throughput-increase](https://s3.amazonaws.com/aws-us-east-1/tutorial/permitted-throughput-increase-screenshot.png) | ![permitted-throughput-decrease](https://s3.amazonaws.com/aws-us-east-1/tutorial/permitted-throughput-decrease-screenshot.png) |
+| ![burst-credit-balance-warning](https://s3.amazonaws.com/efs-us-east-1/tutorial/burst-credit-balance-warning-screenshot.png) | ![burst-credit-balance-critical](https://s3.amazonaws.com/efs-us-east-1/tutorial/burst-credit-balance-critical-screenshot.png) | ![permitted-throughput-increase](https://s3.amazonaws.com/efs-us-east-1/tutorial/permitted-throughput-increase-screenshot.png) | ![permitted-throughput-decrease](https://s3.amazonaws.com/efs-us-east-1/tutorial/permitted-throughput-decrease-screenshot.png) |
 
 #### CloudWatch Dashboard
 
@@ -219,7 +219,7 @@ A CloudWatch dashboard is created with widgets for key metrics, the burst credit
 
 CloudWatch Dashboard Example:
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
 
 #### IAM Policy & EC2 Instance Profile
 
@@ -277,13 +277,13 @@ Below are the unnested CloudFormation templates from above that can be run indiv
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
 
 ### Create an AWS CloudWatch Dashboard and Alarms to a file system
 
@@ -291,13 +291,13 @@ Creates an AWS CloudWatch Dashboard with a file system size custom metric and Cl
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
 
 ### Create AWS CloudWatch Alarms to a file system
 
@@ -305,13 +305,13 @@ Creates AWS CloudWatch Alarms to monitor Burst Credit Balance of an existing fil
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
 
 
 
@@ -321,13 +321,13 @@ Creates an AWS CloudWatch Dashboard with a file system size custom metric for an
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
 
 
 
