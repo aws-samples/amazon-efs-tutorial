@@ -1,6 +1,6 @@
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
+![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/efs-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
 ## Scale-out Tutorial
@@ -291,7 +291,7 @@ nload -u M
 
 Click on the image to watch a screen capture*
 
-[![video](/images/efs_scale_out_demo_results.png)](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs_scale_out_demo_results.mp4)
+[![video](/images/efs_scale_out_demo_results.png)](https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs_scale_out_demo_results.mp4)
 
 *this was achieved using a file system with a permitted throughput greater than 3 GB/s
 
@@ -313,13 +313,13 @@ Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below 
 
 | AWS Region Code | Name | Launch |
 | --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/efs-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
 
 After launching the AWS CloudFormation Stack above, you should see the Amazon EC2 instances running in your VPC.  Wait for the **Name** tag of each instance to read "Scale-out Tutorial" before continuing.
 
