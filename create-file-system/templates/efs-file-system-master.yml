@@ -359,7 +359,7 @@ Resources:
           !Ref Success
         Subnet:
           !Join [",", !Ref Subnet ]
-      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-with-data.yml
+      TemplateURL: https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-file-system-with-data.yml
   BurstCreditBalanceAlarms:
     Condition: CreateAlarmsNoDashboard
     DependsOn: ElasticFileSystem
@@ -382,7 +382,7 @@ Resources:
           !Join [",", !Ref Subnet ]
         WarningThreshold:
           !Ref WarningThreshold
-      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml
+      TemplateURL: https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml
   Dashboard:
     Condition: CreateDashboardNoAlarms
     DependsOn: ElasticFileSystem
@@ -393,7 +393,7 @@ Resources:
           !Ref DeletionPolicyDashboard
         ElasticFileSystem:
           !GetAtt [ ElasticFileSystem, Outputs.ElasticFileSystem ]
-      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml
+      TemplateURL: https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml
   BurstCreditBalanceAlarmsAndDashboard:
     Condition: CreateAlarmsAndDashboard
     DependsOn: ElasticFileSystem
@@ -418,6 +418,6 @@ Resources:
           !Join [",", !Ref Subnet ]
         WarningThreshold:
           !Ref WarningThreshold
-      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml
+      TemplateURL: https://s3.amazonaws.com/efs-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml
 
 
